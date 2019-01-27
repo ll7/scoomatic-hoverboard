@@ -53,17 +53,11 @@ Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ei
 * Evtl Probleme mit späterer Zulassung (ROS + KNN)
 * Modulare EVA Architektur
 -->
-![Autoware Architektur](./images/autoware_overview.png =800x)
+![Autoware Architektur](./images/autoware_overview.png)
 *Architektur von Autoware.AI: Modulares EVA- (Eingabe, Verarbeitung, Ausgabe) Muster. Die Sensordaten werden erfasst und fusioniert und eine Lokalisierung und Objekterkennung durchgeführt. Aufgrund dieser Daten werden Entscheidungen über das Fahrzeugverhalten getroffen, welche an die Missionsplanung weitergegeben werden. Diese steuert basierend darauf die Aktuatoren des Fahrzeugs an.*
 ### Apollo
 [Apollo](https://apollo.auto) ist ein ebenfalls Quelloffenes Framework für die autonome Navigaton von Fahrzeugen. Gestartet vom Chinesischen Konzern Baidu und unterstützt von vielen Industriepartnern wurde seit 2017 eine Sotft- und Hardwareplattform entwickelt, die im aktuellen Stand ein autonomes Fahren im urbanen Umfeld erlauen soll. Im laufe des Jahres 2019 sind erste Versuche mit massenproduktionsreifen Fahrzeugen in abgesteckten Testgebieten geplant, welche bis 2021 zu marktreifen vollständig autonom navigierenden Fahrzeugen für Autobahn- und Stadtverkehr füren sollen.
 Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux mit selbst entwickeltem Echtzeitkernel läuft. Die [Architektur](https://github.com/ApolloAuto/apollo) scheint deutlich umfangreicher und komplexer zu sein, als die von Autoware, was sie für den Einsatz im Scoomatic Projekt ungeeignet, weil zu schwergewichtig, macht.
-
-
-### Waymo
-* Waymo Sicherheitsbericht (2017)
-* TODO?
-
 
 
 ## Autonome Navigation im Fußgängerbereich
@@ -86,8 +80,8 @@ Ebenso ist eine Kartografierung des gesamten Einsatzgebietes im voraus nicht pra
 
 In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden zwei Kameras (Logitech c310, Ausdom AW615) und ein LIDAR (LIDAR-Lite v3 (ca. 30€)) auf einem 2-Achs-Gimbal benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
 
-![Hardware Grewal](./images/grewal.png =x500)
-
+![Hardware Grewal](./images/grewal.png)
+*Hardwareaufbau des Autonomous Wheelchairs*
 
 Als Software kommt auch hier ROS zum Einsatz. Die Kamera wird wiederholt geschwenkt und mehrere Bilder der Umgebung aufgenommen. Diese werden mittels *computer vision software* verarbeitet um mögliche Ziele (Im vorgestellten Anwendungsfall ein Geschäft) zu lokalisieren. Potenzielle Ziele werden an das Navigationsmodul gesendet. Der Nutzer kann diese anschließend auswählen und anfahren.
 Die Gesamtkosten für das System betragen ca. 1000€ und der Stromverbauch liegt bei etwa 100W. Ebenso wie das Smart Wheelchair System ist diese Projekt nicht auf externe Hardware wie GPS angewiesen.
@@ -128,7 +122,8 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 
 Die Softwarearchitektur wird in folgendem Bild veranschaulicht.
 
-![Architektur Bauer](./images/bauer.png =800x)
+![Architektur Bauer](./images/bauer.png)
+*Architektur des Autonomous City Explorer*
 
 ### TOOMAS
 In [TOOMAS: Interactive Shopping Guide Robots in Everyday Use - Final Implementation and Experiences from Long-term Field Trials](http://ieeexplore.ieee.org/document/5354497/) präsentieren Gross et al. einen Einkaufsassistenzroboter, der Kunden in einem Baumarkt zu den gesuchten Artikeln führen soll. Die Eingabe des Suchbegriffs erfolgt über einen Touchscreen. Anschließend führt der Roboter den Kunden zu dem Regal, in dem der Artikel lagert. Der Antrieb ist auch hier über zwei enzeln Ansteuerbare Räder und ein Stützrad.
@@ -146,26 +141,40 @@ Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB
 
 [Starship Technologies](Starship.xyz) bietet eine kommerzielle Lösung zur Auslieferung von Waren an den Endkunden auf der letzten Meile an. Die sechsrädrigen Transportroboter können eine Nutzlast von ca. 10kg Transportieren und werden z.B. von Essenslieferdiensten wie Doordash eingesetzt. Der Hersteller macht keine Angaben zur Sensorik, allerdings lassen die Bilder auf rundum verbaute Kameras (Weitwinkel, stereoskopisch) und Sonarsensoren schließen. Die Räder sind durch eine spezielle Aufhängung in der Höhe verstellbar, was [das erklimmen nicht abgesenkter Bordsteine](https://youtu.be/UPZwnc_Lk2M?t=49) möglich macht.
 
+
+### Marble
+[Marble](https://www.marble.io/) versucht ebenfalls eine Lösung für Produktlieferungen auf der letzten Meile zu bieten. Das kommerzielle Projekt macht keine Angaben zur verwendeten Hardware, allerdings lassen die veröffentlichen Bilder und Videos auf folgende Sensoren schließen:
+* 6 * [Intel Real Sense D415](https://click.intel.com/intelr-realsensetm-depth-camera-d415.html)
+* 4 * Weitwinkelkamera
+* LIDAR
+* GPS
+Die Forgbewegung erfolgt über 4 Gummiräder und eine Ackermannsteuerung
+
+### Kiwi
+Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [Marble](#marble) bietet [Kiwi](https://www.kiwicampus.com/) Roboter für die Lieferung von Waren. Über die verwendete Sensorik ließ sich nichts herausfinden. Die Fortbewegung erfolgt hier wie beim Konkurrenten Marble über 4 Gummiräder und Ackermannsteuerung.
+Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes Trike, dass vier der kleinen Lieferroboter auf der Straße transportieren kann und einen Kellnerroboter, der Gäste in Restaurants bedienen soll.
+
 ### Kit CityBuddy
 * TODO
-### Staubsaugerroboter
-#### Vorwerk
-#### Xiaomi
+### Amazon Scout
+Über den Amazon [Scout](https://blog.aboutamazon.com/transportation/meet-scout) sind noch nicht sehr viele Informationen verfüghar, der allgemeine Aufbau ähnelt aber sehr Stark dem Roboter von [Starship Technologies](#starship-technologies).
 
+
+## Staubsaugerroboter
+Höherpreisige Staubsaugerroboter bieten die Möglichkeit, eine Karte von ihrer Umgebung zu erstellen, um dadurch eine bessere Abdeckung des zu reinigenden Bereiches zu erzielen. Inzwischen gibt es mehrere Modelle mit dieser funktionalität (unter anderem von [Roborock](https://en.roborock.com/pages/robot-vacuum-cleaner), [Xiaomi](https://www.china-gadgets.de/test-xiaomi-saugroboter/), [Vorwerk](https://kobold.vorwerk.de/saugroboter/saugroboter-vr300/) und [Neato](https://www.neatorobotics.com/de/robot-vacuum/botvac-connected-series/). Nach dem die eingesetzten Sensoren sich kaum unterscheiden wird an dieser stelle exemplarisch das Modell S5 des Herstellers Roborock vorgestellt.
+### Roborock S5
+Der [Roborock S5](https://en.roborock.com/pages/robot-vacuum-cleaner) ist mit einem oben am Gehäuse angebrachten LIDAR / LDS (Laser Distance Sensor) ausgestattet, was eine Kartografierung des zu reinigenden Gebiets ermöglicht. Die so erstellte Karte kann per App angesehen werden und darin der Fortschritt der Reinigung angezeigt und Befehle zum Reinigen von Teilflächen gegeben werden. Für die Hindernisvermeidung sind um den Roboter mehrere Ultraschallsensoren angebracht. Außerdem erkennt ein *Bumper* frontale Kollisionen mit hindernissen.
+![Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)](./images/roborock-app.png)
+*Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)*
 # Sinnvolle Hardwareelemente
 ## Aktuatorik
 ### Roboterplattformen für den Wissenschaftlichen Einsatz
 pro
-
 * Offen
 * Gut dokumentiert
 * Viele verschiedene antriebsarten (kette, omni, allrad, ackermann)
-
-
 con
-
 * 5-20k
-
 
 ### Segway Loomo
 Vorstellung Hardware / Software
@@ -177,16 +186,21 @@ pro
 * Skaliert besser, weil weniger Eigenbau notwendig (außerdem: Zeitersparnis bis zum ersten Prototypen)
 * rechenleistung, bildverarbeitung auf realsense
 
-
-
 con
-
 * eventuell nicht offen genug (z.b. regelung) Antwort von Segway abwarten
+* Keine kommunikation mit support möglich
 
 
-pro/con etc.
 ### Hoverboard
-pro/con etc.
+pro
+* günstig, massenprodukt
+* bringt komplette elektronik mit (Akku, Motortreiber, Motoren)
+* hackbar
+* erfordert low level eigenbau -> mehr flexibilität
+* maximale flexibilität
+con
+* mehr aufwand weil viel erst gehackt / gebaut werden muss
+
 ## Sensorik
 TODO low-cost lidar recherchieren
 
@@ -199,20 +213,45 @@ Hier schon konkrete Hardware raussuchen und vorstellen
 
 
 # Bauvorschläge
-## Hoverboard-Eigenbau
-...
 ## Loomo
-Pids ändern nötig und möglich?
-nicht über sdk
-\todo{loomo support wegen regleranpassung fragen
+* antriebsplattform basierend auf segway Loomo
+* hardwareanbau für verschiedene sensorik
+pro
+* antriebsplattform incl balancing bereits voll funktionsfähig
+* bereits eine intel realsense verbaut
+con
+* unflexibel, wenig möglichkeiten sensorik hinzuzufügen
+* beschränkung der programmierbarkeit auf android apps und sdk funktionen
+* sensorik kann nur über usb / wifi / bluetooth hinzugefügt werden
+* unklar ob mehr sensorik regelung beeinflusst
+
+* Pids ändern nötig und möglich?
+* nicht über sdk
+
+## Hoverboard-Eigenbau
+* antriebplattform basierend auf gehacktem Hoverboard
+* Item-Profilschienen für flexible Montage von sensorik
+* Intel NUC PC mit ROS
+* Möglichkeit zur Montage von Ultraschall, Lidar, Realsense
+* imu
+* gps
+* wheel encoder
+pro
+* modulare lösung gut zur evaluation verschiedener sensoren an verschiedenen orten
+* Möglichkeit eigenes slam zu implementieren, aber auch nutzung von ros möglich
+* 
+con
+* viel arbeitsaufwand bis zum ersten resultat
+* weniger hübsch als loomo
+
 # Fazit
-Zusammenfassung und finale Empfehlung für eine Plattform
-
-
+Flexibilität des Eigenbaus überwiegt Einfachheit der Loomo-Lösung
 # Notes
 * Projektmodul: Wiki + Videos als Doku
 * Luttkus.Lennart@me.com (01632479266)
-
+###################################
+# Projektmodul
+[Bezugsquelle Verwendetes Board](https://www.toysstoregmbh.de/10-hoverboard-smart-self-balance-board-bluetooth-luftbereifung-elektroroller-tuev-ce_343_1442)
 # Prototypenaufbau
 ## Hardware
 ### Hoverboard
