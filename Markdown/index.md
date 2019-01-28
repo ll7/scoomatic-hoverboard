@@ -255,5 +255,8 @@ Flexibilität des Eigenbaus überwiegt Einfachheit der Loomo-Lösung
 # Prototypenaufbau
 ## Hardware
 ### Hoverboard
+### Mainboard
+MOSFETS: HN75N09AP UFXA
+
 #### Netzteil
 Das beim Hoverboard mitgelieferte Netzteil hat eine Spannung von 42V und liefert einen maximalen Strom von 2A. Der Stecker für die Verbindung zum Board ist vom Typ TODO
