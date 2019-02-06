@@ -71,6 +71,13 @@ https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-doe
 
 Das spannendste ist eigentlich die Aussage zu ROS2
 
+### Autonomous Campus Mobility Platform
+https://digitalcommons.wpi.edu/mqp-all/3121/
+TODO
+### Autonomous navigation for mobile service robots in urban pedestrian environments
+https://sci-hub.tw/10.1002/rob.20386
+https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386
+TODO
 ## Autonome Navigation im Fußgängerbereich
 TODO: Jahr der Paper
 TODO: Rechenleistung für Kaufempfehlung Rechner
@@ -136,7 +143,7 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 * 2x LIDAR (SICK LMS200)
 * Stereoskopische Kamera auf Zweiachsgimbal (Point Grey Research Bumblebee XB3)
 * 3 PCs für Navigation, Vision Processing und Antriebsansteuerung
-TODO Drei vollwertige PCs
+TODO Drei vollwertige PCs (Welche leistung? 2009)
 Die Softwarearchitektur wird in folgendem Bild veranschaulicht.
 
 ![Architektur Bauer](./images/bauer.png)
@@ -219,16 +226,28 @@ Hier schon konkrete Hardware raussuchen und vorstellen
 ### RPLIDAR
 * LIDAR (RPLIDAR A1)
 * Pointclouds brauchen viel rechenleistung
-* teuer
-
+* 360° Omnidirektionaler Laserscan
+* 5,5 - 10 Hz Adaptive Scan-Frequenz
+* Abtastfrequenz: 4.000 - 8.000Hz
+* Entfernungsbereich: 0,15 - 12m
+* teuer [100€](https://www.robotshop.com/de/de/rplidar-a1m8-360-grad-laserscanner-entwicklungskit.html)
+* ROS Anbindung
 ### Ultraschallsensoren
 * sonar
-* kaum rechenleistung
-* günstig
+* kaum Rechenleistung
+* günstig (4€) wenn nicht wetterbeständig [Der z.B.](https://www.robotshop.com/de/de/hc-sr04-ultra01-ultraschall-entfernungsmesser.html) dann aber erfahrungsgemäß probleme mit mehreren sensoren, die gleichzeitig messen.
+* [Wetterbeständige Version](https://www.robotshop.com/de/de/witterungsbestandiger-ultraschallsensor-mit-separater-sonde.html) deutlich teurer (15€)
+* Nur ein Messwert, für slam brauchts viele. Machbarkeit?
 ### GPS-Empfänger
 * kaum rechenleistung
 * ungenau
-* günstig
+* NEO-7M-C GPS-Modul
+* UART
+* Horizontal position accuracy 2.5m
+* Velocity accuracy 0.1m/s
+* Heading accuracy 0.5 degrees
+* Max Updaterate 10Hz
+* günstig [20€](https://www.robotshop.com/de/de/uart-neo-7m-c-gps-modul.html)
 ### Stereoskopische Kameras
 * Kinect
 * Roboception
@@ -236,16 +255,48 @@ Hier schon konkrete Hardware raussuchen und vorstellen
 * * nimmt einem rechenleistung durch asic? onboardverarbeitung ab
 * rechenleistung
 * teuer
+
+### 2D-Kamera
+
 ### IMU
-* Radar
+* Lagebestimmung
+* MPU9250
+* 3-Axis Gyro
+* 3-Axis Magnetometer
+* 3-Axis Accelerometer
+* i2c
+* [15€](https://www.robotshop.com/de/de/imu-breakout-board-mpu-9250.html)
 * kaum rechenleistung
 * günstig
 
 ## Bordcomputer
+Wegen masse nur roskompatible
 ### Einplatinencomputer (Arm)
-
+#### Beaglebone
+* Spezielle robotikboards (Blue) und Capes (fürs black)
+* Leistungstechnisch unteres ende
+* 60€ (Black, kein wifi, bluetooth) 100€ (Blue)
+* Prozessor
+* RAM
+* Schnittstellen
+#### Raspberry Pi 3B+
+* Community
+* Community
+* Community
+* Prozessor
+* RAM
+* Schnittstellen
+* Preis
+#### Odroid XU4
+* viel rechenleistung
+* Preis
 ### Einplatinencomputer (x86)
+Bester binarysupport
+teurer
 
+* edison?
+* nuc?
+* [Latte Panda] (https://www.lattepanda.com/) 4GB  / 64GB 149$ [Atom x5-Z8350](https://ark.intel.com/de/products/93361/Intel-Atom-x5-Z8350-Processor-2M-Cache-up-to-1-92-GHz-)[1265](https://www.cpubenchmark.net/cpu.php?cpu=Intel+Atom+x5-Z8350+%40+1.44GHz&id=2774) Onboard Arduino, Wifi + Bluetooth, kein RJ45, für windows gedacht
 # Bauvorschläge
 In diesem Kaptiel werden zwei konkrete Bauvorschläge vorgestellt und deren Stärken und Schwächen aufgezeigt. Es wird zuerst eine Lösung mit dem Segway Loomo als Antriebsplattform, die den Großteil der benötigten Hardware schon mitbringt, gezeigt und anschließend ein Eigenbau aus Hoverboardmotoren mit eigenem Rahmen und eigener Sensorauswahl erklärt.
 ## Bauvorschlag: Loomo
