@@ -257,6 +257,7 @@ Hier schon konkrete Hardware raussuchen und vorstellen
 * teuer
 
 ### 2D-Kamera
+für ampelerkennung
 
 ### IMU
 * Lagebestimmung
@@ -281,15 +282,20 @@ Für das Board spricht, dass es speziell für Robotikanwendungen konzipiert wurd
 #### Raspberry Pi 3B+
 Die bekannteste Reihe von Einplatinenrechnern ist die Raspberry Pi Serie. Das aktuell leistungsstärkste Modell, der [Raspberry Pi 3 Modell B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) ist ab ca. [32€](https://geizhals.de/raspberry-pi-3-modell-b-a1785657.html) erhältlich. Durch die große Community ist eine Unterstützung für viele Linux-Distributionen und Software vorhanden und deren Installation und Bedienung gut dokumentiert.
 Auf dem Board ist ein [BCM2837B0](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md) Chips verbaut, der eine 64-Bit ARMv8 SoC beinhaltet dieses Taktet mit 1.4GHz auf vier Kernen. Persistenter speicher ist nicht auf dem Board vorhanden, lässt sich aber über den verbauten Micro-SD-Kartenslot verbauen. Als Hauptspeicher sind 1GB LPDDR2 SDRAM verlötet. Der Pi Kommuziert mit der Außenwelt unter anderem über HDMI, Gigabit Ethernet, 4 USB 2.0 Ports sowie 802.11.b/g/n/ac WLAN und Bluetooth 4.2. Zudem sind über den Rapsberry-Pi Typischen [Pinheader](https://pinout.xyz/) GPIO-Pins, I2C, SPI, und ein UART herausgeführt. Über einen separaten Anschluss kann eine [Kameramodul](https://www.raspberrypi.org/products/camera-module-v2/) verbunden werden.
-#### Odroid XU4
-* viel rechenleistung
-* Preis
-### Einplatinencomputer (x86)
-Bester binarysupport
-teurer
+#### Hardkernel Odroid XU4
+Der [Odroid XU4](https://www.hardkernel.com/shop/odroid-xu4-special-price/) von Hardkernel bietet im Vergleich mit dem [Rapsberry Pi](#Raspbery-pi-3b+) eine höhere Leistung. Der verbaute [Samsung Exynos5422](https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-5-octa-5422/) Chip bietet unter anderem je vier Cortex-A15 und Cortex-A7 ARM-Kerne mit je 2.1 bzw 1.4GHz der verbaute Hauptspeicher ist mit 2GB doppelt so groß wie der im Pi. Ebenso ist Unterstüzt der Odroid [den im Vergleich zur MicroSD Karte schnelleren eMMC Speicher](https://www.mikronauts.com/hardkernel/hardkernel-odroid-xu4-review/8/). Der Odroid bietet neben einem USB-2.0 Port auch zwei USB3.0 Anschlüsse, Gigabit Ethernet und einen HDMI Ausgang. Kabellose Schnittstellen wie WLAN oder Bluetooth sind nicht auf dem Board verbaut und müssen über USB nachgerüstet werden. Der Preis ist mit aktuell 49$ im offiziellen Shop angegeben. Für den XU4 sind [Images](https://wiki.odroid.com/odroid-xu4/os_images/os_images) für Ubuntu 18.04LTS sowie Android 4.4.4 vom Hersteller bereitgestellt. Der Communtitysupport ist im Vergleich zum Pi deutlich kleiner.
 
-* Intel NUC
-* [Latte Panda] (https://www.lattepanda.com/) 4GB  / 64GB 149$ [Atom x5-Z8350](https://ark.intel.com/de/products/93361/Intel-Atom-x5-Z8350-Processor-2M-Cache-up-to-1-92-GHz-)[1265](https://www.cpubenchmark.net/cpu.php?cpu=Intel+Atom+x5-Z8350+%40+1.44GHz&id=2774) Onboard Arduino, Wifi + Bluetooth, kein RJ45, für windows gedacht
+### Einplatinencomputer und Kleinstrechner (x86)
+Einplatinenrechner mit einer CPU auf Basis der Intel x86(_64) Architektur profitieren im Vergleich zu ARM-Basierten Geräten durch die mit "normalen" Rechnern geteilte Architektur von hervorragendem Binarysupport. Pakete, Programme, Treiber und Kernels sind verbreiteter. Zudem ist die Rechenleistung der Rechner häufig größer, was sich aber auch häufig an einem höheren Preis widerspiegelt. Nachfolgend werden einige dieser Einplatinenrechner und Kleinstrechner mit x86-Architektur vorgestellt.
+#### Intel NUC
+[Intel Nuc](https://www.intel.de/content/www/de/de/products/boards-kits/nuc.html) ist eine Serie von Kleinstrechnern von Intel. Es sind komplette Rechner mit Gehäuse, konfigurierbare Kits oder das reine Mainboard mit verlöteter CPU erhältlich. Die Rechner kommen in verschiedenen Leistungsklassen. Als Hardware kommt auf Energieverbrauch optimierte Laptophardware zum Einsatz. Die Auswahl reicht von verhältnismäßig schwachen Konfigurationen mit Intel Celeron Prozessor, 2GB RAM und 32GB SSD bis hin zu aktuellen i7 Modellen mit 32GB DDR4 RAM und Optane Speicher. Dabei reichen die Preise von ca. 200-1500€
+Die Mainboards kommen mit fest installierter CPU und lassen sich mit gewöhnlichem RAM und M.2 SSDs aufrüsten. Ein Gehäuse wie bei den Komplett-PCs ist nicht enthalten. Die Größe der Boards ist mit 100x100mm größer als die der ARM-Boards (ca. 56x85mm beim Raspberry Pi 3B+)
+
+
+#### UDOO x86
+Die Einplatinencomputerserie [UDOO x86](https://www.udoo.org/udoo-x86/) ist in verschiedenen Ausfürungen von [140](https://www.mouser.de/ProductDetail/UDOO/SB02-7400-0000-C0?qs=%2fha2pyFaduhD7YV5fCe4mQ5ZiI8%252bJFn3ov84KqhPoToUN1%252bb4q9AlOMRykQDEI%252bc) bis [325](https://www.mouser.de/ProductDetail/UDOO/SB02-4940-0000-C0?qs=%2fha2pyFaduhD7YV5fCe4mXEscHVYPmsf%252bDBKZ5jk7kkYf5R6JNPj3XXwDtfDZzp3)$ erhältlich. Auf dem Board ist ein x86 Rechner zusammen mit einem [Arduino 101](https://store.arduino.cc/genuino-101) basierend auf dem Intel Curie Prozesor verbaut. Dieser ist über den Hauptrechner Programmierbar und bietet Zugriff auf die beim Arduino üblichen GPIOs. Der Hauptrechner ist in verschiedenen Konfigurationen erhältlich. Bei der CPU kommen 64 Bit Atom-, Celeron- und Pentium-Prozessoren zum Einsatz. Diese arbeiten mit 2-8GB RAM, der fest auf der Platine verlötet ist. Alle Boards verfügen über M.2- SATA- und MicroSD-Slots zur Speichererweiterung, bei den höherpreisigeren Modellen sind 32GB eMMC Speicher auf dem Board verbaut.
+Die Boards sind Kompatibel mit den gängigen Linuxdistributionen, Windows ab Windows 7 und Android. Zur Kommunikation sind unter anderem Bluetooth, Gigabit Ethernet, WLAN und UART verbaut. Die Abmessungen de Boards betragen 120x85mm.
+
 # Bauvorschläge
 In diesem Kaptiel werden zwei konkrete Bauvorschläge vorgestellt und deren Stärken und Schwächen aufgezeigt. Es wird zuerst eine Lösung mit dem Segway Loomo als Antriebsplattform, die den Großteil der benötigten Hardware schon mitbringt, gezeigt und anschließend ein Eigenbau aus Hoverboardmotoren mit eigenem Rahmen und eigener Sensorauswahl erklärt.
 ## Bauvorschlag: Loomo
@@ -370,7 +376,7 @@ Zum Ansteuern der Motoren mit der originalen Mainboard-Firmware wurde die seriel
 | Paritybits   | 0  |
 | Bitorder   | LSB first  |
 
-Da vom Mainboard aus scheinbar nur Befehle zum An- und Abschalten der LED-Beleuchtung gesendet werden, wurde nur die Kommunikation vom Sensor- zum Mainboard reverse-engineert.
+Da vom Mainboard aus scheinbar nusuddenr Befehle zum An- und Abschalten der LED-Beleuchtung gesendet werden, wurde nur die Kommunikation vom Sensor- zum Mainboard reverse-engineert.
 Das Sensorboard sendet wiederholt ein Datenpaket, welches die Geschwindigkeit des Motors vorgibt.
 
 | BYTE_0 | BYTE_1 | BYTE_2 | BYTE_3 | BYTE_4 | BYTE_5 | BYTE_6 | BYTE_7 |
