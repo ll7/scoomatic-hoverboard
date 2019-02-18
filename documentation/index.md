@@ -211,57 +211,18 @@ Gegen die Verwendung spricht die Begrenzung des SDKs in einigen Punkten. So ist 
 Die in den letzen Jahren populär gewordenen chinesischen Hoverboards verschiedener Hersteller sind ursprünglich als Freizeitgerät zum Transport einer Person gedacht. Im Aussehen ähneln sie einem kleinen Segway ohne Lenkstange. Das Board besitzt zwei in einer Achse liegenden, einzeln angetriebene Räder. Der Fahrer kann das Board über Gewichtsverlagerung Steuern. Der mit der Zeit stark gefallene Preis (ab ca. 100€ aus Deutschland) hat dazu geführt, dass die in den Boards verbaute Hardware inzwischen [gut dokumentiert und reverse-engineert](https://www.youtube.com/watch?v=qnQSL9DBPaE) wurde. Dadurch lassen sich die verbauten Motoren, Motortreiber und der Akku auch für andere Zwecke umfunktionieren und z.B. an ein selbst konstruiertes Chassis montieren.
 Der durch die Massenproduktion erreichte, günstige Preis spricht für das Hoverboard als Antriebsplattform. Zudem ist in dem Gerät eine komplett aufeinander abgestimmte Kombination aus Akku (mit Ladeschaltung), Motortreiber und Motoren vorhanden, was die manuelle Auswahl der Komponenten spart. Durch die reverse-engineerte Hardware kann ein Umbau nach eigenen Kriterien erfolgen, was eine hohe Flexibilität des Aufbaus ermöglicht. Allerdings muss dafür die Hardwareplattform selbst gebaut werden, was mehr zeitlichen Aufwand bis zum ersten Prototypen bedeutet.
 ## Sensorik
-TODO low-cost lidar recherchieren
-
-
-Hier schon konkrete Hardware raussuchen und vorstellen
-
-### RPLIDAR
-* LIDAR (RPLIDAR A1)
-* Pointclouds brauchen viel rechenleistung
-* 360° Omnidirektionaler Laserscan
-* 5,5 - 10 Hz Adaptive Scan-Frequenz
-* Abtastfrequenz: 4.000 - 8.000Hz
-* Entfernungsbereich: 0,15 - 12m
-* teuer [100€](https://www.robotshop.com/de/de/rplidar-a1m8-360-grad-laserscanner-entwicklungskit.html)
-* ROS Anbindung
+Nachfolgend werden einige nützliche Sensoren zur autonomen Navigation vorgestellt. Dabei werden nicht nur der Sensortyp, sondern ein konkreter Sensor vorgestellt.
+### (RP)LIDAR
+Der RPLIDAR A1 ist mit einem Preis von ca. [100€](https://www.robotshop.com/de/de/rplidar-a1m8-360-grad-laserscanner-entwicklungskit.html) zwar nicht günstig, allerdings einer der günstigsten LIDAR Sensoren auf dem Markt. Durch einen durch Spiegel in verschiedenen Winkeln abgelenkten Laserstrahl werden Entfernungen in mit einer Scan-Frequenz von 5,5-10Hz in einem 360° Bereich gemessen. Die messbaren Entfernungen liegen dabei zwischen 0,15 und 12 Metern. Eine [ROS-Anbindung](http://wiki.ros.org/rplidar) ermöglicht die Nutzung der in der Software integrierten Lokalisierungs- und Mappingframeworks. Hierfür wird allerdings verhältnismäßig viel Rechenleistung benötigt.
 ### Ultraschallsensoren
-* sonar
-* kaum Rechenleistung
-* günstig (4€) wenn nicht wetterbeständig [Der z.B.](https://www.robotshop.com/de/de/hc-sr04-ultra01-ultraschall-entfernungsmesser.html) dann aber erfahrungsgemäß probleme mit mehreren sensoren, die gleichzeitig messen.
-* [Wetterbeständige Version](https://www.robotshop.com/de/de/witterungsbestandiger-ultraschallsensor-mit-separater-sonde.html) deutlich teurer (15€)
-* Nur ein Messwert, für slam brauchts viele. Machbarkeit?
+Ultraschallsensoren senden einen Schallimpuls aus und bestimmen anhand der Zeit, die das Echo benötigt, um wieder beim Sensor anzukommen, die Entfernung zum nächsten Objekt. Die für die Ansteuerung und die Berechnung der Entfernung notwendige Rechenleistung ist verhältnismäßig klein und kann mit günstigen 8-Bit Mikrocontrollern erreicht werden. Die Sensoren messen nur in eine Richtung, durch den günstigen Preis können aber mehrere Sensoren in verschiedenen Richtungen angebracht werden. Ein für den ersten Prototypen geeigneter Sensor ist das [SR04 Modul](https://www.robotshop.com/de/de/hc-sr04-ultra01-ultraschall-entfernungsmesser.html). Für spätere Versionen könnte eine [wetterbeständige Version](https://www.robotshop.com/de/de/witterungsbestandiger-ultraschallsensor-mit-separater-sonde.html) mit höherem Kaufpreis interessant sein.
 ### GPS-Empfänger
-* kaum rechenleistung
-* ungenau
-* NEO-7M-C GPS-Modul
-* UART
-* Horizontal position accuracy 2.5m
-* Velocity accuracy 0.1m/s
-* Heading accuracy 0.5 degrees
-* Max Updaterate 10Hz
-* günstig [20€](https://www.robotshop.com/de/de/uart-neo-7m-c-gps-modul.html)
+Ein GPS-Empfänger wird benötigt, um die grobe Lokalisierung in der Welt zu ermöglichen. Durch die Technik kann die aktuelle Position auf wenige Meter genau bestimmt werden. Da die komplexe GPS-Logik meist auf den GPS-Modulen selbst berechnet, und das Ergebnis über UART zur Verfügung gestellt wird, benötigt der Hauptcomputer kaum Rechenleistung um die Position über GPS zu bestimmen. Für die Navigation im Fußgängerbereich ist die Genauigkeit der Position allerdings nicht ausreichend und durch die Kombination mit anderen Sensordaten verrechnet werden. Ein taugliches Modul ist das [NEO-7M-C GPS-Modul](https://www.robotshop.com/de/de/uart-neo-7m-c-gps-modul.html) von UBLOX. Dieses ist per UART ansteuerbar und liefert eine horizontale Positionsgenauigkeit von 2.5 Metern. Die Genauigkeit der bestimmten Geschwindigkeit ist mit 0.1 m/s angegeben. Dabei werden die Werte mit einer Frequenz von 10Hz aktualisiert. Der Preis des Moduls liegt bei ca. 20€.
 ### Stereoskopische Kameras
-* Kinect
-* Roboception
-* Intel Real sense
-* * nimmt einem rechenleistung durch asic? onboardverarbeitung ab
-* rechenleistung
-* teuer
+Stereoskopische Kameras wie die Microsoft [Kinect](https://developer.microsoft.com/de-de/windows/kinect) oder die [Inel RealSense](https://www.intel.de/content/www/de/de/architecture-and-technology/realsense-overview.html) Kameras liefern ein 3-Dimensionales Kamerabild in Form einer Punktewolke. Die Verarbeitung der beiden Kamerabilder zur Punktwolke geschieht dabei im Normalfall mithilfe eines speziell dafür ausgelegen Prozessors auf der Kamera selbst. Für die Verarbeitung der Punktwolke wird dennoch verhältnismäßig viel Rechenleistung benötigt. Auch die Auswertung der 2D-Bilder mittels Frameworks wie OpenCV um z.B. rote Ampeln zur Laufzeit zu erkennen, benötigen viel Rechenleistung. Zudem sind die Kameras mit einem Kaufpreis von 150-400€ recht teuer.
 
-### 2D-Kamera
-für ampelerkennung
-
-### IMU
-* Lagebestimmung
-* MPU9250
-* 3-Axis Gyro
-* 3-Axis Magnetometer
-* 3-Axis Accelerometer
-* i2c
-* [15€](https://www.robotshop.com/de/de/imu-breakout-board-mpu-9250.html)
-* kaum rechenleistung
-* günstig
+### Inertial Measurement Unit (IMU)
+Eine IMU ermöglicht es, die Lage und Drehgeschwindigkeit eines Geräts zu bestimmen. Dies geschieht durch die Auswertung eines Gyroskops, Accelerometers und Magnetometers. Diese sind bei dem MPU9250 Chip von IvenSense alle in einer 3-Achs ausführung auf einem einzigen Chip untergebracht. Dieser gibt die Daten über einen i2c-Bus aus. Der Preis für ein Breakoutboard mit dem Chip beträgt ca. [15€](https://www.robotshop.com/de/de/imu-breakout-board-mpu-9250.html). Für die Bestimmung einer genauen Lage und Winkelgeschwindigkeiten ist es hilfreich die einzelnen Messwerte über Sensorfusion zu vereinen. Hierzu bietet sich z.B. ein [Kalman Filter](https://ieeexplore.ieee.org/abstract/document/1626777) an. Dieser benötigt kaum Rechenleistung und kann auf einem 8-Bit Microcontroller problemlos ausgeführt werden.
 
 ## Bordcomputer
 Nachfolgend werden exemplarisch einige Kandidaten für den Boardcomputer vorgestellt und deren Vor- und Nachteile aufgezeigt. Dabei werden zuerst Computer auf Basis der ARM-Architektur und anschließend Intelx86-basierte Geräte vorgestellt. Aufgrund der Masse der verfügbaren Geräte wird nur eine Auswahl davon behandelt. Bei der Auswahl wurde unter anderem darauf wert gelegt, dass die Rechner zum Framework [ROS](http://www.ros.org/) kompatibel sind.
@@ -276,7 +237,7 @@ Für das Board spricht, dass es speziell für Robotikanwendungen konzipiert wurd
 Die bekannteste Reihe von Einplatinenrechnern ist die Raspberry Pi Serie. Das aktuell leistungsstärkste Modell, der [Raspberry Pi 3 Modell B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) ist ab ca. [32€](https://geizhals.de/raspberry-pi-3-modell-b-a1785657.html) erhältlich. Durch die große Community ist eine Unterstützung für viele Linux-Distributionen und Software vorhanden und deren Installation und Bedienung gut dokumentiert.
 Auf dem Board ist ein [BCM2837B0](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md) Chips verbaut, der eine 64-Bit ARMv8 SoC beinhaltet dieses Taktet mit 1.4GHz auf vier Kernen. Persistenter speicher ist nicht auf dem Board vorhanden, lässt sich aber über den verbauten Micro-SD-Kartenslot verbauen. Als Hauptspeicher sind 1GB LPDDR2 SDRAM verlötet. Der Pi Kommuziert mit der Außenwelt unter anderem über HDMI, Gigabit Ethernet, 4 USB 2.0 Ports sowie 802.11.b/g/n/ac WLAN und Bluetooth 4.2. Zudem sind über den Rapsberry-Pi Typischen [Pinheader](https://pinout.xyz/) GPIO-Pins, I2C, SPI, und ein UART herausgeführt. Über einen separaten Anschluss kann eine [Kameramodul](https://www.raspberrypi.org/products/camera-module-v2/) verbunden werden.
 #### Hardkernel Odroid XU4
-Der [Odroid XU4](https://www.hardkernel.com/shop/odroid-xu4-special-price/) von Hardkernel bietet im Vergleich mit dem [Rapsberry Pi](#Raspbery-pi-3b+) eine höhere Leistung. Der verbaute [Samsung Exynos5422](https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-5-octa-5422/) Chip bietet unter anderem je vier Cortex-A15 und Cortex-A7 ARM-Kerne mit je 2.1 bzw 1.4GHz der verbaute Hauptspeicher ist mit 2GB doppelt so groß wie der im Pi. Ebenso ist Unterstüzt der Odroid [den im Vergleich zur MicroSD Karte schnelleren eMMC Speicher](https://www.mikronauts.com/hardkernel/hardkernel-odroid-xu4-review/8/). Der Odroid bietet neben einem USB-2.0 Port auch zwei USB3.0 Anschlüsse, Gigabit Ethernet und einen HDMI Ausgang. Kabellose Schnittstellen wie WLAN oder Bluetooth sind nicht auf dem Board verbaut und müssen über USB nachgerüstet werden. Der Preis ist mit aktuell 49$ im offiziellen Shop angegeben. Für den XU4 sind [Images](https://wiki.odroid.com/odroid-xu4/os_images/os_images) für Ubuntu 18.04LTS sowie Android 4.4.4 vom Hersteller bereitgestellt. Der Communtitysupport ist im Vergleich zum Pi deutlich kleiner.
+Der [Odroid XU4](https://www.hardkernel.com/shop/odroid-xu4-special-price/) von Hardkernel bietet im Vergleich mit dem [Rapsberry Pi](#Raspbery-pi-3b) eine höhere Leistung. Der verbaute [Samsung Exynos5422](https://www.samsung.com/semiconductor/minisite/exynos/products/mobileprocessor/exynos-5-octa-5422/) Chip bietet unter anderem je vier Cortex-A15 und Cortex-A7 ARM-Kerne mit je 2.1 bzw 1.4GHz der verbaute Hauptspeicher ist mit 2GB doppelt so groß wie der im Pi. Ebenso ist Unterstüzt der Odroid [den im Vergleich zur MicroSD Karte schnelleren eMMC Speicher](https://www.mikronauts.com/hardkernel/hardkernel-odroid-xu4-review/8/). Der Odroid bietet neben einem USB-2.0 Port auch zwei USB3.0 Anschlüsse, Gigabit Ethernet und einen HDMI Ausgang. Kabellose Schnittstellen wie WLAN oder Bluetooth sind nicht auf dem Board verbaut und müssen über USB nachgerüstet werden. Der Preis ist mit aktuell 49$ im offiziellen Shop angegeben. Für den XU4 sind [Images](https://wiki.odroid.com/odroid-xu4/os_images/os_images) für Ubuntu 18.04LTS sowie Android 4.4.4 vom Hersteller bereitgestellt. Der Communtitysupport ist im Vergleich zum Pi deutlich kleiner.
 
 ### Einplatinencomputer und Kleinstrechner (x86)
 Einplatinenrechner mit einer CPU auf Basis der Intel x86(_64) Architektur profitieren im Vergleich zu ARM-Basierten Geräten durch die mit "normalen" Rechnern geteilte Architektur von hervorragendem Binarysupport. Pakete, Programme, Treiber und Kernels sind verbreiteter. Zudem ist die Rechenleistung der Rechner häufig größer, was sich aber auch häufig an einem höheren Preis widerspiegelt. Nachfolgend werden einige dieser Einplatinenrechner und Kleinstrechner mit x86-Architektur vorgestellt.
@@ -306,7 +267,7 @@ Zusammenfassend lässt sich also sagen, dass die vorgestellte Lösung durch die 
 Alternativ könnte ein günstig (150€) erhältiches Hoverboard, dessen Hardware umgebaut und mit Open-Source Firmware ausgestattet werden kann genutzt werden, um eine flexible Antriebsplattform für den Prototypen bereitzustellen. Die Motoren und Teile des Chassis werden mit [Alu Profilschinen](https://www.boschrexroth.com/de/de/produkte/produktgruppen/montagetechnik/themen/aluminiumprofile-loesungen-und-komponenten/aluminiumprofile-produkte/index) zu einem neuen Chassis verbunden, das nicht auf die Balanciermechanik de Hoverboards angewiesen ist, da diese eine Einstiegshürde für die Benutzung darstellt. Akku und Motortreiber des Hoverboards können ebenfalls weiter genutzt werden. An den Profilschienen  kann verschiedene Sensorik flexibel befestigt werden. Als Sensorik kann ebenfalls ein [RPLIDAR](#rplidar), eine [Intel RealSense](#Stereoskopische-Kameras) oder [Kinect](#Stereoskopische-Kameras) Kamera sowie [Ultraschallsensoren](#Ultraschallsensoren), eine [IMU](#IMU) und ein [GPS-Empfänger](#GPS-Empfänger) verbaut werden.
 Für die Fusion der Sensoren sowie für das Mapping und die Lokalisierung kann je nach verwendeter Sensorik und daraus resultierender benötigter Rechenleistung ein [Einplatinencomputer](#Bordcomputer) mit Arm oder Intel x86(_64)-Architektur zum Einsatz kommen die Möglichkeiten hier reichen vom vergleichsweise günstigen Raspberry Pi Zero für unter 10€ bis zu vollwertigen Mini-PCs wie dem Intel NUC, der in verschiedenen Konfigurationsvarianten erhältlich ist und, mit einem Intel Core i7 der 8. Generation, 16GB RAM und 4GB Grafikspeicher ausgestattet, auch äußerst Rechenaufwändige Algorithmen problemlos ohne große Verzögerung ausführen kann. Als Softwarelösung bietet sich das modulare Open-Source Roboterframework [ROS](ros.org) an, welches Komponenten für SLAM und Visualisierung, sowie Hardwaretreiber für Sensoren wie die Kinect bereits mitbringt und von einer breiten Community unterstützt wird.
 
-Ganz klar für diese Lösung sprechen die hohe Modularität und Erweiterbarkeit des Aufbaus. Bei guter Dokumentation von Schnittstellen und Designentscheidungen kann das System für viele Einsatztzwecke angepasst und iterativ weiterentwickelt werden und bietet ebenfalls eine modulare Plattform für die Evaluation von verschiedenen Sensoren. Durch die komplette Offenheit in der Software, lässt sich z.B. auch ein eigenes Programm für das Mapping implementieren, sollte das in ROS enthaltene nicht den Anforderungen entsprechen.
+Ganz klar für diese Lösung sprechen die hohe Modularität und Erweiterbarkeit des Aufbaus. Bei guter Dokumentation von Schnittstellen und Designentscheidungen kann das System für viele Einsatzzwecke angepasst und iterativ weiterentwickelt werden und bietet ebenfalls eine modulare Plattform für die Evaluation von verschiedenen Sensoren. Durch die komplette Offenheit in der Software, lässt sich z.B. auch ein eigenes Programm für das Mapping implementieren, sollte das in ROS enthaltene nicht den Anforderungen entsprechen.
 
 Ein deutlicher Nachteil der Lösung ist der hohe Entwicklungs- und Fertigungsaufwand bis zum ersten nutzbaren Prototypen. Die Antriebsplattform muss selbst entwickelt und gefertigt, die Sensorik und der Boardcomputer ausgewählt und integriert werden. Zudem wird es schwer werden, eine optisch so ansprechende Plattform wie den Loomo zu entwickeln.
 
