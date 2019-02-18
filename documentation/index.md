@@ -208,15 +208,8 @@ Für den Einsatz im Scoomatic-Projekt sprechen die reletiv offenen schnittstelle
 Gegen die Verwendung spricht die Begrenzung des SDKs in einigen Punkten. So ist zum Beispiel eine Anpassung der Reglerparameter für das Balancieren möglich. Dies könnte durch das Verbauen weiterer Sensorik am Roboter allerdings nötig sein. Der offizielle Support hat bis jetzt auf Fragen nicht reagiert, wodurch sich auch nicht klären lässt, ob geplant ist, dieses Feature nachzureichen. Außerdem besitzt der Loomo kaum gute möglichkeiten zusätzliche Sensorik zu befestigen, was die Erweiterbarkeit ebenfalls einschränkt
 
 ### Hoverboard
-pro
-* günstig, massenprodukt
-* bringt komplette elektronik mit (Akku, Motortreiber, Motoren)
-* hackbar
-* erfordert low level eigenbau -> mehr flexibilität
-* maximale flexibilität
-con
-* mehr aufwand weil viel erst gehackt / gebaut werden muss
-
+Die in den letzen Jahren populär gewordenen chinesischen Hoverboards verschiedener Hersteller sind ursprünglich als Freizeitgerät zum Transport einer Person gedacht. Im Aussehen ähneln sie einem kleinen Segway ohne Lenkstange. Das Board besitzt zwei in einer Achse liegenden, einzeln angetriebene Räder. Der Fahrer kann das Board über Gewichtsverlagerung Steuern. Der mit der Zeit stark gefallene Preis (ab ca. 100€ aus Deutschland) hat dazu geführt, dass die in den Boards verbaute Hardware inzwischen [gut dokumentiert und reverse-engineert](https://www.youtube.com/watch?v=qnQSL9DBPaE) wurde. Dadurch lassen sich die verbauten Motoren, Motortreiber und der Akku auch für andere Zwecke umfunktionieren und z.B. an ein selbst konstruiertes Chassis montieren.
+Der durch die Massenproduktion erreichte, günstige Preis spricht für das Hoverboard als Antriebsplattform. Zudem ist in dem Gerät eine komplett aufeinander abgestimmte Kombination aus Akku (mit Ladeschaltung), Motortreiber und Motoren vorhanden, was die manuelle Auswahl der Komponenten spart. Durch die reverse-engineerte Hardware kann ein Umbau nach eigenen Kriterien erfolgen, was eine hohe Flexibilität des Aufbaus ermöglicht. Allerdings muss dafür die Hardwareplattform selbst gebaut werden, was mehr zeitlichen Aufwand bis zum ersten Prototypen bedeutet.
 ## Sensorik
 TODO low-cost lidar recherchieren
 
