@@ -33,19 +33,12 @@ nice to have:
 # Related Work
 Dieses Kapitel widmet sich der Vorstellung verwandter Arbeiten. Es werden dabei hauptsächlich verwandte Felder wie autonome Navigation in Fahrzeugen, Rollstühlen,und Staubsaugerrobotern betrachtet. Für jede Arbeit wird, sofern möglich, ein Überblick über Hardware, Software und deren Architektur und Schnittstellen sowie geplante Future Work gegeben.
 
-<!--
-Hardware
-Software
-Softwarearchitektur + Schnittstellen
-Future Work
--->
+
 
 ## Autonome Navigation in Kraftfahrzeugen
 
 Auf den ersten Blick scheinen autonom navigierende Autos sehr viel mit dem hier vorliegenden Problem gemeinsam zu haben. Sie navigieren in einer sich ständig verändernden, nicht genau kartografierten Umgebung und müssen auf andere Verkehrsteilnehmer Rücksicht nehmen. Allerdings fahren Autos die meiste Zeit deutlich schneller als die für das Scoomatic-Projekt geplante Schrittgeschwindigkeit. Außerdem unterscheidet sich die Umgebung, in der die jeweiligen Fahrzeuge navigieren und damit auch die auftretenden Hindernisse und Probleme.
 Nachfolgend wird ein Überblick über gefundene Informationen zu Fahrassistenzprogrammen und selbstfahrenden Fahrzeugen im Automobilbereich gegeben. Hierbei wird aufgrund mangelnder Publikationen und fehlender Offenheit nicht auf Kommerzielle Systeme von Automobilherstellern wie Tesla, Audi, Mercedes oder von Dienstleistern wie Uber eingegangen. Sondern die beiden Open-Source Frameworks Autoware und Apollo TODO evtl und Waymo TODO betrachtet.
-
-
 
 
 ### Autoware
@@ -68,17 +61,29 @@ Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ei
 Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux mit selbst entwickeltem Echtzeitkernel läuft. Die [Architektur](https://github.com/ApolloAuto/apollo) scheint deutlich umfangreicher und komplexer zu sein, als die von Autoware, was sie für den Einsatz im Scoomatic Projekt ungeeignet, weil zu schwergewichtig, macht.
 TODO: Bild von Architektur + Vergleich zu Autoware
 ### apex.ai
-TODO
-Lars ist gerade noch über apex.ai gestolpert. Vielleicht kannst du das noch irgendwo im Markdown Dokument hinzufügen.
+
+* "Apex OS is a safe, secure and reliable software communication layer for self driving applications" Juan Pablo, Senior Software Engineer
+* Safety + Security tief in System verankert
+* Hardware- und Application agnostic
+* Basiert auf ros2, erweitert um safety, security, echtzeit
+
+* Apex.autonomy
+* Applikationen für selbstfahrende Fahrzeug
+* 3D Perception Fertig, einige lidars schon getestet
+* Lokalisierung, Plannung und Steuerung für 2019 geplant
+* harte echtzeit, gute softwaretechnik (Dokumentierte interfaces, integration tests etc)
+* C++
+* x86_64 und amd64 Support, Linux, QNX, Windows, OSX
+
+
 
 https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-does-the-invisible-critical-work-that-will-make-selfdriving-cars-possible.amp.html
 
-Das spannendste ist eigentlich die Aussage zu ROS2
 
-### Autonomous Campus Mobility Platform
+### Autonomous Campus Mobility Platform (2018)
 https://digitalcommons.wpi.edu/mqp-all/3121/
-TODO
-### Autonomous navigation for mobile service robots in urban pedestrian environments
+
+### Autonomous navigation for mobile service robots in urban pedestrian environments (2011)
 https://sci-hub.tw/10.1002/rob.20386
 https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386
 TODO
@@ -99,18 +104,15 @@ Die Software für das SWS basiert auf ROS und nutzt die Point Cloud Library (PCL
 Diese Lösung ist für das Scoomatic-Projekt zu kostspielig. Allerdings könnte Versucht werden, die teuren LIDARs durch eine kostengünstigere Version wie den RPLIDAR zu ersetzen und die dadurch entstehenden Nachteile durch GPS auszugleichen.
 Ebenso ist eine Kartografierung des gesamten Einsatzgebietes im voraus nicht praktikabel.
 
-
+TODO The computational process- ing for the software components was performed by a laptop with an Intel Core i7-2760QM 2.4GHZ processor and 4 GiB of RAM.
 ### Autonomous Wheelchair Navigation in Unmapped Indoor Environments (2018)
 
-In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden zwei Kameras (Logitech c310, Ausdom AW615) und ein LIDAR (LIDAR-Lite v3 (ca. 30€)) auf einem 2-Achs-Gimbal benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
-TODO welche Reichweite
-TODO warum zwei kameras
-TODO warum Lidar Lite wenn 2D Vorhanden
-TODO 2D-Gimbal erklären
+In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden eine Kamera (Logitech c310) und ein LIDAR (LIDAR-Lite v3 (ca. 30€, Reichweite 5cm bis 40m)) benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
+Eine der beiden Kameras und der LIDAR-Lite sind auf einem 2-Achs-Gimbal montiert.
 ![Hardware Grewal](./images/grewal.png)
 *Hardwareaufbau des Autonomous Wheelchairs*
 
-Als Software kommt auch hier ROS zum Einsatz. Die Kamera wird wiederholt geschwenkt und mehrere Bilder der Umgebung aufgenommen. Diese werden mittels *computer vision software* verarbeitet um mögliche Ziele (Im vorgestellten Anwendungsfall ein Geschäft) zu lokalisieren. Potenzielle Ziele werden an das Navigationsmodul gesendet. Der Nutzer kann diese anschließend auswählen und anfahren.
+Als Software kommt auch hier ROS zum Einsatz. Sie wird auf einem Dell Inpsiron TM15R 5537 mit einem Core i5 4200U mit 8GB DDR3 RAM ausgeführt. Die Kamera wird wiederholt geschwenkt und mehrere Bilder der Umgebung aufgenommen. Diese werden mittels *computer vision software* verarbeitet um mögliche Ziele (Im vorgestellten Anwendungsfall ein Geschäft) zu lokalisieren. Wurde ein Ziel erkannt, wird über den LIDAR Lite die Distanz zu diesem ermittelt. Potenzielle Ziele werden an das Navigationsmodul gesendet. Der Nutzer kann diese anschließend auswählen und anfahren. Der 2D-Lidar Dient zur Erstellung einer Karte für die Navigation.
 Die Gesamtkosten für das System betragen ca. 1000€ und der Stromverbrauch liegt bei etwa 100W. Ebenso wie das Smart Wheelchair System ist diese Projekt nicht auf externe Hardware wie GPS angewiesen.
 <!--
 * 2x Kamera (Logitech c310, Ausdom AW615) + Lidar (LIDAR-Lite v3 (30€)) auf 2-Achs-Gimbal, RPLIDAR A2(350€)
@@ -137,10 +139,11 @@ Für Mapping und Positionsbestimmung sind die folgenden Sensoren verbaut:
 * XSens IMU
 * GPS Pathfinder Pro
 * 2x SICK LMS 151 LIDAR
+Das Navigationssystem wird auf einem herkömmlichen Laptop mit einem Quadcore i7 mit 2.3GHz ausgeführt.
 
 Um in einem Gebiet autonom navigieren zu können, muss von diesem vorher eine Karte erstellt worden sein. Dies geschieht durch das abfahren der Umgebung mithilfe eines Joysticks und ist laut Paper nicht sehr zeitaufwändig. Zudem muss die Karte nur einmal erstellt werden, weil der Algorithmus robust auf kleinere Änderungen in der Umgebung und bewegte Hindernisse wie Fußgänger reagiert.
-Ampeln an Fußgängerübergängen und andere sicherheitsrelevante stellen werden manuell in der Karte eingetragen. Der Roboter pausiert an den jeweiligen Stellen und wartet auf eine Freigabe durch den Nutzer.
-TODO Keine Interaktion mit der Ampel hervorheben
+Ampeln an Fußgängerübergängen und andere sicherheitsrelevante stellen werden manuell in der Karte eingetragen. Der Roboter pausiert an den jeweiligen Stellen und wartet auf eine Freigabe durch den Nutzer, weil diese Problemstellen von der Sensorik nicht ausreichend erkannt werden.
+
 ### The Autonomous City Explorer (2009)
 ![Abbildung Bauer](./images/bauer2.png)
 Bauer et al. zeigt in [The Autonomous City Explorer: Towards Natural Human-Robot Interaction in Urban Environments](http://link.springer.com/10.1007/s12369-009-0011-9) einen Roboter, der ohne die Hilfe von GPS oder einer vorher erstellten Karte in urbanen Umgebungen navigieren kann. Dabei achtet er auf Passanten und seine unmittelbare Umgebung.
@@ -149,9 +152,9 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 * Radencoder
 * 2x LIDAR (SICK LMS200)
 * Stereoskopische Kamera auf Zweiachsgimbal (Point Grey Research Bumblebee XB3)
-* 3 PCs für Navigation, Vision Processing und Antriebsansteuerung
-TODO Drei vollwertige PCs (Welche leistung? 2009)
-Die Softwarearchitektur wird in folgendem Bild veranschaulicht.
+* 3 PCs, je einer für Navigation (4x2.2GHz), Vision Processing (4x2.2GHz) und Antriebsansteuerung (PowerPC)
+
+Die Softwarearchitektur wird im folgenden Bild veranschaulicht.
 
 ![Architektur Bauer](./images/bauer.png)
 *Architektur des Autonomous City Explorer*
@@ -163,7 +166,7 @@ Zur Positionsbestimmung, Kartografierung und Hindernisvermeidung sind die folgen
 * Omnidirektionale Kamera (360° schwenkbar)
 * 24x Sonar für Hinderniserkennung und Mapping
 * Zusätzlich LIDAR (SICK S300, scheinbar nur für TÜV Zulassung, würde wohl auch ohne funktionieren)
-
+Als Bordcomputer kommt ein Embedded PC mit einem Intel Core 2 Duo Prozessor zum Einsatz.
 Zum erstellen der Karte muss das komplette Gebiet mittels Joystick manuell abgefahren werden.
 Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB8il81kmI) angesehen werden.
 
