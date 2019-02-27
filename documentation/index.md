@@ -160,8 +160,8 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 Die Softwarearchitektur wird im folgenden Bild veranschaulicht.
 
 ![Architektur Bauer](./images/bauer.png)
-*Architektur des Autonomous City Explorer*
-TODO Kommunikation selbst gelöst? kein ROS?
+*Architektur des Autonomous City Explorer. Diese scheint selbst implementiert zu sein, ROS wird im Paper nicht erwähnt*
+
 ### TOOMAS (2009)
 ![Toomas](./images/toomas.png)
 
