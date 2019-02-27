@@ -1,31 +1,35 @@
 Scoomatic
 =========
-Ein Inhaltsverzeichnis müsste manuell generiert werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich die struktur nicht mehr viel ändert.
+Ein Inhaltsverzeichnis müsste manuell erstellt werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich an der Struktur nicht mehr viel ändert.
 
 # Einleitung
 Eine große Herausforderung im öffentlichen Personennahverkehr ist das Zurücklegen der sogenannten _letzten Meile_. Um von der nächsten Haltestelle von Bahn, S-Bahn und Bus zum eigentlichen Ziel zu kommen, sind oft noch mehr als ein Kilometer strecke zurückzulegen. Einige Unternehmen versuchen diese letzte Teiletappe mit Leihfahrrädern zu überbrücken. Diese Räder müssen allerdings später wieder vom Reisenden zu Sammelstationen zurückgebracht werden. Oft werden sie jedoch im Weg stehen gelassen wodurch sie bei vielen Menschen als störend angesehen werden. Diese Seminararbeit soll sich mit einem Lösungsansatz für dieses Problem beschäftigen. Nachfolgend werden Anforderungen für einen Prototypenaufbau präsentiert, der die oben genannten Probleme lösen kann. Anschließend werden verwandte Arbeiten vorgestellt und zwei Bauvorschläge für jeweils einen Prototypen gegeben.
 # Aufgabenstellung
 Im folgenden Abschnitt wird das Projekt im Detail vorgestellt und die Anforderungen an den Prototypen festgehalten.
 ## Vorstellung des Projekts
-Im Rahmen des Scoomatic-Projects soll ein Elektrofahrzeug entwickelt werden, das in der Lage ist, eine Person die letzte Meile zum Zielort zu transportieren. Die aktuell in einigen Städten verwendete Lösung mit Leihfahrrädern hat den Nachteil, dass die Räder oft am falschen Ort stehen. Diese Problematik soll dadurch gelöst werden, dass die Fahrzeuge autonom zurück zur nächsten Sammelstation fahren können oder die Sammelstation wechseln können, um somit zu Stoßzeiten genug Fahrzeuge am richtigen Ort zu haben.
+Im Rahmen des Scoomatic-Projects soll ein Elektrofahrzeug entwickelt werden, das in der Lage ist, eine Person die letzte Meile zum Zielort zu transportieren. Die aktuell in einigen Städten verwendete Lösung mit Leihfahrrädern hat den Nachteil, dass die Räder oft am falschen Ort stehen. Diese Problematik soll dadurch gelöst werden, dass die Fahrzeuge autonom zurück zur nächsten Sammelstation fahren können oder die Sammelstation wechseln können, um somit zu Stoßzeiten genug Fahrzeuge am richtigen Ort zu haben. Ebenso ist das Anfordern eines Fahrzeugs vergleichbar mit dem Rufen eines Taxis denkbar. Für dieses Projekt wird ein Fahrzeug benötigt, dass in einer urbanen Umgebung selbstständig selbstständig zu navigieren und eine Person zu befördern. Da diese Aufgabenstellung nicht trivial ist, soll in mehreren Iterationen ein Prototyp entwickelt werden, der stückweise um Funktionalitäten erweitert wird. Die Anforderungen an die erste Iteration des Prototypen werden nachfolgend dargestellt.
 
 
-## Requirements Anforderungen an den Prototypen
+## Anforderungen an den Prototypen
 
+Die anforderungen des ersten Prototypen sind nah am gewünschten Endprodukt gehalten, jedoch wurde auf einige Features verzichtet, um schnell ein erstes Resultat zu erhalten. Die erste Iteration des Prototypen soll eine flexible Plattform zur Evaluation von Sensorik und Aktuatorik darstellen. Die Reichweite sollte in der Größenordnung 10-20km liegen. Dabei sollte die Antriebsart schon nahe am Endprodukt liegen. Kleinere Unebenheiten im Untergrund wie Kopfsteinpflaster und abgesenkte Bordsteine sollen von der Plattform bewältigt werden können. Bei der Auswahl der Hardware ist darauf zu achten, dass die kosten niedrig gehalten und die Konstruktion (in leicht abgewandelter Form) später leicht in größeren Stückzahlen gefertigt werden können. Für die autonome Navigation darf keine genaue Karte des nahen Umfelds (Bürgersteig) vorausgesetzt werden, öffentlich zugängliche Kartendaten dürfen aber genutzt werden. Im autonomen Betrieb muss die Plattform nicht schneller als Schrittgeschwindigkeit fahren können.
+"Nice-to-have" wären die Fähigkeit eine Person schon im ersten Prototypen zu transportieren, CAD-Dateien für eine spätere Simulation und eine ansprechende und professionelle Optik des Aufbaus.
+
+<!--
 * letzte Meile, für 10-20km Reichweite nutzbar
-* evaluation menschentransport notwendig für 1. Prototypen?
-* Selbstständige Navigation im urbanen Umfeld
-* Coolnes-Faktor
-* CAD-Files für Simulation
+* hardware für Selbstständige Navigation im urbanen Umfeld (exkl. vision f. ampel, etc.)
+* Antriebstechnisch nah an Endprodukt
 * Bordstein/Kopfsteinpflasterfähig
 * niedrige kosten weil später massenprodukt
 * möglichst leicht auf massenfertigbares produkt umsetzbar (problem ros)
-* Antriebstechnisch nah an Endprodukt
 * Keine genaue Karte des Bürgersteigs vorhanden (im Vorraus)
-* navigation im Fußgängerbereich
 * im autonomen modus nur Schrittgeschwindigkeit
 
-
+nice to have:
+* evaluation menschentransport notwendig für 1. Prototypen?
+* CAD-Files für Simulation
+* Coolnes-Faktor
+-->
 # Related Work
 Dieses Kapitel widmet sich der Vorstellung verwandter Arbeiten. Es werden dabei hauptsächlich verwandte Felder wie autonome Navigation in Fahrzeugen, Rollstühlen,und Staubsaugerrobotern betrachtet. Für jede Arbeit wird, sofern möglich, ein Überblick über Hardware, Software und deren Architektur und Schnittstellen sowie geplante Future Work gegeben.
 
