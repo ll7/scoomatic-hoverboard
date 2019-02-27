@@ -83,11 +83,11 @@ https://sci-hub.tw/10.1002/rob.20386
 https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386
 TODO
 ## Autonome Navigation im Fußgängerbereich
-TODO: Jahr der Paper
 TODO: Rechenleistung für Kaufempfehlung Rechner
 Die autonome Navigation von Fahrzeugen im Fußgängerbereich ist Thema einiger wissenschaftlicher Arbeiten, allerdings auch von kommerziellen Produkten. Hier werden nicht nur Lösungen für den Transport von Menschen, wie z.B. mit selbstfahrenden Rollstühlen, sondern auch autonome Transportfahrzeuge und Serviceroboter betrachtet. Auch die nur im weiteren Sinne im "Fußgängerbereich" navigierenden Staubsaugerroboter werden aufgrund der Parallelen in Navigation und Pfadplanung kurz betrachtet.
 
-### Smart Wheelchair System
+### Smart Wheelchair System (2017)
+![Abbildung SWS](./images/schweisinger.png)
 Das [Smart wheelchair ecosystem for autonomous navigation in urban environments](https://link.springer.com/article/10.1007/s10514-016-9549-1) (SWS) ist ein autonom navigierender Elektrorollstuhl, welcher nur durch einige LIDARs und Odometrie und ohne die Hilfe von GPS mittels einer vorher erzeugten Karte von *Landmarks* selbstständig Routen abfahren kann. Auf dem Fahrzeug sind folgende Sensoren verbaut:
 * 2x IFM O3D200 3D Kamera
 * Hokuyo UTM-30LX 2D LIDAR
@@ -100,7 +100,7 @@ Diese Lösung ist für das Scoomatic-Projekt zu kostspielig. Allerdings könnte 
 Ebenso ist eine Kartografierung des gesamten Einsatzgebietes im voraus nicht praktikabel.
 
 
-### Autonomous Wheelchair Navigation in Unmapped Indoor Environments
+### Autonomous Wheelchair Navigation in Unmapped Indoor Environments (2018)
 
 In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden zwei Kameras (Logitech c310, Ausdom AW615) und ein LIDAR (LIDAR-Lite v3 (ca. 30€)) auf einem 2-Achs-Gimbal benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
 TODO welche Reichweite
@@ -117,7 +117,8 @@ Die Gesamtkosten für das System betragen ca. 1000€ und der Stromverbrauch lie
 * 100W, 1000€, keine externe Hardware (GPS)
 -->
 
-### Template-based autonomous navigation in urban environments
+### Template-based autonomous navigation in urban environments (2011)
+![Abbildung Sozua](./images/sozua.png)
 Sozua et al. beschreiben in [Template-based autonomous navigation in urban environments](http://portal.acm.org/citation.cfm?doid=1982185.1982485) eine Methode zur Navigation auf Fahrbahnen. Der kamerabasierte Ansatz nutzt eine einzige, nach vorne gerichtete Graustufenkamera mit einer Auflösung von 320x240 Pixeln um ein Neuronales Netz zu speisen. Dieses Generiert daraus eine Matrix, welche das Bild in *Straße* und *Keine  Straße* unterteilt. Anschließend wird ein *Template Matching Verfahren* genutzt, um Position und Orientierung der Fahrbahn zu bestimmen.
 Ein klarer Vorteil dieser Methodik ist, dass nur verhältnismäßig günstige Kameras benötigt werden. Allerdings ist über dieses Verfahren auch nur eine Art *Spurhalteassistent* und keine Lokalisierung oder Hindernisvermeidung möglich.
 Als Future Work ist die Integration von LIDAR-Daten in dieses Verfahren geplant.
@@ -128,7 +129,8 @@ Als Future Work ist die Integration von LIDAR-Daten in dieses Verfahren geplant.
 -->
 
 
-### A Navigation System for Robots Operating in Crowded Urban Environments
+### A Navigation System for Robots Operating in Crowded Urban Environments (2013)
+![Abbildung Kümmerle](./images/kuemmerle.png)
 Die [Arbeit von Kümmerle et al.](http://ieeexplore.ieee.org/document/6631026/) beschreibt einen Assistenzroboter, der es schafft, sich in einer urbanen Umgebung zurechtzufinden und darin autonom zu Navigieren.
 Für den Antrieb werden zwei einzeln angetriebene Räder und ein schwenkbares Stützrad genutzt, was das Wenden auf der Stelle erlaubt.
 Für Mapping und Positionsbestimmung sind die folgenden Sensoren verbaut:
@@ -139,7 +141,8 @@ Für Mapping und Positionsbestimmung sind die folgenden Sensoren verbaut:
 Um in einem Gebiet autonom navigieren zu können, muss von diesem vorher eine Karte erstellt worden sein. Dies geschieht durch das abfahren der Umgebung mithilfe eines Joysticks und ist laut Paper nicht sehr zeitaufwändig. Zudem muss die Karte nur einmal erstellt werden, weil der Algorithmus robust auf kleinere Änderungen in der Umgebung und bewegte Hindernisse wie Fußgänger reagiert.
 Ampeln an Fußgängerübergängen und andere sicherheitsrelevante stellen werden manuell in der Karte eingetragen. Der Roboter pausiert an den jeweiligen Stellen und wartet auf eine Freigabe durch den Nutzer.
 TODO Keine Interaktion mit der Ampel hervorheben
-### The Autonomous City Explorer
+### The Autonomous City Explorer (2009)
+![Abbildung Bauer](./images/bauer2.png)
 Bauer et al. zeigt in [The Autonomous City Explorer: Towards Natural Human-Robot Interaction in Urban Environments](http://link.springer.com/10.1007/s12369-009-0011-9) einen Roboter, der ohne die Hilfe von GPS oder einer vorher erstellten Karte in urbanen Umgebungen navigieren kann. Dabei achtet er auf Passanten und seine unmittelbare Umgebung.
 Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folgende Hardware:
 * Zwei einzeln angetrieben Räder und zwei schwenkbare Stützräder
@@ -153,7 +156,7 @@ Die Softwarearchitektur wird in folgendem Bild veranschaulicht.
 ![Architektur Bauer](./images/bauer.png)
 *Architektur des Autonomous City Explorer*
 TODO Kommunikation selbst gelöst? kein ROS?
-### TOOMAS
+### TOOMAS (2009)
 In [TOOMAS: Interactive Shopping Guide Robots in Everyday Use - Final Implementation and Experiences from Long-term Field Trials](http://ieeexplore.ieee.org/document/5354497/) präsentieren Gross et al. einen Einkaufsassistenzroboter, der Kunden in einem Baumarkt zu den gesuchten Artikeln führen soll. Die Eingabe des Suchbegriffs erfolgt über einen Touchscreen. Anschließend führt der Roboter den Kunden zu dem Regal, in dem der Artikel lagert. Der Antrieb ist auch hier über zwei einzeln Ansteuerbare Räder und ein Stützrad.
 Zur Positionsbestimmung, Kartografierung und Hindernisvermeidung sind die folgenden Sensoren verbaut:
 
