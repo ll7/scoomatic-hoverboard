@@ -367,6 +367,7 @@ Anschließend wurde mit einem [Arduino Uno](https://store.arduino.cc/arduino-uno
 
 ![Schaltungsaufbau](./images/hoverboard_stock_example_schematic.png)
 TODO Kabelfarben von Hoverboardstecker übernehmen
+TODO Welcher UART?
 
 Der Arduinocode für diesen Aufbau findet sich im Git-Repository unter */code/examples/hoverboard_stock_example/*
 
