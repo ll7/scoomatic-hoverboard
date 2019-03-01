@@ -438,7 +438,7 @@ Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labor
 
 Vor dem ersten Flashen des Mainboards muss die *Readout-Protection* (ROP) des GD32F103-Chips entfernt werden. Diese Verhindert das Auslesen der ursprünglichen Firmware des Boards, aber auch das Aufspielen neuer Software. Dieser Vorgang muss nur einmal durchgeführt werden und ist bei späteren Updates nicht mehr nötig.
 
-Das ROP aktiviert ist, lässt sich daran erkennen, dass beim Verbinden des Chips mit dem ST-Link Utillity die folgende Fehlermeldung erscheint:
+Das ROP aktiviert ist, lässt sich daran erkennen, dass beim Verbinden des Chips mit dem [ST-Link Utillity](https://my.st.com/content/my_st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-programmers/stsw-link004.license=1551375221605.product=STSW-LINK004.version=4.4.0.html) die folgende Fehlermeldung erscheint:
 
 ![Read out protection entfernen](./images/read-out-protection1.png)
 
