@@ -1,18 +1,18 @@
 Scoomatic
 =========
-Ein Inhaltsverzeichnis müsste manuell erstellt werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich an der Struktur nicht mehr viel ändert.
+TODO Ein Inhaltsverzeichnis müsste manuell erstellt werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich an der Struktur nicht mehr viel ändert.
 
 # Einleitung
-Eine große Herausforderung im öffentlichen Personennahverkehr ist das Zurücklegen der sogenannten _letzten Meile_. Um von der nächsten Haltestelle von Bahn, S-Bahn und Bus zum eigentlichen Ziel zu kommen, sind oft noch mehr als ein Kilometer strecke zurückzulegen. Einige Unternehmen versuchen diese letzte Teiletappe mit Leihfahrrädern zu überbrücken. Diese Räder müssen allerdings später wieder vom Reisenden zu Sammelstationen zurückgebracht werden. Oft werden sie jedoch im Weg stehen gelassen wodurch sie bei vielen Menschen als störend angesehen werden. Diese Seminararbeit soll sich mit einem Lösungsansatz für dieses Problem beschäftigen. Nachfolgend werden Anforderungen für einen Prototypenaufbau präsentiert, der die oben genannten Probleme lösen kann. Anschließend werden verwandte Arbeiten vorgestellt und zwei Bauvorschläge für jeweils einen Prototypen gegeben.
+Eine große Herausforderung im öffentlichen Personennahverkehr ist das Zurücklegen der sogenannten _letzten Meile_. Um von der nächsten Haltestelle von Bahn, S-Bahn und Bus zum eigentlichen Ziel zu kommen, sind oft noch eine Strecke von mehr als einem Kilometer zurückzulegen. Einige Unternehmen versuchen, diese letzte Teiletappe mit Leihfahrrädern zu überbrücken. Diese Räder müssen allerdings später wieder vom Reisenden zu Sammelstationen zurückgebracht werden. Oft werden sie jedoch im Weg stehen gelassen wodurch sie bei vielen Menschen als störend angesehen werden. Diese Seminararbeit soll sich mit einem Lösungsansatz für dieses Problem beschäftigen. Nachfolgend werden Anforderungen für einen Prototypenaufbau präsentiert, der die oben genannten Probleme lösen kann. Anschließend werden verwandte Arbeiten vorgestellt und zwei Bauvorschläge für jeweils einen Prototypen gegeben.
 # Aufgabenstellung
 Im folgenden Abschnitt wird das Projekt im Detail vorgestellt und die Anforderungen an den Prototypen festgehalten.
 ## Vorstellung des Projekts
-Im Rahmen des Scoomatic-Projects soll ein Elektrofahrzeug entwickelt werden, das in der Lage ist, eine Person die letzte Meile zum Zielort zu transportieren. Die aktuell in einigen Städten verwendete Lösung mit Leihfahrrädern hat den Nachteil, dass die Räder oft am falschen Ort stehen. Diese Problematik soll dadurch gelöst werden, dass die Fahrzeuge autonom zurück zur nächsten Sammelstation fahren können oder die Sammelstation wechseln können, um somit zu Stoßzeiten genug Fahrzeuge am richtigen Ort zu haben. Ebenso ist das Anfordern eines Fahrzeugs vergleichbar mit dem Rufen eines Taxis denkbar. Für dieses Projekt wird ein Fahrzeug benötigt, dass in einer urbanen Umgebung selbstständig selbstständig zu navigieren und eine Person zu befördern. Da diese Aufgabenstellung nicht trivial ist, soll in mehreren Iterationen ein Prototyp entwickelt werden, der stückweise um Funktionalitäten erweitert wird. Die Anforderungen an die erste Iteration des Prototypen werden nachfolgend dargestellt.
+Im Rahmen des Scoomatic-Projects soll ein Elektrofahrzeug entwickelt werden, das in der Lage ist, eine Person die letzte Meile zum Zielort zu transportieren. Die aktuell in einigen Städten verwendete Lösung mit Leihfahrrädern hat den Nachteil, dass die Räder oft am falschen Ort stehen. Diese Problematik soll dadurch gelöst werden, dass die Fahrzeuge autonom zurück zur nächsten Sammelstation fahren können oder die Sammelstation wechseln können, um somit zu Stoßzeiten genug Fahrzeuge am richtigen Ort zu haben. Ebenso ist das Anfordern eines Fahrzeugs vergleichbar mit dem Rufen eines Taxis denkbar. Für dieses Projekt wird ein Fahrzeug benötigt, dass in einer urbanen Umgebung selbstständig zu navigieren und eine Person zu befördern. Da diese Aufgabenstellung nicht trivial ist, soll in mehreren Iterationen ein Prototyp entwickelt werden, der stückweise um Funktionalitäten erweitert wird. Die Anforderungen an die erste Iteration des Prototypen werden nachfolgend dargestellt.
 
 
 ## Anforderungen an den Prototypen
 
-Die Anforderungen des ersten Prototypen sind nah am gewünschten Endprodukt gehalten, jedoch wurde auf einige Features verzichtet, um schnell ein erstes Resultat zu erhalten. Die erste Iteration des Prototypen soll eine flexible Plattform zur Evaluation von Sensorik und Aktuatorik darstellen. Die Reichweite sollte in der Größenordnung 10-20km liegen. Dabei sollte die Antriebsart schon nahe am Endprodukt liegen. Kleinere Unebenheiten im Untergrund wie Kopfsteinpflaster und abgesenkte Bordsteine sollen von der Plattform bewältigt werden können. Bei der Auswahl der Hardware ist darauf zu achten, dass die kosten niedrig gehalten und die Konstruktion (in leicht abgewandelter Form) später leicht in größeren Stückzahlen gefertigt werden können. Für die autonome Navigation darf keine genaue Karte des nahen Umfelds (Bürgersteig) vorausgesetzt werden, öffentlich zugängliche Kartendaten dürfen aber genutzt werden. Im autonomen Betrieb muss die Plattform nicht schneller als Schrittgeschwindigkeit fahren können.
+Die Anforderungen des ersten Prototypen sind nah am gewünschten Endprodukt gehalten, jedoch wurde auf einige Features verzichtet, um schnell ein erstes Resultat zu erhalten. Die erste Iteration des Prototypen soll eine flexible Plattform zur Evaluation von Sensorik und Aktuatorik darstellen. Die Reichweite sollte in der Größenordnung 10-20km liegen. Dabei sollte die Antriebsart schon nahe am Endprodukt liegen. Kleinere Unebenheiten im Untergrund wie Kopfsteinpflaster und abgesenkte Bordsteine sollen von der Plattform bewältigt werden können. Bei der Auswahl der Hardware ist darauf zu achten, dass die Kosten niedrig gehalten und die Konstruktion (in leicht abgewandelter Form) später leicht in größeren Stückzahlen gefertigt werden kann. Für die autonome Navigation darf keine genaue Karte des nahen Umfelds (Bürgersteig) vorausgesetzt werden, öffentlich zugängliche Kartendaten dürfen aber genutzt werden. Im autonomen Betrieb muss die Plattform nicht schneller als Schrittgeschwindigkeit fahren können.
 "Nice-to-have" wären die Fähigkeit eine Person schon im ersten Prototypen zu transportieren, CAD-Dateien für eine spätere Simulation und eine ansprechende und professionelle Optik des Aufbaus.
 
 <!--
@@ -37,12 +37,12 @@ Dieses Kapitel widmet sich der Vorstellung verwandter Arbeiten. Es werden dabei 
 
 ## Autonome Navigation in Kraftfahrzeugen
 
-Auf den ersten Blick scheinen autonom navigierende Autos sehr viel mit dem hier vorliegenden Problem gemeinsam zu haben. Sie navigieren in einer sich ständig verändernden, nicht genau kartografierten Umgebung und müssen auf andere Verkehrsteilnehmer Rücksicht nehmen. Allerdings fahren Autos die meiste Zeit deutlich schneller als die für das Scoomatic-Projekt geplante Schrittgeschwindigkeit. Außerdem unterscheidet sich die Umgebung, in der die jeweiligen Fahrzeuge navigieren und damit auch die auftretenden Hindernisse und Probleme.
-Nachfolgend wird ein Überblick über gefundene Informationen zu Fahrassistenzprogrammen und selbstfahrenden Fahrzeugen im Automobilbereich gegeben. Hierbei wird aufgrund mangelnder Publikationen und fehlender Offenheit nicht auf Kommerzielle Systeme von Automobilherstellern wie Tesla, Audi, Mercedes oder von Dienstleistern wie Uber eingegangen. Sondern die beiden Open-Source Frameworks Autoware und Apollo und apex.ai betrachtet.
+Auf den ersten Blick scheinen autonom navigierende Autos sehr viel mit dem hier vorliegenden Problem gemeinsam zu haben. Sie navigieren in einer sich ständig verändernden, oftmals von gespeicherten Kartendaten abweichenden Umgebung und müssen auf andere Verkehrsteilnehmer Rücksicht nehmen. Allerdings fahren Autos die meiste Zeit deutlich schneller als die für das Scoomatic-Projekt geplante Schrittgeschwindigkeit. Außerdem unterscheidet sich die Umgebung, in der die jeweiligen Fahrzeuge navigieren und damit auch die auftretenden Hindernisse und Probleme.
+Nachfolgend wird ein Überblick über gefundene Informationen zu Fahrassistenzprogrammen und selbstfahrenden Fahrzeugen im Automobilbereich gegeben. Hierbei wird aufgrund mangelnder Publikationen und fehlender Offenheit nicht auf Kommerzielle Systeme von Automobilherstellern wie Tesla, Audi, Mercedes oder von Dienstleistern wie Uber eingegangen. Sondern die Open-Source Frameworks [Autoware](#autoware), [Apollo](#apollo) und [apex.ai](#apex.ai) betrachtet.
 
 
 ### Autoware
-Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ein ROS-Basiertes, modular aufgebautes Framework für selbstfahrende Fahrzeuge in urbanen Umgebungen. Es Bringt Module für Kartografierung und SLAM, sowie zur Fusion verschiedener Sensorwerte (GPS, Inertialsensoren, Kameras, LIDARs). Ebenso ist eine Pfadplanung und Regelung enthalten. Die erste Version ([Autoware.AI](https://www.autoware.ai/)) basiert auf ROS 1 und war als Forschungsplattform gedacht. Der ROS 2 Port [Autoware.auto](https://www.autoware.auto/) wurde mit Rücksicht auf eine gute Softwarearchitektur und "aufgeräumteren" Code komplett neu geschrieben und eignet sich aufgrund der Echtzeitkommunikationsfähigkeit von ROS 2 möglicherweise besser für den Produktiveinsatz. Allerdings ist Autoware.Auto nach der Aktuellen [Roadmap](https://autowareauto.gitlab.io/AutowareAuto/index.html#index-roadmap) noch nicht komplett implementiert. Allerdings sollen alle fehlenden Features noch im Jahr 2019 implementiert werden. Bis jetzt (Stand: Januar 2019) ist die Dokumentation des Projekts noch sehr unvollständig.
+Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ein ROS2-Basiertes, modular aufgebautes Framework für selbstfahrende Fahrzeuge in urbanen Umgebungen. Es Bringt Module für Kartografierung und SLAM, sowie zur Fusion verschiedener Sensorwerte (GPS, Inertialsensoren, Kameras, LIDARs). Ebenso ist eine Pfadplanung und Regelung enthalten. Die erste Version ([Autoware.AI](https://www.autoware.ai/)) basiert auf ROS 1 und war als Forschungsplattform gedacht. Der ROS 2 Port [Autoware.auto](https://www.autoware.auto/) wurde mit Rücksicht auf eine gute Softwarearchitektur und "aufgeräumteren" Code komplett neu geschrieben und eignet sich aufgrund der Echtzeitkommunikationsfähigkeit von ROS 2 möglicherweise besser für den Produktiveinsatz. Allerdings ist Autoware.Auto nach der Aktuellen [Roadmap](https://autowareauto.gitlab.io/AutowareAuto/index.html#index-roadmap) noch nicht komplett implementiert. Allerdings sollen alle fehlenden Features noch im Jahr 2019 implementiert werden. Bis jetzt (Stand: Januar 2019) ist die Dokumentation des Projekts noch sehr unvollständig.
 
 <!--
 * Open Source
@@ -54,15 +54,15 @@ Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ei
 * Evtl Probleme mit späterer Zulassung (ROS + KNN)
 * Modulare EVA Architektur
 -->
-![Autoware Architektur](./images/autoware_overview.png)
+![Autoware Architektur](../images/autoware_overview.png)
 *Architektur von Autoware.AI: Modulares EVA- (Eingabe, Verarbeitung, Ausgabe) Muster. Die Sensordaten werden erfasst und fusioniert und eine Lokalisierung und Objekterkennung durchgeführt. Aufgrund dieser Daten werden Entscheidungen über das Fahrzeugverhalten getroffen, welche an die Missionsplanung weitergegeben werden. Diese steuert basierend darauf die Aktuatoren des Fahrzeugs an.*
 ### Apollo
-[Apollo](https://apollo.auto) ist ein ebenfalls quelloffenes Framework für die autonome Navigation von Fahrzeugen. Gestartet vom Chinesischen Konzern Baidu und unterstützt von vielen Industriepartnern wurde seit 2017 eine Soft- und Hardwareplattform entwickelt, die im aktuellen Stand ein autonomes Fahren im urbanen Umfeld erlauben soll. Im laufe des Jahres 2019 sind erste Versuche mit massenproduktionsreifen Fahrzeugen in abgesteckten Testgebieten geplant, welche bis 2021 zu marktreifen vollständig autonom navigierenden Fahrzeugen für Autobahn- und Stadtverkehr füren sollen.
+[Apollo](https://apollo.auto) ist ein ebenfalls quelloffenes Framework für die autonome Navigation von Fahrzeugen. Gestartet vom Chinesischen Konzern Baidu und unterstützt von vielen Industriepartnern wurde seit 2017 eine Soft- und Hardwareplattform entwickelt, die im aktuellen Stand ein autonomes Fahren im urbanen Umfeld erlauben soll. Im laufe des Jahres 2019 sind erste Versuche mit massenproduktionsreifen Fahrzeugen in abgesteckten Testgebieten geplant, welche bis 2021 zu marktreifen vollständig autonom navigierenden Fahrzeugen für Autobahn- und Stadtverkehr führen sollen.
 Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux mit selbst entwickeltem Echtzeitkernel läuft. Die [Architektur](https://github.com/ApolloAuto/apollo) scheint deutlich umfangreicher und komplexer zu sein, als die von Autoware, was sie für den Einsatz im Scoomatic Projekt ungeeignet, weil zu schwergewichtig, macht.
-![Apollo Architektur](./images/apollo.png)
+![Apollo Architektur](../images/apollo.png)
 *Architektur von Apollo. Im Vergleich zu Autoware gibt es hier einen "Guardian", der Programmfehler detektiert und abfängt. ([Quelle](https://cdn-images-1.medium.com/max/800/1*EePl_JroHY8YnRIVTWMjJA.png))*
 ### apex.ai
-
+TODO Ausformulieren
 * "Apex OS is a safe, secure and reliable software communication layer for self driving applications" Juan Pablo, Senior Software Engineer
 * Safety + Security tief in System verankert
 * Hardware- und Application agnostic
@@ -81,24 +81,27 @@ Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux m
 https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-does-the-invisible-critical-work-that-will-make-selfdriving-cars-possible.amp.html
 
 
+
+## Autonome Navigation im Fußgängerbereich
+Die autonome Navigation von Fahrzeugen im Fußgängerbereich ist Thema einiger wissenschaftlicher Arbeiten, allerdings auch von kommerziellen Produkten. Hier werden nicht nur Lösungen für den Transport von Menschen, wie z.B. mit selbstfahrenden Rollstühlen, sondern auch autonome Transportfahrzeuge und Serviceroboter betrachtet. Auch die nur im weiteren Sinne im "Fußgängerbereich" navigierenden Staubsaugerroboter werden aufgrund der Parallelen in Navigation und Pfadplanung kurz betrachtet.
+
 ### Autonomous Campus Mobility Platform (2018)
 https://digitalcommons.wpi.edu/mqp-all/3121/
-
+TODO
 ### Autonomous navigation for mobile service robots in urban pedestrian environments (2011)
 https://sci-hub.tw/10.1002/rob.20386
 https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386
 TODO
-## Autonome Navigation im Fußgängerbereich
-Die autonome Navigation von Fahrzeugen im Fußgängerbereich ist Thema einiger wissenschaftlicher Arbeiten, allerdings auch von kommerziellen Produkten. Hier werden nicht nur Lösungen für den Transport von Menschen, wie z.B. mit selbstfahrenden Rollstühlen, sondern auch autonome Transportfahrzeuge und Serviceroboter betrachtet. Auch die nur im weiteren Sinne im "Fußgängerbereich" navigierenden Staubsaugerroboter werden aufgrund der Parallelen in Navigation und Pfadplanung kurz betrachtet.
 
 ### Smart Wheelchair System (2017)
-![Abbildung SWS](./images/schwesinger.png)
+![Abbildung SWS](../images/schwesinger.png)
 
 Das [Smart wheelchair ecosystem for autonomous navigation in urban environments](https://link.springer.com/article/10.1007/s10514-016-9549-1) (SWS) ist ein autonom navigierender Elektrorollstuhl, welcher nur durch einige LIDARs und Odometrie und ohne die Hilfe von GPS mittels einer vorher erzeugten Karte von *Landmarks* selbstständig Routen abfahren kann. Auf dem Fahrzeug sind folgende Sensoren verbaut:
 * 2x IFM O3D200 3D Kamera
 * Hokuyo UTM-30LX 2D LIDAR
 * Radencoder
 * Microstrain 3DM-GX1 IMU
+
 Zur Verarbeitung der Sensordaten kommt ein Laptop mit einem Intel Core i7-2760QM 2.4GHZ Prozessor und 4GB Arbeitsspeicher zum Einsatz.
 Die im voraus generierte Karte wird durch ein Kartenmobil mit mehr Sensorik (IMU, GPS, Radencoder, 3 LIDARs) erstellt. Die detaillierten Sensorwerte werden auf eine vereinfachte Karte aus Landmarks zusammengeführt. Ein Landmark kann hierbei z.B. ein Straßenschild oder ein Hydrant sein.
 Die Software für das SWS basiert auf ROS und nutzt die Point Cloud Library (PCL) für die Verarbeitung der LIDAR-Werte. Die Gesamtkosten für die Hardware des Rollstuhls belaufen sich laut Paper auf weniger als 10000 USD.
@@ -109,7 +112,7 @@ Ebenso ist eine Kartografierung des gesamten Einsatzgebietes im voraus nicht pra
 
 In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden eine Kamera (Logitech c310) und ein LIDAR (LIDAR-Lite v3 (ca. 30€, Reichweite 5cm bis 40m)) benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
 Eine der beiden Kameras und der LIDAR-Lite sind auf einem 2-Achs-Gimbal montiert.
-![Hardware Grewal](./images/grewal.png)
+![Hardware Grewal](../images/grewal.png)
 *Hardwareaufbau des Autonomous Wheelchairs*
 
 Als Software kommt auch hier ROS zum Einsatz. Sie wird auf einem Dell Inpsiron TM15R 5537 mit einem Core i5 4200U mit 8GB DDR3 RAM ausgeführt. Die Kamera wird wiederholt geschwenkt und mehrere Bilder der Umgebung aufgenommen. Diese werden mittels *computer vision software* verarbeitet um mögliche Ziele (Im vorgestellten Anwendungsfall ein Geschäft) zu lokalisieren. Wurde ein Ziel erkannt, wird über den LIDAR Lite die Distanz zu diesem ermittelt. Potenzielle Ziele werden an das Navigationsmodul gesendet. Der Nutzer kann diese anschließend auswählen und anfahren. Der 2D-Lidar Dient zur Erstellung einer Karte für die Navigation.
@@ -120,7 +123,7 @@ Die Gesamtkosten für das System betragen ca. 1000€ und der Stromverbrauch lie
 -->
 
 ### Template-based autonomous navigation in urban environments (2011)
-![Abbildung Sozua](./images/sozua.png)
+![Abbildung Sozua](../images/sozua.png)
 
 Sozua et al. beschreiben in [Template-based autonomous navigation in urban environments](http://portal.acm.org/citation.cfm?doid=1982185.1982485) eine Methode zur Navigation auf Fahrbahnen. Der kamerabasierte Ansatz nutzt eine einzige, nach vorne gerichtete Graustufenkamera mit einer Auflösung von 320x240 Pixeln um ein Neuronales Netz zu speisen. Dieses Generiert daraus eine Matrix, welche das Bild in *Straße* und *Keine  Straße* unterteilt. Anschließend wird ein *Template Matching Verfahren* genutzt, um Position und Orientierung der Fahrbahn zu bestimmen.
 Ein klarer Vorteil dieser Methodik ist, dass nur verhältnismäßig günstige Kameras benötigt werden. Allerdings ist über dieses Verfahren auch nur eine Art *Spurhalteassistent* und keine Lokalisierung oder Hindernisvermeidung möglich.
@@ -133,7 +136,7 @@ Als Future Work ist die Integration von LIDAR-Daten in dieses Verfahren geplant.
 
 
 ### A Navigation System for Robots Operating in Crowded Urban Environments (2013)
-![Abbildung Kümmerle](./images/kuemmerle.png)
+![Abbildung Kümmerle](../images/kuemmerle.png)
 
 Die [Arbeit von Kümmerle et al.](http://ieeexplore.ieee.org/document/6631026/) beschreibt einen Assistenzroboter, der es schafft, sich in einer urbanen Umgebung zurechtzufinden und darin autonom zu Navigieren.
 Für den Antrieb werden zwei einzeln angetriebene Räder und ein schwenkbares Stützrad genutzt, was das Wenden auf der Stelle erlaubt.
@@ -147,7 +150,7 @@ Um in einem Gebiet autonom navigieren zu können, muss von diesem vorher eine Ka
 Ampeln an Fußgängerübergängen und andere sicherheitsrelevante stellen werden manuell in der Karte eingetragen. Der Roboter pausiert an den jeweiligen Stellen und wartet auf eine Freigabe durch den Nutzer, weil diese Problemstellen von der Sensorik nicht ausreichend erkannt werden.
 
 ### The Autonomous City Explorer (2009)
-![Abbildung Bauer](./images/bauer2.png)
+![Abbildung Bauer](../images/bauer2.png)
 
 Bauer et al. zeigt in [The Autonomous City Explorer: Towards Natural Human-Robot Interaction in Urban Environments](http://link.springer.com/10.1007/s12369-009-0011-9) einen Roboter, der ohne die Hilfe von GPS oder einer vorher erstellten Karte in urbanen Umgebungen navigieren kann. Dabei achtet er auf Passanten und seine unmittelbare Umgebung.
 Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folgende Hardware:
@@ -159,11 +162,11 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 
 Die Softwarearchitektur wird im folgenden Bild veranschaulicht.
 
-![Architektur Bauer](./images/bauer.png)
+![Architektur Bauer](../images/bauer.png)
 *Architektur des Autonomous City Explorer. Diese scheint selbst implementiert zu sein, ROS wird im Paper nicht erwähnt*
 
 ### TOOMAS (2009)
-![Toomas](./images/toomas.png)
+![Toomas](../images/toomas.png)
 
 In [TOOMAS: Interactive Shopping Guide Robots in Everyday Use - Final Implementation and Experiences from Long-term Field Trials](http://ieeexplore.ieee.org/document/5354497/) präsentieren Gross et al. einen Einkaufsassistenzroboter, der Kunden in einem Baumarkt zu den gesuchten Artikeln führen soll. Die Eingabe des Suchbegriffs erfolgt über einen Touchscreen. Anschließend führt der Roboter den Kunden zu dem Regal, in dem der Artikel lagert. Der Antrieb ist auch hier über zwei einzeln Ansteuerbare Räder und ein Stützrad.
 Zur Positionsbestimmung, Kartografierung und Hindernisvermeidung sind die folgenden Sensoren verbaut:
@@ -177,11 +180,12 @@ Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB
 
 
 ### Starship Technologies
-
+TODO Bild
 [Starship Technologies](Starship.xyz) bietet eine kommerzielle Lösung zur Auslieferung von Waren an den Endkunden auf der letzten Meile an. Die sechsrädrigen Transportroboter können eine Nutzlast von ca. 10kg Transportieren und werden z.B. von Essenslieferdiensten wie Doordash eingesetzt. Der Hersteller macht keine Angaben zur Sensorik, allerdings lassen die Bilder auf rundum verbaute Kameras (weitwinkel, stereoskopisch) und Sonarsensoren schließen. Die Räder sind durch eine spezielle Aufhängung in der Höhe verstellbar, was [das erklimmen nicht abgesenkter Bordsteine](https://youtu.be/UPZwnc_Lk2M?t=49) möglich macht.
 
 
 ### Marble
+TODO Bild
 [Marble](https://www.marble.io/) versucht ebenfalls eine Lösung für Produktlieferungen auf der letzten Meile zu bieten. Das kommerzielle Projekt macht keine Angaben zur verwendeten Hardware, allerdings lassen die veröffentlichen Bilder und Videos auf folgende Sensoren schließen:
 * 6 * [Intel Real Sense D415](https://click.intel.com/intelr-realsensetm-depth-camera-d415.html)
 * 4 * Weitwinkelkamera
@@ -190,12 +194,14 @@ Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB
 Die Fortbewegung erfolgt über 4 Gummiräder und eine Ackermannsteuerung
 
 ### Kiwi
+TODO Bild
 Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [Marble](#marble) bietet [Kiwi](https://www.kiwicampus.com/) Roboter für die Lieferung von Waren. Über die verwendete Sensorik ließ sich nichts herausfinden. Die Fortbewegung erfolgt hier wie beim Konkurrenten Marble über 4 Gummiräder und Ackermannsteuerung.
 Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes Trike, dass vier der kleinen Lieferroboter auf der Straße transportieren kann und einen Kellnerroboter, der Gäste in Restaurants bedienen soll.
 
 ### Kit CityBuddy
 * TODO
 ### Amazon Scout
+TODO Bild
 Über den Amazon [Scout](https://blog.aboutamazon.com/transportation/meet-scout) sind noch nicht sehr viele Informationen verfüghar, der allgemeine Aufbau ähnelt aber sehr Stark dem Roboter von [Starship Technologies](#starship-technologies).
 
 
@@ -216,7 +222,7 @@ Der große Nachteil dieser Plattformen ist der hohe Preis. Soll nicht nur Sensor
 > Hinweis: Die Angaben für diesen Abschnitt wurden hauptsächlich aus dem [robotshop](https://www.robotshop.com/de/de/rad-ketten-roboter.html) entnommen
 
 ### Segway Loomo
-![Loomo](./images/loomo.png)
+![Loomo](../images/loomo.png)
 Der [Segway Loomo](http://www.loomo.com/en/) ist ein selbst-balancierendes Elektrofahrzeug. Optisch ähnelt es den ursprünglichen Segway Modellen, allerdings wurde der Lenker verkürzt und die Lenkung erfolgt jetzt über seitliches Bewegen der Lenkstange zwischen den Knien.
 Der Loomo Unterscheidet sich von einem normalen Segway durch die Möglichkeit, ihn bei Bedarf in einen Begleitroboter umzufunktionieren. Um diese Funktion erfüllen zu können, ist eine Intel RealSense ZR300 Kamera, eine HD-Kamera, verschiedene Ultraschallsensoren, Encoder, eine IMU, Infrarot Abstandssensoren und Touchsensoren verbaut (Vgl. [Loomo Specs](http://www.loomo.com/en/spec.html)). Die Verarbeitung der Signale übernimmt ein Intel Atom Z8750 Prozessor, der Android in der Version 5.1 ausführt. Der Hersteller stellt Entwicklern eine [API](https://developer.segwayrobotics.com/developer/overview.html) zur Verfügung, mit der eigene Android-Apps mit der Hard- und Software des Loomo kommunizieren können. Als Schnittstellen zur Erweiterung bietet der Loomo USB, Bluetooth und WLAN. Der Kaufpreis im [Segway-Webshop](https://shop.segway.com/de-de/92/-segway-loomo) beträgt aktuell (29.1.2019) 1699€
 Für den Einsatz im Scoomatic-Projekt sprechen die relativ offenen Schnittstellen über das SDK sowie eine Erweiterbarkeit der Hardware über USB, Bluetooth und WiFi. Außerdem sehr nützlich ist die bereits verbaute Sensorik und ein fertig implementiertes Antriebskonzept.

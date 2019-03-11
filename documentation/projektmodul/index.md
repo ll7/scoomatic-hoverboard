@@ -12,7 +12,7 @@ Dokumentation Projektmodul
 #### Mainboard
 Das Mainboard unterscheidet sich sowohl in der Geometrie als auch vom Prozessor zu dem von [Fauth et al](https://www.youtube.com/watch?v=qnQSL9DBPaE&t=1788s) vorgestellten sowohl in der Boardgeometrie als auch im verwendeten Hauptprozessor. Statt des STM32F103 kommt ein [GD32F103](https://smdprutser.nl/blog/stm32f103-vs-gd32f103/) zum Einsatz, welcher dem STM zwar ähnelt, sich aber durch mehr Speicher und eine höhere Taktrate von ihm unterscheidet. Allerdings scheint die Firmware zwischen den beiden Chips und Boards kompatibel zu sein.
 
-![Bild Hoverboard Mainboard](./images/mainboard.jpg)
+![Bild Hoverboard Mainboard](../images/mainboard.jpg)
 
 Zu den auf dem Board verwendeten MOSFETs vom Typ HN75N09AP war kein Datenblatt auffindbar. Die technischen Daten, die aus einer [Produktbeschreibung](http://dalincom.ru/goods-10601.html) entnommen werden konnten sind nachfolgend aufgelistet:
 | Bezeichnung | Wert |
@@ -24,28 +24,28 @@ Zu den auf dem Board verwendeten MOSFETs vom Typ HN75N09AP war kein Datenblatt a
 
 #### Sensorboard
 
-![Bild Sensorboard](./images/sensorboard.jpg)
+![Bild Sensorboard](../images/sensorboard.jpg)
 
 Auf der linken und rechten Hälfte des Hoverboards befindet sich je ein *Sensorboard*. Dieses misst den Neigungswinkel der Boardseite und erkennt, ob eine Person auf dem Board steht.
 Auf dem Sensorboard befindet sich ein MindMotion [MM32F031 Datasheet](http://www.mindmotion.com.cn/userfiles/images/mm32f031wendangziliao/ds_mm32f031_ver2.0.pdf) Microcontroller, welcher ein Klon des  [STM032F031](https://www.st.com/resource/en/datasheet/stm32f031c4.pdf) zu sein scheint. Ebenso finden sich auf dem Board Steckverbinder für die LED-Beleuchtungs- und Anzeigemodule der jeweiligen Seite.
 Um zu erkennen, ob sich eine Person auf der jeweiligen Boardseite befindet, befinden sich je zwei Lichtschranken auf jedem Sensorboard. Diese werden unterbrochen, wenn eine Person auf das Hoverboard steigt und damit ein sich über den Lichtschranken befindendes Silikonteil in den Erkennungsbereich letzterer drückt. Es genügt dabei, eine der beiden Lichtschranken zu unterbrechen, um den Motor der jeweiligen Seite anzuschalten. Für Testzwecke kann im ausgebauten Zustand ein Stück Schrumpfschlauch über eine der Lichtschranken gezogen werden, um den Motor zu aktivieren.
 
-![Lichtschranke mit Schrumpfschlauch](./images/light_barrier.jpg)
+![Lichtschranke mit Schrumpfschlauch](../images/light_barrier.jpg)
 
 Die 14.4V Versorgungsspannung wird von Linearreglern auf 5V und 3.3V zur Versorgung der LEDs und Lichtschranken sowie der IMU und des Mikrocontrollers verwendet. Der Typ der IMU ließ sich nicht ermitteln.
 
 Nachfolgend ist die Pinbelegung des Verbindungssteckers zum Mainboard aufgezeichnet.
 Das Protokoll, über das das Sensorboard dem Mainboard die Motorgeschwindigkeit vorgibt, wird im Abschnitt [Ansteuerung der Motoren mit Originalfirmware](#ansteuerung-der-motoren-mit-originalfirmware) erklärt.
 
-![Pinout Sensorboard](./images/pinout-sensorboard.png)
+![Pinout Sensorboard](../images/pinout-sensorboard.png)
 #### Netzteil
 Das beim Hoverboard mitgelieferte Netzteil hat eine Spannung von 42V und liefert einen maximalen Strom von 2A. Der Stecker für die Verbindung zum Board ist vom Typ TODO
 Die Pinbelegung der *Buchse* ist nachfolgen dargestellt:
 
-![Pinbelegung Ladebuchse](./images/pinout-chargingport.png)
+![Pinbelegung Ladebuchse](../images/pinout-chargingport.png)
 #### Ansteuerung der Motoren mit Originalfirmware
 
-![Versuchsaufbau](./images/experiment-stock-fw.jpg)
+![Versuchsaufbau](../images/experiment-stock-fw.jpg)
 Zum Ansteuern der Motoren mit der originalen Mainboard-Firmware wurde die serielle Kommunikation zwischen Sensor- und Mainboard analysiert. Hierfür kam ein [Logic-Analyzer](https://eur.saleae.com/products/saleae-logic-8?variant=10963959349291) zum Einsatz. Das ermittelte Protokoll ähnelt dem [hier](http://drewspewsmuse.blogspot.com/2016/06/how-i-hacked-self-balancing-scooter.html) vorgestellten. Die folgenden Parameter konnten für die serielle Verbindung ermittelt werden.
 | Bezeichnung | Wert |
 | --- | --- |
@@ -75,7 +75,7 @@ Anschließend wurde mit einem [Arduino Uno](https://store.arduino.cc/arduino-uno
 
 > **Hinweis:** Bei dem hier gezeigten Versuch wurde nur der Motor einer Seite angesteuert. Wird jedoch ein weiteres Arduino-Board auf dem Seriellen Port der anderen Seite verwendet, sollten sich Problemlos beide Motoren gleichzeitig ansteuern lassen.
 
-![Schaltungsaufbau](./images/hoverboard_stock_example_schematic.png)
+![Schaltungsaufbau](../images/hoverboard_stock_example_schematic.png)
 TODO Kabelfarben von Hoverboardstecker übernehmen
 
 Der Arduinocode für diesen Aufbau findet sich im Git-Repository unter */code/examples/hoverboard_stock_example/*
@@ -135,11 +135,11 @@ Jetzt kann die Firmware durch Ausführen von make im Wurzelverzeichnis des Repos
 ##### Flashen des Boards
 Vor dem ersten Flashen muss auf dem Mainboard der Programmierheader installiert werden (s. Bild). Dafür müssen alle acht Schrauben der MOSFETs gelöst und der Header von hinten verlötet werden.
 
-![Programmierheader auf dem Mainboard](./images/mainboard-program-header.jpg)
+![Programmierheader auf dem Mainboard](../images/mainboard-program-header.jpg)
 
 Anschließend kann der ST-LinkV2 Programmieradapter an dem Header angeschlossen werden.
 
-![Verbindung mit STLink](./images/connection-mainboard-stlink.jpg)
+![Verbindung mit STLink](../images/connection-mainboard-stlink.jpg)
 
 Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labornetzgerät bei einer Spannung zwischen 36 und 42V verbunden und die beiden Pins des Anschalters am Board dauerhaft gebrückt. Anschließend wird der
 
@@ -150,21 +150,21 @@ Vor dem ersten Flashen des Mainboards muss die *Readout-Protection* (ROP) des GD
 
 Das ROP aktiviert ist, lässt sich daran erkennen, dass beim Verbinden des Chips mit dem ST-Link Utillity die folgende Fehlermeldung erscheint:
 
-![Read out protection entfernen](./images/read-out-protection1.png)
+![Read out protection entfernen](../images/read-out-protection1.png)
 
 Durch Auswählen von Target -> Option Bytes..
 
-![Read out protection entfernen](./images/read-out-protection2.png)
+![Read out protection entfernen](../images/read-out-protection2.png)
 
 öffnet sich ein Dialogfenster, in dem Read Out Protection auf Disabled gesetzt werden kann.
 
-![Read out protection entfernen](./images/read-out-protection3.png)
+![Read out protection entfernen](../images/read-out-protection3.png)
 
 Nach dem Bestätigen der Dialoge wird der gesamte Speicher des Chips mit 0xFF überschrieben. Anschließend kann über File/Open die vorher kompilierte Datei *hover.hex* aus dem */build* Verzeichnis des Firmwarerepositorys geöffnet und per *Target -> Program & Verify* auf das Board übertragen werden.
 
 Danach wird ein Arduino mit dem Beispielcode aus dem Verzeichnis */examples/serial_hoverboard* bespielt und die nachfolgende Beispielschaltung aufgebaut
 
-![Schaltungsaufbau](./images/serial_hoverboard_example_schematic.png)
+![Schaltungsaufbau](../images/serial_hoverboard_example_schematic.png)
 TODO Kabelfarben von Hoverboardstecker übernehmen
 
 Der Arduino liest, nachdem er mit einer Stromquelle verbunden wurde, periodisch die Analogwerte des Joysticks aus und sendet diese über den seriellen Port an das Hoverboard. Auf- und Abbewegen des Sticks lässt das Board dabei nach vorne und hinten fahren, bei Bewegungen nach links und rechts fährt das Board eine entsprechende Kurve.
