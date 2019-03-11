@@ -62,24 +62,15 @@ Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux m
 ![Apollo Architektur](../images/apollo.png)
 *Architektur von Apollo. Im Vergleich zu Autoware gibt es hier einen "Guardian", der Programmfehler detektiert und abfängt. ([Quelle](https://cdn-images-1.medium.com/max/800/1*EePl_JroHY8YnRIVTWMjJA.png))*
 ### apex.ai
-TODO Ausformulieren
-* "Apex OS is a safe, secure and reliable software communication layer for self driving applications" Juan Pablo, Senior Software Engineer
-* Safety + Security tief in System verankert
-* Hardware- und Application agnostic
-* Basiert auf ros2, erweitert um safety, security, echtzeit
+Das [apex.ai](apex.ai) Projekt gliedert sich in zwei Teilbereiche. Apex.OS und Apex.Autonomy. Juan Pablo, Senior Software Engineer bei Apex, beschreibt Apex.OS wie folgt:
+> Apex.OS is a safe, secure and reliable software communication layer for self driving applications
+>
+Bei dem Produkt handelt es sich um ein ROS2-Basiertes System, dass die Kommunikation in autonomen Fahrzeugen zum einen robust und fehlertolerant (safe), sowie sicher vor Angreifern (secure) machen soll. Die beiden Aspekte Safety und Security sind dabei von anfang an bedacht worden und tief im System verankert. Dabei ist das Framework nicht an spezielle Hardware gebunden. Sie kann auf beliebigen Computern oder ECUs ausgeführt werden.
 
-* Apex.autonomy
-* Applikationen für selbstfahrende Fahrzeug
-* 3D Perception Fertig, einige lidars schon getestet
-* Lokalisierung, Plannung und Steuerung für 2019 geplant
-* harte echtzeit, gute softwaretechnik (Dokumentierte interfaces, integration tests etc)
-* C++
-* x86_64 und amd64 Support, Linux, QNX, Windows, OSX
+Apex.Autonomy bündelt die eigentlichen Applikationen, die für selbstständiges Fahren notwendig sind in einem Paket. Die _3D Perception_-Software ist bereits vollständig, einige LIDAR Sensoren wurden schon in das System integriert und getestet. Die Implementierung der Lokalisierung, Pfadplanung und Steuerung des Fahrzeugs [ist für 2019 geplant](https://www.apex.ai/products1). Die Anwendungen unterstützen dabei harte Echtzeitkriterien und bei der Implementierung wird darauf geachtet, ein softwaretechnisch gutes System zu schaffen. So werden Interfaces definiert und dokumentiert und Integrationtests für den Großteil des Codes erstellt und durchgeführt. Die Anwendungen sind in C++ geschrieben und für 64-Bit Desktopprozessoren  unter Linux, [QNX](http://blackberry.qnx.com/), Windows und OSX geeignet.
 
-
-
-https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-does-the-invisible-critical-work-that-will-make-selfdriving-cars-possible.amp.html
-
+<!-- https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-does-the-invisible-critical-work-that-will-make-selfdriving-cars-possible.amp.html
+-->
 
 
 ## Autonome Navigation im Fußgängerbereich
@@ -180,28 +171,37 @@ Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB
 
 
 ### Starship Technologies
-TODO Bild
+![Produktbild Starship](../images/Starship.png)
+*Bild des Roboters von Starship Technologies ([Quelle](https://www.starship.xyz/kit/))*
+
 [Starship Technologies](Starship.xyz) bietet eine kommerzielle Lösung zur Auslieferung von Waren an den Endkunden auf der letzten Meile an. Die sechsrädrigen Transportroboter können eine Nutzlast von ca. 10kg Transportieren und werden z.B. von Essenslieferdiensten wie Doordash eingesetzt. Der Hersteller macht keine Angaben zur Sensorik, allerdings lassen die Bilder auf rundum verbaute Kameras (weitwinkel, stereoskopisch) und Sonarsensoren schließen. Die Räder sind durch eine spezielle Aufhängung in der Höhe verstellbar, was [das erklimmen nicht abgesenkter Bordsteine](https://youtu.be/UPZwnc_Lk2M?t=49) möglich macht.
 
 
 ### Marble
-TODO Bild
-[Marble](https://www.marble.io/) versucht ebenfalls eine Lösung für Produktlieferungen auf der letzten Meile zu bieten. Das kommerzielle Projekt macht keine Angaben zur verwendeten Hardware, allerdings lassen die veröffentlichen Bilder und Videos auf folgende Sensoren schließen:
+![Marble Roboter](../images/marble.jpg)
+*Produktbild Marble Lieferroboter([Quelle](http://www.govtech.com/fs/automation/Delivery-Bot-Company-Begins-Mapping-Texas-Sidewalks.html))*
+
+[Marble](https://www.marble.io/) versucht ebenfalls eine Lösung für Produktlieferungen auf der letzten Meile zu bieten. Die entwickelten Roboter sind bereits in Dallas, Texas im testbetrieb im Einsatz. Das kommerzielle Projekt macht keine Angaben zur verwendeten Hardware, allerdings lassen die veröffentlichen Bilder und Videos auf folgende Sensoren schließen:
 * 6 * [Intel Real Sense D415](https://click.intel.com/intelr-realsensetm-depth-camera-d415.html)
 * 4 * Weitwinkelkamera
 * LIDAR
 * GPS
 Die Fortbewegung erfolgt über 4 Gummiräder und eine Ackermannsteuerung
 
+
 ### Kiwi
-TODO Bild
+![Kiwi Roboter](../images/kiwi.png)
+*Produktbild Kiwi Lieferroboter([Quelle](https://www.notion.so/Assets-21b3fe2dff954bd8945f65bd76bb3ff5))*
+
 Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [Marble](#marble) bietet [Kiwi](https://www.kiwicampus.com/) Roboter für die Lieferung von Waren. Über die verwendete Sensorik ließ sich nichts herausfinden. Die Fortbewegung erfolgt hier wie beim Konkurrenten Marble über 4 Gummiräder und Ackermannsteuerung.
 Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes Trike, dass vier der kleinen Lieferroboter auf der Straße transportieren kann und einen Kellnerroboter, der Gäste in Restaurants bedienen soll.
 
 ### Kit CityBuddy
 * TODO
 ### Amazon Scout
-TODO Bild
+![Amazon Scout Roboter](../images/scout.jpg)
+*Produktbild Amazon Scout Lieferroboter([Quelle](https://blog.aboutamazon.com/transportation/meet-scout))*
+
 Über den Amazon [Scout](https://blog.aboutamazon.com/transportation/meet-scout) sind noch nicht sehr viele Informationen verfüghar, der allgemeine Aufbau ähnelt aber sehr Stark dem Roboter von [Starship Technologies](#starship-technologies).
 
 
@@ -210,7 +210,7 @@ Höherpreisige Staubsaugerroboter bieten die Möglichkeit, eine Karte von ihrer 
 ### Roborock S5
 Der [Roborock S5](https://en.roborock.com/pages/robot-vacuum-cleaner) ist mit einem oben am Gehäuse angebrachten LIDAR / LDS (Laser Distance Sensor) ausgestattet, was eine Kartografierung des zu reinigenden Gebiets ermöglicht. Die so erstellte Karte kann per App angesehen werden und darin der Fortschritt der Reinigung angezeigt und Befehle zum Reinigen von Teilflächen gegeben werden. Für die Hindernisvermeidung sind um den Roboter mehrere Ultraschallsensoren angebracht. Außerdem erkennt ein *Bumper* frontale Kollisionen mit Hindernissen.
 
-![Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)](images/roborock-app.png)
+![Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)](../images/roborock-app.png)
 *Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)*
 # Sinnvolle Hardwareelemente
 Im folgenden Kapitel wird eine Auswahl an Hardware vorgestellt und deren Eignung für das Projekt analysiert.
