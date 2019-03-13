@@ -1,5 +1,62 @@
 Scoomatic
 =========
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Einleitung](#einleitung)
+- [Aufgabenstellung](#aufgabenstellung)
+	- [Vorstellung des Projekts](#vorstellung-des-projekts)
+	- [Anforderungen an den Prototypen](#anforderungen-an-den-prototypen)
+- [Related Work](#related-work)
+	- [Autonome Navigation in Kraftfahrzeugen](#autonome-navigation-in-kraftfahrzeugen)
+		- [Autoware](#autoware)
+		- [Apollo](#apollo)
+		- [apex.ai](#apexai)
+	- [Autonom navigierende Forschungsplattformen](#autonom-navigierende-forschungsplattformen)
+		- [Ubiquity Robotics](#ubiquity-robotics)
+		- [Innok Heros](#innok-heros)
+	- [Autonome Navigation im Fußgängerbereich](#autonome-navigation-im-fugängerbereich)
+		- [Autonomous Campus Mobility Platform (2018)](#autonomous-campus-mobility-platform-2018)
+		- [Autonomous navigation for mobile service robots in urban pedestrian environments (2011)](#autonomous-navigation-for-mobile-service-robots-in-urban-pedestrian-environments-2011)
+		- [Smart Wheelchair System (2017)](#smart-wheelchair-system-2017)
+		- [Autonomous Wheelchair Navigation in Unmapped Indoor Environments (2018)](#autonomous-wheelchair-navigation-in-unmapped-indoor-environments-2018)
+		- [Template-based autonomous navigation in urban environments (2011)](#template-based-autonomous-navigation-in-urban-environments-2011)
+		- [A Navigation System for Robots Operating in Crowded Urban Environments (2013)](#a-navigation-system-for-robots-operating-in-crowded-urban-environments-2013)
+		- [The Autonomous City Explorer (2009)](#the-autonomous-city-explorer-2009)
+		- [TOOMAS (2009)](#toomas-2009)
+		- [Starship Technologies](#starship-technologies)
+		- [Marble](#marble)
+		- [Kiwi](#kiwi)
+		- [Nuro](#nuro)
+		- [Kit CityBuddy](#kit-citybuddy)
+		- [Amazon Scout](#amazon-scout)
+	- [Staubsaugerroboter](#staubsaugerroboter)
+		- [Roborock S5](#roborock-s5)
+- [Sinnvolle Hardwareelemente](#sinnvolle-hardwareelemente)
+	- [Aktuatorik](#aktuatorik)
+		- [Roboterplattformen für den wissenschaftlichen Einsatz](#roboterplattformen-für-den-wissenschaftlichen-einsatz)
+		- [Segway Loomo](#segway-loomo)
+		- [Hoverboard](#hoverboard)
+	- [Sensorik](#sensorik)
+		- [(RP)LIDAR](#rplidar)
+		- [Ultraschallsensoren](#ultraschallsensoren)
+		- [GPS-Empfänger](#gps-empfänger)
+		- [Stereoskopische Kameras](#stereoskopische-kameras)
+		- [Inertial Measurement Unit (IMU)](#inertial-measurement-unit-imu)
+	- [Bordcomputer](#bordcomputer)
+		- [Einplatinencomputer (ARM)](#einplatinencomputer-arm)
+			- [Beaglebone Blue](#beaglebone-blue)
+			- [Raspberry Pi 3B+](#raspberry-pi-3b)
+			- [Hardkernel Odroid XU4](#hardkernel-odroid-xu4)
+		- [Einplatinencomputer und Kleinstrechner (x86)](#einplatinencomputer-und-kleinstrechner-x86)
+			- [Intel NUC](#intel-nuc)
+			- [UDOO x86](#udoo-x86)
+- [Bauvorschläge](#bauvorschläge)
+	- [Bauvorschlag: Loomo](#bauvorschlag-loomo)
+	- [Bauvorschlag: Hoverboard](#bauvorschlag-hoverboard)
+- [Fazit](#fazit)
+
+<!-- /TOC -->
+
 TODO Ein Inhaltsverzeichnis müsste manuell erstellt werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich an der Struktur nicht mehr viel ändert.
 
 # Einleitung
@@ -71,6 +128,12 @@ Apex.Autonomy bündelt die eigentlichen Applikationen, die für selbstständiges
 
 <!-- https://spectrum.ieee.org/cars-that-think/transportation/self-driving/apexai-does-the-invisible-critical-work-that-will-make-selfdriving-cars-possible.amp.html
 -->
+
+## Autonom navigierende Forschungsplattformen
+### Ubiquity Robotics
+https://ubiquityrobotics.com/
+### Innok Heros
+https://www.innok-robotics.de/produkte/heros
 
 
 ## Autonome Navigation im Fußgängerbereich
@@ -196,6 +259,9 @@ Die Fortbewegung erfolgt über 4 Gummiräder und eine Ackermannsteuerung
 Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [Marble](#marble) bietet [Kiwi](https://www.kiwicampus.com/) Roboter für die Lieferung von Waren. Über die verwendete Sensorik ließ sich nichts herausfinden. Die Fortbewegung erfolgt hier wie beim Konkurrenten Marble über 4 Gummiräder und Ackermannsteuerung.
 Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes Trike, dass vier der kleinen Lieferroboter auf der Straße transportieren kann und einen Kellnerroboter, der Gäste in Restaurants bedienen soll.
 
+### Nuro
+https://nuro.ai/
+TODO
 ### Kit CityBuddy
 * TODO
 ### Amazon Scout
