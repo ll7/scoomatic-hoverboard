@@ -28,7 +28,6 @@ Scoomatic
 		- [Marble](#marble)
 		- [Kiwi](#kiwi)
 		- [Nuro](#nuro)
-		- [Kit CityBuddy](#kit-citybuddy)
 		- [Amazon Scout](#amazon-scout)
 	- [Staubsaugerroboter](#staubsaugerroboter)
 		- [Roborock S5](#roborock-s5)
@@ -326,8 +325,7 @@ https://nuro.ai/
 * fußgänger, traffic  und straßenschilder werden erkannt
 * bereits im einsatz in scottsdale arizona
 * proprietär, aber lidar und ultraschall erkennbar
-### Kit CityBuddy
-* TODO
+
 ### Amazon Scout
 ![Amazon Scout Roboter](../images/scout.jpg)
 *Produktbild Amazon Scout Lieferroboter([Quelle](https://blog.aboutamazon.com/transportation/meet-scout))*
