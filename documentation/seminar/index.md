@@ -57,8 +57,6 @@ Scoomatic
 
 <!-- /TOC -->
 
-TODO Ein Inhaltsverzeichnis müsste manuell erstellt werden. Wird später durch eine Startseite / ein Menü im Wiki gelöst, wenn sich an der Struktur nicht mehr viel ändert.
-
 # Einleitung
 Eine große Herausforderung im öffentlichen Personennahverkehr ist das Zurücklegen der sogenannten _letzten Meile_. Um von der nächsten Haltestelle von Bahn, S-Bahn und Bus zum eigentlichen Ziel zu kommen, sind oft noch eine Strecke von mehr als einem Kilometer zurückzulegen. Einige Unternehmen versuchen, diese letzte Teiletappe mit Leihfahrrädern zu überbrücken. Diese Räder müssen allerdings später wieder vom Reisenden zu Sammelstationen zurückgebracht werden. Oft werden sie jedoch im Weg stehen gelassen wodurch sie bei vielen Menschen als störend angesehen werden. Diese Seminararbeit soll sich mit einem Lösungsansatz für dieses Problem beschäftigen. Nachfolgend werden Anforderungen für einen Prototypenaufbau präsentiert, der die oben genannten Probleme lösen kann. Anschließend werden verwandte Arbeiten vorgestellt und zwei Bauvorschläge für jeweils einen Prototypen gegeben.
 # Aufgabenstellung
@@ -131,22 +129,80 @@ Apex.Autonomy bündelt die eigentlichen Applikationen, die für selbstständiges
 
 ## Autonom navigierende Forschungsplattformen
 ### Ubiquity Robotics
-https://ubiquityrobotics.com/
+![Ubiquity Magni](../images/magni.png)
+
+*Bild der Magni Plattform von Ubiquity Robotics ([Quelle](https://store.ubiquityrobotics.com/))*
+
+TODO Ausformulieren
+
+Das Teil heißt Magni
+* ROS1 kinetic Basiert (Ubuntu 16.04) (Nur noch bis anfang 2021 supported)
+* raspberry pi 3B als bordcomputer
+* [dokumentiert](https://learn.ubiquityrobotics.com/)
+* 100kg Payload
+* 1900USD
+* 12V Bleiakku nicht included
+* kamera
+* Ultraschallsensoren
+* Fernbedienung
+
+[Ubiquity Robotics](https://ubiquityrobotics.com/)
+
 ### Innok Heros
-https://www.innok-robotics.de/produkte/heros
+TODO Ausformulieren
+
+![Konfigurationen Innok](../images/innok.jpg)
+
+*Beispielkonfigurationen Innok Heros ([Quelle](https://www.innok-robotics.de/produkte/heros))*
+
+[Innok Heros](https://www.innok-robotics.de/produkte/heros)
+
+* 2 oder 4 angetriebene Motoren, kann auto ziehen
+* verschiedene radkonfigurationen für lenkbarkeit oder traktion
+* verbauter x86 Rechner
+* ros1 basiert, alle treiber vorkonfiguriert
+* fernbedienung + gps + imu + wlan ap + lidar möglich
+* Modulare bauseise, selbst konfigurierbar
+* zu hoch um komfortabel drauf zu stehen, bestenfalls krankenfahrstuhl
+* teuer ~15-20k TODO Bestätigung consti
 
 
 ## Autonome Navigation im Fußgängerbereich
 Die autonome Navigation von Fahrzeugen im Fußgängerbereich ist Thema einiger wissenschaftlicher Arbeiten, allerdings auch von kommerziellen Produkten. Hier werden nicht nur Lösungen für den Transport von Menschen, wie z.B. mit selbstfahrenden Rollstühlen, sondern auch autonome Transportfahrzeuge und Serviceroboter betrachtet. Auch die nur im weiteren Sinne im "Fußgängerbereich" navigierenden Staubsaugerroboter werden aufgrund der Parallelen in Navigation und Pfadplanung kurz betrachtet.
 
 ### Autonomous Campus Mobility Platform (2018)
-https://digitalcommons.wpi.edu/mqp-all/3121/
-TODO
-### Autonomous navigation for mobile service robots in urban pedestrian environments (2011)
-https://sci-hub.tw/10.1002/rob.20386
-https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386
-TODO
+TODO Ausformulieren
 
+![Autonomous Campus Mobility Platform CAD Zeichnung](../images/Hefter.png)
+
+Hefter et al. [Autonomous Campus Mobility Platform](https://digitalcommons.wpi.edu/mqp-all/3121/)
+* Elektrisches Longboard
+* Lenkbar
+* Lidar XV-11 LIDAR
+* GPS und IMU (BerryGPS-IMU)
+* Raspberry Pi 3
+* einstiegshürde zu hoch, schwer für ältere menschen
+* wenig über software, scheint aber komplett selbst geschrieben
+
+### Autonomous navigation for mobile service robots in urban pedestrian environments (2011)
+TODO Ausformulieren
+https://sci-hub.tw/10.1002/rob.20386
+![Bild Roboter Tibi und Dabo](../images/Trulls.png)
+[Autonomous navigation for mobile service robots in urban pedestrian environments](https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386)
+* service roboter
+* a fully autonomous navigation solution for urban, pedestrian environ- ments.
+* Trulls et al.
+* based on Segway RMP200
+* Two Leuze RS4 2D laser range finder
+* A third 2D laser scanner, a Hokuyo UTM-30LX
+* Steigung von Segway
+* Wheel encoders, providing odometry readings ot U, from the Segway platform
+* pedestrian- only environment
+* poor GPS coverage
+* over 6 km of autonomous navigation, with a success rate on go to requests of nearly 99%.
+* [YARP](https://www.yarp.it/) as middleware (auch independent processes mit publish subscribe architektur)
+
+![Bild Architektur des Navigationsstacks](../images/Trulls2.png)
 ### Smart Wheelchair System (2017)
 ![Abbildung SWS](../images/schwesinger.png)
 
@@ -260,8 +316,15 @@ Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [
 Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes Trike, dass vier der kleinen Lieferroboter auf der Straße transportieren kann und einen Kellnerroboter, der Gäste in Restaurants bedienen soll.
 
 ### Nuro
+![Nuro Roboter](../imges/nuro.gif)
+*Anwendungsbeispiele Nuro Lieferroboter ([Quelle](https://nuro.ai))*
 https://nuro.ai/
-TODO
+* delivery Roboter
+* fährt im straßenbereich, nicht im fußgängerbereich
+* eher selbstfahrendes auto
+* fußgänger, traffic  und straßenschilder werden erkannt
+* bereits im einsatz in scottsdale arizona
+* proprietär, aber lidar und ultraschall erkennbar
 ### Kit CityBuddy
 * TODO
 ### Amazon Scout
