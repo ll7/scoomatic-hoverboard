@@ -1,0 +1,657 @@
+/**
+* Copyright (c) 2012-2016 SAP SE, All Rights Reserved
+*
+* Theming Engine 1.26.18
+* data:{"Path": "Portal.prtl.BRCOMPASS_LIGHT_STD.nn7", "PathPattern": "/%frameworkId%/%libId%/%themeId%/%fileId%.css", "IECssRuleLimitFiles": [], "Extends": ["sap_standard","baseTheme"], "Version": { "Build":"7.50.11.0.20181125081542", "Source": "7.50.11.0", "Engine": "1.26.18"}}
+*/
+
+.sapThemeMetaData-Portal-prtl{background-image: url('data:text/plain;utf-8,{"Path": "Portal.prtl.BRCOMPASS_LIGHT_STD.nn7", "PathPattern": "/%frameworkId%/%libId%/%themeId%/%fileId%.css", "IECssRuleLimitFiles": [], "Extends": ["sap_standard","baseTheme"], "Version": { "Build":"7.50.11.0.20181125081542", "Source": "7.50.11.0", "Engine": "1.26.18"}}');}
+
+/**
+* Base.baseLib.baseTheme.base (Version 11.0.20)
+*/
+
+.sapSvgLibs {
+  background-image: none, none, none;
+}
+.sapSvgLibsDataUri {
+  background-image: url("data:text/plain;utf-8, @{sapSvgLib_SAP-icons}, @{sapSvgLib_SAPGUI-icons}, @{sapSvgLib_SAPWeb-icons}");
+}
+.sapSvgIconPositive {
+  fill: #008a3b !important;
+}
+.sapSvgIconCritical {
+  fill: #fffcb5 !important;
+}
+.sapSvgIconNegative {
+  fill: #d0001d !important;
+}
+
+/**
+* Portal.baseLib.baseTheme.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.baseTheme.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.baseTheme.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.baseTheme.nn7 (Version 7.50.11.0)
+*/
+
+.prtlHdrWhl {
+  border-width: 1px;
+  border-color: #d5d5d5;
+  border-style: solid none none none;
+  font-size: medium;
+  height: 31px;
+}
+.prtlHeaderNotch {
+  background-repeat: repeat;
+  border-width: 1px;
+  border-color: #fff;
+  border-style: none solid none solid;
+  background-color: #e9e2a3;
+}
+.prtlHeaderNotchImgWidth {
+  width: 6px;
+  height: 30px;
+}
+.prtlHdrWelcome {
+  color: #1a2071;
+  font-style: normal;
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-align: left;
+  background-color: #d5d5d5;
+  padding: 0 16px 0 10px;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/welcome_stretch.gif');
+  background-position: top;
+  background-repeat: repeat-x;
+}
+.prtlHdrLnk {
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: normal;
+  font-family: arial, sans-serif;
+  color: #021C3B;
+  padding-right: 4px;
+  padding-left: 4px;
+  text-decoration: underline;
+}
+.prtlHdrLnk:link {
+  color: #225A8D;
+}
+.prtlHdrLnk:visited {
+  color: #225A8D;
+}
+.prtlHdrLnk:hover {
+  color: #6D1A02;
+  cursor: pointer;
+  text-decoration: none;
+}
+.prtlHdrLogoContainer {
+  background-color: #f7f9fb;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/customer_logo.gif');
+  width: 130px;
+  height: 53px;
+  border-style: none;
+  border-width: 0;
+  border-color: #fff;
+  background-repeat: no-repeat;
+  display: block;
+}
+.prtlHdrBrandImgContainer {
+  border-width: 1px;
+  border-color: #fff;
+  border-style: none solid none solid;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/customer_brand_image.jpg');
+  width: 100%;
+  height: 50px;
+  background-repeat: repeat-x;
+  background-position: top;
+}
+.prtlHdrSep {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/separator.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 1pt;
+  padding: 0 8px 0 8px;
+}
+.prtlHeaderFunctionsTable {
+  border-width: 1px;
+  border-color: #fff;
+  border-style: none solid none none;
+  background-color: #d5d5d5;
+  height: 30px;
+  padding: 0 16px 0 16px;
+  text-align: right;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/functions_stretch.gif');
+  background-position: top;
+  background-repetition: repeat-x;
+}
+.prtlHeaderFunctionsContainer {
+  font-style: normal;
+  font-family: arial,sans-serif;
+  font-size: medium;
+  text-align: right;
+}
+.prtlHeaderFunctionsContainer .urLnkFunction * {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkFunction:link * {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkFunction:visited * {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkFunction:hover * {
+  color: #c00;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkResult .urTxtStd {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkResult:link .urTxtStd {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkResult:visited .urTxtStd {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urLnkResult:hover .urTxtStd {
+  color: #c00;
+  text-decoration: underline;
+}
+.prtlHeaderFunctionsContainer .urTxtStd {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  font-style: normal;
+}
+.prtlLnkFunction {
+  color: #1a2071;
+  padding: 0 0 0 4px;
+  text-align: right;
+}
+.prtlLnkFunction:link {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlLnkFunction:visited {
+  color: #1a2071;
+  text-decoration: underline;
+}
+.prtlLnkFunction:hover {
+  color: #c00;
+  text-decoration: underline;
+}
+.prtlTxtStd {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  font-style: normal;
+}
+.prtlHdrLnkMnImg {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/ico12_pu_indicator.gif');
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  height: 12px;
+  width: 12px;
+}
+.prtlToolAreaWhl {
+  border-width: 1px;
+  border-color: #a5b1bf;
+  border-style: none none solid none;
+  background-color: #d5d5d5;
+  height: 21px;
+  font-size: medium;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/toolarea/tools_area_stretch.gif');
+  background-position: top;
+  background-repetition: repeat-x;
+  border-bottom-color: #e2e7eb;
+  border-top-color: #a9b4be;
+}
+.prtlToolAreaTaskTable {
+  font-size: medium;
+  font-family: arial,sans-serif;
+}
+.prtlToolAreaTaskTextLftPadd {
+  padding-left: 16px;
+}
+.prtlToolAreaTaskText {
+  font-style: normal;
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  color: #225a8d;
+  text-align: left;
+}
+.prtlToolAreaTaskText:link {
+  color: #225a8d;
+}
+.prtlToolAreaTaskText:visited {
+  color: #225a8d;
+}
+.prtlToolAreaTaskText:hover {
+  color: #4b8bc7;
+}
+.prtlToolAreaTaskDivider {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/toolarea/tool_separator.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 17px;
+}
+.prtlToolAreaTaskCompAlign {
+  text-align: left;
+  background-color: #d5d5d5;
+}
+.prtlToolAreaBtn {
+  padding: 0 2px 0 2px;
+  white-space: nowrap;
+  cursor: hand;
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  margin: 0 8px 0 3px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff #323046 #323046 #fff;
+  text-align: center;
+  color: #036;
+  background-color: #e7eaee;
+  font-size: medium;
+  font-weight: normal;
+  height: 18px;
+  text-decoration: none;
+}
+.prtlToolAreaTaskTable .urBtnStd {
+  padding: 0 2px 0 2px;
+  white-space: nowrap;
+  cursor: hand;
+  font-size: 0.7em;
+  margin: 0 8px 0 3px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff #323046 #323046 #fff;
+  text-align: center;
+  color: #036;
+  background-color: #e7eaee;
+  font-weight: normal;
+  height: 18px;
+  text-decoration: none;
+  position: relative;
+  top: 1px;
+  top: -1;
+}
+.prtlToolAreaTaskTable .urBtnStd:link {
+  text-decoration: none;
+}
+.prtlToolAreaTaskTable .urBtnStd:visited {
+  text-decoration: none;
+}
+.prtlToolAreaTaskTable .urBtnStd:hover {
+  background-color: #e7eaee;
+  border-color: #f7f9fb #4b8bc7 #4b8bc7 #f7f9fb;
+  color: #000;
+  text-decoration: none;
+}
+.prtlHdrToolAreaSearch {
+  font-size: 0.7em;
+  color: #000;
+  border-color: #cacaca;
+  border-width: 1px;
+  border-style: solid;
+  padding: 0 0 0 5px;
+  background-color: #fff;
+  height: 1.4em;
+}
+.prtlTopNav1stLvl-a {
+  color: #fff;
+  font-weight: bold;
+  font-size: medium;
+  font-family: arial,sans-serif;
+  background-color: #153b63;
+  padding: 1px 7px 1px 8px;
+  border-style: none solid none none;
+  border-width: 1px 1px 1px 1px;
+  border-color: #fff;
+  cursor: default;
+}
+.prtlTopNav1stLvl-i {
+  color: #153b63;
+  font-weight: lighter;
+  font-size: medium;
+  font-family: arial,sans-serif;
+  background-color: #b4c6d9;
+  padding: 2px 7px 1px 8px;
+  border-style: none solid solid none;
+  border-width: 1px;
+  border-color: #fff;
+  z-index: 0;
+  cursor: hand;
+}
+.prtlTopNav1stLvl-right {
+  background-color: #fff;
+  width: 100%;
+}
+.prtlTopNavAct {
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  text-decoration: none;
+  color: #fff;
+}
+.prtlTopNavLnk {
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  text-decoration: none;
+  color: #153b63;
+}
+.prtlTopNavLnk:link {
+  color: #153b63;
+}
+.prtlTopNavLnk:visited {
+  color: #153b63;
+}
+.prtlTopNavLnk:hover {
+  color: #153b63;
+}
+.prtlTopNav2ndLvl-iHover {
+  color: #0970ab;
+  font-weight: lighter;
+  font-size: medium;
+  font-family: arial,sans-serif;
+  background-color: #dce3ec;
+  margin: 1px 0 0 0;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+}
+.prtlTopNavLnkHover {
+  text-decoration: none;
+  color: #00adef;
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+}
+.prtlTopNav1stLvlHover {
+  background-color: #dce3ec;
+  padding: 0 0.9ex 0 0.9ex;
+  vertical-align: middle;
+  padding: 2px 7px 1px 8px;
+  font-size: medium;
+  border-style: none solid solid none;
+  border-width: 1px;
+  border-color: #fff;
+}
+.prtlTopNav2ndLvlSepHover {
+  color: #666;
+  font-weight: lighter;
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  background-color: #dce3ec;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+}
+.prtlTopNav2ndLvlRightHover {
+  color: #dfe9f4;
+  font-weight: lighter;
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  background-color: #dce3ec;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+  width: 100%;
+}
+.prtlTopNav2ndLvl-a {
+  color: #fff;
+  font-weight: bolder;
+  font-size: medium;
+  font-family: arial,sans-serif;
+  background-color: #153b63;
+  margin: 1px 0 0 0;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+}
+.prtlTopNav2ndLvl-i {
+  color: #dfe9f4;
+  font-weight: lighter;
+  font-size: medium;
+  font-family: arial,sans-serif;
+  background-color: #153b63;
+  margin: 1px 0 0 0;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+}
+.prtlTopNav2ndAct {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  text-decoration: none;
+  padding: 0 0 0 5px;
+  color: #fff;
+  height: 16px;
+}
+.prtlTopNav2ndLnk {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  text-decoration: none;
+  height: 16px;
+  color: #dfe9f4;
+}
+.prtlTopNav2ndLnk:link {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  text-decoration: none;
+  height: 16px;
+  color: #dfe9f4;
+}
+.prtlTopNav2ndLnk:visited {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  text-decoration: none;
+  height: 16px;
+  color: #dfe9f4;
+}
+.prtlTopNav2ndLnk:hover {
+  font-family: arial,sans-serif;
+  font-size: 0.7em;
+  text-decoration: none;
+  height: 16px;
+  color: #fff;
+}
+.prtlTopNav2ndLvlSep {
+  color: #fff;
+  font-weight: lighter;
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  background-color: #153b63;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+}
+.prtlTopNav2ndLvlRight {
+  color: #dfe9f4;
+  font-weight: lighter;
+  font-size: 0.7em;
+  font-family: arial,sans-serif;
+  background-color: #153b63;
+  padding: 2px 0 1px 7px;
+  cursor: default;
+  width: 100%;
+}
+.prtlTopNavWhl {
+  border-color: #fff;
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  width: 99% !important;
+}
+.prtlTopNavNotch {
+  z-index: 2;
+  width: 6px;
+  background-color: #b4c6d9;
+  border-color: #FFFFFF;
+  border-style: none solid none solid;
+  border-width: 1px;
+  height: 40px;
+}
+.prtlTopNavContainer {
+  position: absolute;
+  width: 0px;
+  left: 0px;
+  top: 1px;
+  overflow: hidden;
+  border-color: white;
+  border-width: 0 0 0 1px;
+  border-style: none none none solid;
+}
+.prtlDivScrollerLeft {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/topLvlNav/topLvlScrollerLeft.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 21px;
+  background-color: #b2cbe2;
+  height: 100%;
+  vertical-align: middle;
+  border-color: #fff #fff #225a8d #fff;
+  border-style: none none solid solid;
+  border-width: 0 0 3px 1px;
+  cursor: hand;
+}
+.prtlDivScrollerRight {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/topLvlNav/topLvlScrollerRight.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 21px;
+  background-color: #b2cbe2;
+  height: 100%;
+  vertical-align: middle;
+  border-color: #fff #fff #225a8d #fff;
+  border-width: 0 0 3px 1px;
+  border-style: none none solid solid;
+  cursor: hand;
+}
+.prtlTopNav2ndLvlWhl {
+  width: 100%;
+  height: 17px;
+  border-color: #153b63;
+  border-width: 0 0 3px 0;
+  border-style: solid;
+}
+.prtlHeaderFunctionsContainer .urMenuItemTxtTrn {
+  color: #000;
+  font-size: 0.7em;
+  cursor: hand;
+  font-weight: normal;
+  height: 20px;
+  padding: 4px 0 2px 8px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.prtlHeaderFunctionsContainer .urMenuItemBtnTrn {
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/header/ico12_pu_indicator.gif');
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  color: #000;
+  font-size: 0.7em;
+  cursor: hand;
+  font-weight: normal;
+  height: 20px;
+  padding: 3px 9px 3px 0;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.prtlHeaderFunctionsContainer .urMenuItemTxtTrnHover {
+  color: #4B8BC7;
+  background-color: transparent;
+  font-size: 0.7em;
+  cursor: hand;
+  font-weight: normal;
+  height: 20px;
+  padding: 4px 0 2px 8px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.prtlTopNavContentSep {
+  background-repeat: repeat-x;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/topLvlNav/separator.gif');
+  backgoround-position: center top;
+  height: 4px;
+  display: inline;
+}
+.prtlDivListEntries {
+  width: 21px;
+  background-color: #b2cbe2;
+  height: 100%;
+  vertical-align: middle;
+  border-color: #fff #fff #225a8d #fff;
+  border-style: none none solid solid;
+  border-width: 0 0 3px 1px;
+  cursor: hand;
+  background-image: url('../../../Portal/prtl/BRCOMPASS_LIGHT_STD/img/images/topLvlNav/topLvIScrollerMore.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/**
+* Base.baseLib.sap_standard.base (Version 11.0.20)
+*/
+
+
+/**
+* Portal.baseLib.sap_standard.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.sap_standard.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.sap_standard.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.sap_standard.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Base.baseLib.BRCOMPASS_LIGHT_STD.custom (Version 11.0.20)
+*/
+
+
+/**
+* Base.baseLib.BRCOMPASS_LIGHT_STD.base (Version 11.0.20)
+*/
+
+
+/**
+* Portal.baseLib.BRCOMPASS_LIGHT_STD.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.BRCOMPASS_LIGHT_STD.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.BRCOMPASS_LIGHT_STD.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl.BRCOMPASS_LIGHT_STD.nn7 (Version 7.50.11.0)
+*/
+

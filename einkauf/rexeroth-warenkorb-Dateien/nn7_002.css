@@ -1,0 +1,140 @@
+/**
+* Copyright (c) 2012-2016 SAP SE, All Rights Reserved
+*
+* Theming Engine 1.26.18
+* data:{"Path": "Portal.prtl_std.BRCOMPASS_LIGHT_STD.nn7", "PathPattern": "/%frameworkId%/%libId%/%themeId%/%fileId%.css", "IECssRuleLimitFiles": [], "Extends": ["sap_standard","baseTheme"], "Version": { "Build":"7.50.11.0.20181125081542", "Source": "7.50.11.0", "Engine": "1.26.18"}}
+*/
+
+.sapThemeMetaData-Portal-prtl_std{background-image: url('data:text/plain;utf-8,{"Path": "Portal.prtl_std.BRCOMPASS_LIGHT_STD.nn7", "PathPattern": "/%frameworkId%/%libId%/%themeId%/%fileId%.css", "IECssRuleLimitFiles": [], "Extends": ["sap_standard","baseTheme"], "Version": { "Build":"7.50.11.0.20181125081542", "Source": "7.50.11.0", "Engine": "1.26.18"}}');}
+
+/**
+* Base.baseLib.baseTheme.base (Version 11.0.20)
+*/
+
+.sapSvgLibs {
+  background-image: none, none, none;
+}
+.sapSvgLibsDataUri {
+  background-image: url("data:text/plain;utf-8, @{sapSvgLib_SAP-icons}, @{sapSvgLib_SAPGUI-icons}, @{sapSvgLib_SAPWeb-icons}");
+}
+.sapSvgIconPositive {
+  fill: #008a3b !important;
+}
+.sapSvgIconCritical {
+  fill: #fffcb5 !important;
+}
+.sapSvgIconNegative {
+  fill: #d0001d !important;
+}
+
+/**
+* Portal.baseLib.baseTheme.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.baseTheme.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.baseTheme.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.baseTheme.nn7 (Version 7.50.11.0)
+*/
+
+.prtlBody {
+  margin: 0 0 0 0;
+  background-color: #fff;
+  background-repeat: no-repeat;
+}
+.prtlHeaderCon {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+.prtlPageConL {
+  margin: 1 0 0 1;
+  padding: 0;
+}
+.prtlPageConM {
+  margin: 1 1 0 0;
+  padding: 0;
+}
+.prtlPageConR {
+  margin: 1 0 0 0;
+  padding: 0;
+}
+.prtlPageConF {
+  margin: 1 1 0 1;
+  padding: 0;
+}
+.prtlPrtlFullPageAppBody {
+  background-color: #fff;
+  background-repeat: no-repeat;
+  margin: 1 1 0 1;
+  padding: 0;
+}
+.prtlFocus {
+  margin-left: -1;
+}
+* {
+  outline: none;
+}
+
+/**
+* Base.baseLib.sap_standard.base (Version 11.0.20)
+*/
+
+
+/**
+* Portal.baseLib.sap_standard.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.sap_standard.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.sap_standard.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.sap_standard.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Base.baseLib.BRCOMPASS_LIGHT_STD.custom (Version 11.0.20)
+*/
+
+
+/**
+* Base.baseLib.BRCOMPASS_LIGHT_STD.base (Version 11.0.20)
+*/
+
+
+/**
+* Portal.baseLib.BRCOMPASS_LIGHT_STD.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.baseLib.BRCOMPASS_LIGHT_STD.nn7 (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.BRCOMPASS_LIGHT_STD.base (Version 7.50.11.0)
+*/
+
+
+/**
+* Portal.prtl_std.BRCOMPASS_LIGHT_STD.nn7 (Version 7.50.11.0)
+*/
+
