@@ -1,4 +1,0 @@
-$(document).ready(function () {$(window).resize(function () {if (!$('#SupportMsg_PopUpBox').is(':hidden')) popupResize();});});
-function popupResize(){var maskHeight = $(window).height();var maskWidth = $(window).width();var popupTop =  (maskHeight/2) - ($('#SupportMsg_PopUpBox').height()/2);var popupLeft = (maskWidth/2) - ($('#SupportMsg_PopUpBox').width()/2); 
-$('#SupportMsg_PopUpOverlay').css({height:maskHeight, width:maskWidth}).show();	$('#SupportMsg_PopUpBox').css({top:popupTop, left:popupLeft, height:240, width:625}).show();}
-function popupClose(){$('#SupportMsg_PopUpOverlay, #SupportMsg_PopUpBox').hide();}
