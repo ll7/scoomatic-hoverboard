@@ -1,0 +1,4 @@
+sonar_driver:
+        ros__parameters:
+                port: "/dev/ttyUSB0"
+                topic: "/sonar"
