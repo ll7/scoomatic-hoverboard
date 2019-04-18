@@ -178,6 +178,81 @@ Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" i
 
 Der SonicDisc sketch benötigt eine akutelle version der Arduino IDE (1.8.8 getestet und funktioniert). Mit der Version 1.0.5 aus den Ubuntu-Paketquellen kompiliert der sketch nicht.
 https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/
+
+## LIDAR
+### ROS1
+[ROS1 Package](http://wiki.ros.org/rplidar) installieren.
+```bash
+  ssh -X ubuntu@scoomatic
+  sudo apt install ros-melodic-rplidar-ros
+  source /opt/ros/melodic/setup.bash
+  roscore &
+  rosrun rplidar_ros rplidarNode &
+  rviz
+```
+> **Hinweis:** Die rviz GUI lässt sich nur über ssh starten, wenn man sich von einem Linux mit X-Server aus verbindet.
+
+![Rviz mit RPLIDAR](../images/rviz-rplidar.png)
+In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen
+
+### ROS2-Bridge
+
+## RaspberryPi
+TODO Imagedownload URL
+Login: ubuntu:notubuntu
+Ubuntu 18.04 mit ROS Melodic und ROS2 Crystal
+git repos gehören in ~/git
+ros1 ws in ~/catkin_ws
+ros2 ws in ~/ros2_ws
+
+
+
+aliases rbuild (alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash") für ros2ws bauen, rclean (alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/") für ros2ws cleanen
+
+ros2 bedienung über ros2 binary
+```bash
+usage: ros2 [-h] Call `ros2 <command> -h` for more detailed usage. ...
+
+ros2 is an extensible command-line tool for ROS 2.
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Commands:
+  daemon     Various daemon related sub-commands
+  launch     Run a launch file
+  lifecycle  Various lifecycle related sub-commands
+  msg        Various msg related sub-commands
+  multicast  Various multicast related sub-commands
+  node       Various node related sub-commands
+  param      Various param related sub-commands
+  pkg        Various package related sub-commands
+  run        Run a package specific executable
+  security   Various security related sub-commands
+  service    Various service related sub-commands
+  srv        Various srv related sub-commands
+  topic      Various topic related sub-commands
+
+  Call `ros2 <command> -h` for more detailed usage.
+```
+
+topic, srv, node, msg, srv haben list, info
+
+node starten über
+```bash
+ros2 run scoomatic_drivers node_name
+```
+
+launchfile starten über
+```bash
+ros2 launch scoomatic_drivers stuff
+```
+
+umschalten zwischen Workspaces über
+
+```bash
+source /opt/ros/[crystal oder melodic]/setup.bash
+```
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
