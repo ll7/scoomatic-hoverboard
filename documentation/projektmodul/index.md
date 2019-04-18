@@ -195,7 +195,22 @@ https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/
 ![Rviz mit RPLIDAR](../images/rviz-rplidar.png)
 In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen
 
+### ROS2
+TODO
+
 ### ROS2-Bridge
+## Sonar Sensoren
+Firmware: /code/Arduino Firmware/scoomatic-sonar
+ROS-Treiber: /code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py
+starten: ros2 run scoomatic_drivers sonar_driver __params:=params.yaml
+Parameter:
+```yaml
+sonar_driver:
+        ros__parameters:
+                port: "/dev/ttyUSB0"  # Serial port des Sensors
+                topic: "/sonar"       # Topic in das gepublisht werden soll
+```
+
 
 ## RaspberryPi
 TODO Imagedownload URL
