@@ -1,11 +1,15 @@
 # Scoomatic Sonar Driver
 # Author: Martin Schoerner
-# Last Change: 2019-04-17
+# Last Change: 2019-04-26
+# Reads data from 8 sensor sonar array via usb uart.
+# Sensor sends periodic packets in the form v0;v1;v2;v3;v4;v5;v6;v7
+# coded in ascii with v0 to v7 representing the distance
+# each sensor measures as integer in cm
 # Publishes to:
-#   /sonar: Sonar values as sensor_msgs/PointCloud2
+#   /$topic: Sonar values as sensor_msgs/PointCloud2
 # Params:
 #   port: Address of serial Port (e.g. /dev/ttyUSB0)
-#   
+#   topic: Topicname for publishing sensor values
 
 from time import sleep
 import serial
@@ -19,7 +23,7 @@ def read_serial(ser):
     data = ser.readline()
     # parse
     try:
-        data = data.decode('ascii').split(";"); # TODO hier muss try catch rum
+        data = data.decode('ascii').split(";")
     except UnicodeDecodeError:
         node.get_logger().warn("Corrupt Package from Sonar sensor (could not decode)")
         return [0,0,0,0,0,0,0,0]
@@ -37,11 +41,13 @@ def read_serial(ser):
 
 def main(args=None):
     rclpy.init(args=args)
-
+    # Start node
     node = rclpy.create_node('sonar_driver')
-
+    # Read parameter
     topic = node.get_parameter('topic').value
+    # Cerate publisher
     publisher = node.create_publisher(PointCloud2, topic)
+    # Create pointcloud message for the sensor values
     field = PointField()
     field.name = "Distance"
     field.offset = 0
