@@ -179,6 +179,18 @@ Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" i
 Der SonicDisc sketch benötigt eine akutelle version der Arduino IDE (1.8.8 getestet und funktioniert). Mit der Version 1.0.5 aus den Ubuntu-Paketquellen kompiliert der sketch nicht.
 https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/
 
+Firmware: /code/Arduino Firmware/scoomatic-sonar
+ROS-Treiber: /code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py
+starten: ros2 run scoomatic_drivers sonar_driver __params:=params.yaml
+Parameter:
+```yaml
+sonar_driver:
+        ros__parameters:
+                port: "/dev/ttyUSB0"  # Serial port des Sensors
+                topic: "/sonar"       # Topic in das gepublisht werden soll
+```
+
+TODO Fix bug with all zero values
 ## LIDAR
 ### ROS1
 [ROS1 Package](http://wiki.ros.org/rplidar) installieren.
@@ -199,18 +211,6 @@ In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame'
 TODO
 
 ### ROS2-Bridge
-## Sonar Sensoren
-Firmware: /code/Arduino Firmware/scoomatic-sonar
-ROS-Treiber: /code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py
-starten: ros2 run scoomatic_drivers sonar_driver __params:=params.yaml
-Parameter:
-```yaml
-sonar_driver:
-        ros__parameters:
-                port: "/dev/ttyUSB0"  # Serial port des Sensors
-                topic: "/sonar"       # Topic in das gepublisht werden soll
-```
-
 
 ## RaspberryPi
 TODO Imagedownload URL
@@ -220,6 +220,7 @@ git repos gehören in ~/git
 ros1 ws in ~/catkin_ws
 ros2 ws in ~/ros2_ws
 
+Pakete aus git repos sind über symlinks vom repo in den src Ordner eingefügt
 
 
 aliases rbuild (alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash") für ros2ws bauen, rclean (alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/") für ros2ws cleanen
