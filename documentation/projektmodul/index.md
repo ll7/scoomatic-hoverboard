@@ -269,6 +269,11 @@ umschalten zwischen Workspaces über
 ```bash
 source /opt/ros/[crystal oder melodic]/setup.bash
 ```
+
+## XBOX One Controller
+ sudo apt install sysfsutils sudo nano /etc/sysfs.conf place the following at the end of the file. "/module/bluetooth/parameters/disable_ertm=1"
+https://www.youtube.com/watch?v=bAI4vnlQhPg
+https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
