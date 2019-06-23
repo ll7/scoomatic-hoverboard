@@ -28,6 +28,8 @@ setup(
 	entry_points={
 	    'console_scripts': [
 	        'sonar_driver = scoomatic_drivers.sonar_driver:main',
+                'motor_driver = scoomatic_drivers.motor_driver:main',
+                'test = scoomatic_drivers.test:main',
 	    ],
 	},
 )
