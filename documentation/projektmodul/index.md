@@ -271,7 +271,41 @@ source /opt/ros/[crystal oder melodic]/setup.bash
 ```
 
 ## XBOX One Controller
- sudo apt install sysfsutils sudo nano /etc/sysfs.conf place the following at the end of the file. "/module/bluetooth/parameters/disable_ertm=1"
+ sudo apt install sysfsutils 
+ sudo nano /etc/sysfs.conf 
+ place the following at the end of the file.
+ "/module/bluetooth/parameters/disable_ertm=1"
+
+
+Bluetooth auf image aktivieren
+sudo apt-get install bluetooth blueman
+sudo modprobe btusb
+sudo systemctl start bluetooth
+# sudo systemctl start hciuart
+
+
+### gamepad_driver
+ros2 run scoomatic_drivers gamepad_driver __params:=params.yaml
+
+Joystickbelegung:
+btn_sout (0,1) = A = Arm
+ABS_RZ (0..1023) = RT = Speed
+
+ABS_Z (0..1023) = RT = Reverse Speed
+ABS_Y = (-32768.32767) = LStick lr = Lenken
+
+params:
+```yaml
+gamepad_driver:
+        ros__parameters:
+                topic: "/gamepad" # Topic for geometry_msgs/Twist message
+                rate: 10 # Updaterate for Topic
+```
+Aufbau Message:
+msg.linear.x = Vorwärts / Rückwärts -1..1
+msg.angluar.z = Richtung Links / Rechts -1..1
+
+
 https://www.youtube.com/watch?v=bAI4vnlQhPg
 https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
 # Sonstiges
