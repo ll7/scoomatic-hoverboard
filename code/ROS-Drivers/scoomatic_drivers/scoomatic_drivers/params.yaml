@@ -2,3 +2,7 @@ sonar_driver:
         ros__parameters:
                 port: "/dev/ttyUSB0"
                 topic: "/sonar"
+gamepad_driver:
+        ros__parameters:
+                topic: "/gamepad"
+                rate: 5 
