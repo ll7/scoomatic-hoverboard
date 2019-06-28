@@ -172,6 +172,34 @@ Der Arduino liest, nachdem er mit einer Stromquelle verbunden wurde, periodisch 
 > **Hinweis:** Auch an dieser Stelle sei nochmal erwähnt, dass durch die unterschiedlichen Logiklevel am Arduino Uno (5V) und am Hoverboard (**3.3V**) ein **Level-Shifter** notwendig ist, das das Mainboard sonst Schaden nemen kann. Außerdem liegt am roten Kabel des Steckverbinders zum Hoverboard eine Spannung von **14.4V** an, die, wenn falsch verbunden, sowohl den Arduino als auch das Mainboard zerstören kann (Zitat NiklasFauth:  "15v will destroy everything.")
 
 
+# Motortreiber
+
+## Debug
+ b'1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n'
+
+
+1: ADC1
+2: ADC2
+3: output speed R 0-1000
+4: output speed L 0-1000
+5: battery voltage calibration
+6: for verifying battery voltage
+7: for board temperature calibration
+8: for verifying board temperature calibration
+
+
+
+int32 adc1
+int32 adc2
+int32 wheelspeed_l # (0..1000)
+int32 wheelspeed_r  # (0..1000)
+int32 battery_voltage_calibration_value
+float32 battery_voltage
+int32 board_temperature_calibration_value
+int32 board_temperature
+ 
+
+
 # Sensorik
 ## Ultraschall
 Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" installiert. Zum Uploaden muss als Prozessor in der Arduino IDE "Atmega 328P (old bootloader)" gewählt werden, sonst klappt das flashen nicht.
@@ -207,18 +235,42 @@ TODO Fix bug with all zero values
 ![Rviz mit RPLIDAR](../images/rviz-rplidar.png)
 In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen
 
+Auf anderem rechner:
+export ROS_MASTER_URI=http://192.168.140.16:11311/
 ### ROS2
 TODO
+
+
+## GPS
+### ROS1
+Matek Systems GPS Ublox SAM-M8Q
+https://github.com/KumarRobotics/ublox
+https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
 ### ROS2-Bridge
 
 ## RaspberryPi
+
+TODO: wifi connect mit nmcli
+eth0: dhcp
 TODO Imagedownload URL
 Login: ubuntu:notubuntu
 Ubuntu 18.04 mit ROS Melodic und ROS2 Crystal
 git repos gehören in ~/git
 ros1 ws in ~/catkin_ws
 ros2 ws in ~/ros2_ws
+
+
+Dateisystemstruktur
+/home/ubuntu/git
+/home/ubuntu/catkin_ws
+/home/ubuntu/ros2_ws
+/opt/ros/melodic
+/opt/ros/crystal
+
+
+standardmäßig wird crystal gesourced, source /opt/ros/melodic/setup.bash für melodic
+
 
 Pakete aus git repos sind über symlinks vom repo in den src Ordner eingefügt
 
@@ -308,6 +360,17 @@ msg.angluar.z = Richtung Links / Rechts -1..1
 
 https://www.youtube.com/watch?v=bAI4vnlQhPg
 https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
+
+# TODO
+ROS1:
+Lidar, GPS, IMU?
+ROS2
+Joystick, Gamepad, Sonar, Motoren
+
+topics und nodes
+launchfiles und nodes übersicht
+
+image dumpen wenn fertig
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.

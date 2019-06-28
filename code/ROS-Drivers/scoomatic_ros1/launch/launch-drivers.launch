@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+
+
+
+    <!-- GPS -->
+    <node name="ublox_gps" pkg="ublox" type="ublox_gps" output="screen"/>
+
+
+
+    <!-- IMU -->
+    <node name="game_sensors_clusterer" pkg="game_sensors" type="clustering.py" output="screen"/>
+
+    <!-- LIDAR -->
+    <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen"/>
+
+
+    <!-- Converts joint states to TF transforms for rviz, etc -->
+<!--    <node name="game_sensors_board_transform_publisher" pkg="tf" type="static_transform_publisher"
+          args="0.3 0 0 1 0 0 0 gripper_iiwa_inac_top game_board 10" />
+  -->
+  <node name="$(anon dynparam)" pkg="dynamic_reconfigure" type="dynparam" output="screen" args="set_from_parameters /rc_1/rc_visard_driver">
+    <param name="camera_fps" type="int" value="25" />
+    <param name="camera_exp_auto" type="boolean" value="true" />
+    <param name="camera_exp_max" type="double" value="18.0" />
+    <param name="depth_quality" type="String" value="H" />
+    <param name="depth_disprange" type="int" value="256" />
+    <param name="depth_fill" type="int" value="3" />
+    <param name="depth_seg" type="int" value="40" />
+    <param name="depth_median" type="int" value="1" />
+    <param name="depth_minconf" type="double" value="0" />
+    <param name="depth_maxdeptherr" type="int" value="100" />
+    <param name="depth_mindepth" type="double" value="0.53" />
+    <param name="depth_maxdepth" type="double" value="0.56" />
+    <param name="camera_wb_auto" type="boolean" value="true" />
+  </node>
+
+
+
+  <!--<include file="$(find apriltags_ros)/launch/example.launch"/>    -->
+</launch>
+

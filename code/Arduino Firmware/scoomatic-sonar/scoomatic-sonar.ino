@@ -19,7 +19,7 @@ const uint8_t INT_PIN = 0; // Note that this is also the RX pin
 // The pin connected to the on-bard LED for debugging
 const uint8_t LED_PIN = 1; // Note that this is also the TX pin
 // How often the measurements should take place (in milliseconds)
-const unsigned long MEASUREMENT_INTERVAL = 100;
+const unsigned long MEASUREMENT_INTERVAL = 500;
 
 
 
@@ -33,7 +33,7 @@ enum Vector {
 // The Sonic Disc pin mapping of sensors
 // Sonic Sensors are defined as SonicSensor(trigger pin, echo pin)
 SonicSensor sensors[NUM_OF_SENSORS] = {
-  SonicSensor(A3, A2),  // Ultrasonic_0 on the Sonic Disc
+ SonicSensor(A3, A2),  // Ultrasonic_0 on the Sonic Disc
   SonicSensor(A1, A0),  // Ultrasonic_1
   SonicSensor(13, 12),  // Ultrasonic_2
   SonicSensor(11, 10),  // Ultrasonic_3
@@ -42,6 +42,8 @@ SonicSensor sensors[NUM_OF_SENSORS] = {
   SonicSensor(4, 5),    // Ultrasonic_6
   SonicSensor(3, 2) // Ultrasonic_7
 };
+
+int mapping[NUM_OF_SENSORS] = {2,3,4,5,6,7,1,0};
 
 /**
    Handles the echo signal from an ultrasonic sensor.
@@ -52,7 +54,6 @@ SonicSensor sensors[NUM_OF_SENSORS] = {
    @param intVector The vector that the interrupt originated from
 */
 void handleEcho(Vector intVector) {
-  digitalWrite(13,HIGH);
   // Determine which vector the interrupt originated from
   // so we only check signals from those specific sensors
   int sensorsInVector[3] = {0}; // We have up to 3 sensors in each vector
@@ -100,7 +101,7 @@ void handleEcho(Vector intVector) {
       }
     }
   }
-  digitalWrite(13, LOW);
+  
 }
 
 /**
@@ -246,14 +247,14 @@ void loop() {
     triggerSensors();
     interrupts();               // End critical section
 
-    delay(100); // TODO Remove
+   // delay(500); // TODO Remove
     // Now that we are certain that our measurements are consistent
     // time-wise, calculate the distance.
     for (int i = 0; i < NUM_OF_SENSORS; i++) {
       // Calculate distance for each sensor.
       // Will also timeout any pending measurements
       if(i!=0){Serial.print(";");}
-      Serial.print(sensors[i].calculateDistance());
+      Serial.print(sensors[mapping[i]].calculateDistance());
 
     }
 

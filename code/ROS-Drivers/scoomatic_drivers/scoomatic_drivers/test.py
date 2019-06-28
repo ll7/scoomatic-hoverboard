@@ -22,8 +22,8 @@ g_node = None
 def chatter_callback(msg):
     global g_node
     g_node.get_logger().info(
-        'I heard: "%s"' "message")
-
+        'I heard: "%s"' % msg.linear.x)
+print("stuff")
 
 def main(args=None):
     global g_node
