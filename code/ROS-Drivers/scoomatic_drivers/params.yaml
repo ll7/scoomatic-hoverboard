@@ -2,12 +2,19 @@ sonar_driver:
         ros__parameters:
                 port: "/dev/ttyUSB0"
                 topic: "/sonar"
+                rate: "10"
 gamepad_driver:
         ros__parameters:
                 topic: "/cmd_vel"
-                rate: 5
+                rate: 1
 
 motor_driver:
        ros__parameters:
                topic: "/cmd_vel"
                port: "/dev/ttyUSB0" 
+
+motor_diag:
+        ros__parameters:
+                topic: "/motor_diag"
+                port: "/dev/ttyUSB0"
+                rate: "5"

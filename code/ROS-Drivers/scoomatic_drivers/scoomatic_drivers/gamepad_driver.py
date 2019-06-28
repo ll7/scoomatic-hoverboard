@@ -35,12 +35,16 @@ import threading
 armed = False
 direction = 0.0 # +- dd1
 speed = 0.0   # +- 1 
+node = None
+thread_active = True
 def handle_game_controller():
-    global armed, direction, speed
+    global armed, direction, speed, node
     events = None
     try:
         events = get_gamepad()
     except:
+        node.get_logger().warn("Gamepad disconnected!")
+        sleep(5)
         return
 
     for event in events:
@@ -55,10 +59,11 @@ def handle_game_controller():
             direction = event.state / 32768  # Normieren auf -+ 1.0
         
 def gamepad_thread():
-    while rclpy.ok():
+    while thread_active:
         handle_game_controller()
 
 def main(args=None):
+    global node, thread_active
     rclpy.init(args=args)
     # Start node
     node = rclpy.create_node('gamepad_driver')
@@ -92,6 +97,7 @@ def main(args=None):
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
+    thread_active = False
     node.destroy_node()
     rclpy.shutdown()
 
