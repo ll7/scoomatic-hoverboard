@@ -28,12 +28,21 @@ from inputs import get_gamepad
 from geometry_msgs.msg import Twist
 import threading
 
+
+
+
+
 armed = False
 direction = 0.0 # +- dd1
 speed = 0.0   # +- 1 
 def handle_game_controller():
     global armed, direction, speed
-    events = get_gamepad()
+    events = None
+    try:
+        events = get_gamepad()
+    except:
+        return
+
     for event in events:
        # print(event.ev_type, event.code, event.state)
         if event.code == 'BTN_SOUTH': # Arm
@@ -64,6 +73,8 @@ def main(args=None):
     # Start GameController update Thread 
     t1 = threading.Thread(target=gamepad_thread)
     t1.start()
+
+    node.get_logger().info("Gamepad driver Online!")
     # open serial port
     while rclpy.ok():
         #  read line from serial port
@@ -75,6 +86,7 @@ def main(args=None):
             msg.angular.z = float(direction)
         # publish message
         publisher.publish(msg)
+
         sleep(1/rate)  # seconds
         
     # Destroy the node explicitly

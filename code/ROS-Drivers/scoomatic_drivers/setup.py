@@ -30,6 +30,7 @@ setup(
 	        'sonar_driver = scoomatic_drivers.sonar_driver:main',
                 'motor_driver = scoomatic_drivers.motor_driver:main',
                 'gamepad_driver = scoomatic_drivers.gamepad_driver:main',
+                'test = scoomatic_drivers.test:main',
 	    ],
 	},
 )
