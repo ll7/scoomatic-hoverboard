@@ -308,6 +308,11 @@ msg.angluar.z = Richtung Links / Rechts -1..1
 
 https://www.youtube.com/watch?v=bAI4vnlQhPg
 https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
+
+# TODO
+Dateisystemstruktur
+topics und nodes
+launchfiles und nodes übersicht
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
