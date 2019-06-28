@@ -210,6 +210,13 @@ In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame'
 ### ROS2
 TODO
 
+
+## GPS
+### ROS1
+Matek Systems GPS Ublox SAM-M8Q
+https://github.com/KumarRobotics/ublox
+https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
+
 ### ROS2-Bridge
 
 ## RaspberryPi
@@ -219,6 +226,15 @@ Ubuntu 18.04 mit ROS Melodic und ROS2 Crystal
 git repos gehören in ~/git
 ros1 ws in ~/catkin_ws
 ros2 ws in ~/ros2_ws
+
+
+Dateisystemstruktur
+/home/ubuntu/git
+/home/ubuntu/catkin_ws
+/home/ubuntu/ros2_ws
+/opt/ros/melodic
+/opt/ros/crystal
+
 
 Pakete aus git repos sind über symlinks vom repo in den src Ordner eingefügt
 
@@ -310,9 +326,14 @@ https://www.youtube.com/watch?v=bAI4vnlQhPg
 https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
 
 # TODO
-Dateisystemstruktur
+ROS1:
+Lidar, GPS, IMU?
+ROS2
+Joystick, Gamepad, Sonar, Motoren
+
 topics und nodes
 launchfiles und nodes übersicht
+standardmäßig wird crystal gesourced, source /opt/ros/melodic/setup.bash für melodic
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
