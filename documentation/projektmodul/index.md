@@ -172,6 +172,34 @@ Der Arduino liest, nachdem er mit einer Stromquelle verbunden wurde, periodisch 
 > **Hinweis:** Auch an dieser Stelle sei nochmal erwähnt, dass durch die unterschiedlichen Logiklevel am Arduino Uno (5V) und am Hoverboard (**3.3V**) ein **Level-Shifter** notwendig ist, das das Mainboard sonst Schaden nemen kann. Außerdem liegt am roten Kabel des Steckverbinders zum Hoverboard eine Spannung von **14.4V** an, die, wenn falsch verbunden, sowohl den Arduino als auch das Mainboard zerstören kann (Zitat NiklasFauth:  "15v will destroy everything.")
 
 
+# Motortreiber
+
+## Debug
+ b'1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n'
+
+
+1: ADC1
+2: ADC2
+3: output speed R 0-1000
+4: output speed L 0-1000
+5: battery voltage calibration
+6: for verifying battery voltage
+7: for board temperature calibration
+8: for verifying board temperature calibration
+
+
+
+int32 adc1
+int32 adc2
+int32 wheelspeed_l # (0..1000)
+int32 wheelspeed_r  # (0..1000)
+int32 battery_voltage_calibration_value
+float32 battery_voltage
+int32 board_temperature_calibration_value
+int32 board_temperature
+ 
+
+
 # Sensorik
 ## Ultraschall
 Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" installiert. Zum Uploaden muss als Prozessor in der Arduino IDE "Atmega 328P (old bootloader)" gewählt werden, sonst klappt das flashen nicht.
