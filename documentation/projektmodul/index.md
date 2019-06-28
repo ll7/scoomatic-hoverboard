@@ -207,6 +207,8 @@ TODO Fix bug with all zero values
 ![Rviz mit RPLIDAR](../images/rviz-rplidar.png)
 In Rviz das 'Laser Scan' plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen
 
+Auf anderem rechner:
+export ROS_MASTER_URI=http://192.168.140.16:11311/
 ### ROS2
 TODO
 
@@ -220,6 +222,9 @@ https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 ### ROS2-Bridge
 
 ## RaspberryPi
+
+TODO: wifi connect mit nmcli
+eth0: dhcp
 TODO Imagedownload URL
 Login: ubuntu:notubuntu
 Ubuntu 18.04 mit ROS Melodic und ROS2 Crystal
