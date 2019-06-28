@@ -236,6 +236,9 @@ Dateisystemstruktur
 /opt/ros/crystal
 
 
+standardmäßig wird crystal gesourced, source /opt/ros/melodic/setup.bash für melodic
+
+
 Pakete aus git repos sind über symlinks vom repo in den src Ordner eingefügt
 
 
@@ -333,7 +336,8 @@ Joystick, Gamepad, Sonar, Motoren
 
 topics und nodes
 launchfiles und nodes übersicht
-standardmäßig wird crystal gesourced, source /opt/ros/melodic/setup.bash für melodic
+
+image dumpen wenn fertig
 # Sonstiges
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
