@@ -16,8 +16,7 @@ import serial
 import rclpy
 from sensor_msgs.msg import PointCloud2,PointField
 
-from std_msgs.msg import String
-
+node = None
 def read_serial(ser):
     # read line
     data = ser.readline()
@@ -40,11 +39,13 @@ def read_serial(ser):
 
 
 def main(args=None):
+    global node
     rclpy.init(args=args)
     # Start node
     node = rclpy.create_node('sonar_driver')
     # Read parameter
     topic = node.get_parameter('topic').value
+    rate = int(node.get_parameter('rate').value)
     # Cerate publisher
     publisher = node.create_publisher(PointCloud2, topic)
     # Create pointcloud message for the sensor values
@@ -62,7 +63,7 @@ def main(args=None):
     msg.point_step = 1
     msg.row_step = 8
     msg.data = [0,0,0,0,0,0,0,0]
-    msg.is_dense = True;
+    msg.is_dense = True
     node.get_logger().info("Using Serial Port "+str(node.get_parameter('port').value))
     port = node.get_parameter('port').value
     
@@ -71,13 +72,17 @@ def main(args=None):
         node.get_logger().info("Serial Port opened with 115200 Baud")
         while rclpy.ok():
             #  read line from serial port
-            data = read_serial(ser)
+            try:
+                data = read_serial(ser)
+            except:
+                sleep(1/rate)
+                continue
             # update message
             msg.data = data
 #           msg.header.stamp = rclpy.time() # Not implemented yet
             # publish message
             publisher.publish(msg)
-            sleep(0.5)  # seconds
+            sleep(1/rate)  # seconds
         
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically

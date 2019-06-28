@@ -31,6 +31,7 @@ setup(
                 'motor_driver = scoomatic_drivers.motor_driver:main',
                 'gamepad_driver = scoomatic_drivers.gamepad_driver:main',
                 'test = scoomatic_drivers.test:main',
+                'motor_diag = scoomatic_drivers.motor_diag:main'
 	    ],
 	},
 )
