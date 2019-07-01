@@ -35,7 +35,7 @@ def read_serial(ser):
 
     newdata = []
     if data[0] != "JOY":
-        node.get_logger().warn("Corrupt Package or wrong device selected (%s)" % node.get_parameter('port').value))
+        node.get_logger().warn("Corrupt Package or wrong device selected (%s)" % node.get_parameter('port').value)
         return[0,0,0]
     data.remove("JOY")
     for s in data: # Convert string values to integer
@@ -77,11 +77,11 @@ def main(args=None):
             # Create pointcloud message for the sensor values
             msg_vel = Twist()
             #    msg.header.stamp = rclpy.time() # Not implemented yet
-            msg_vel.linear.x = vel
-            msg_vel.anagular.z = rot
+            msg_vel.linear.x = float((vel/-512.0) -1)
+            msg_vel.angular.z = float((rot/512.0)-1)
 
             msg_btn = Bool()
-            msg_btn.data = btn_pressed
+            msg_btn.data = bool(btn_pressed)
 
             # publish messages
             publisher_vel.publish(msg_vel)

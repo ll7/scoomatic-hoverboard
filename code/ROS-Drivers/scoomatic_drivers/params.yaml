@@ -18,3 +18,9 @@ motor_diag:
                 topic: "/motor_diag"
                 port: "/dev/ttyUSB0"
                 rate: "5"
+joy_driver:
+        ros__parameters:
+                topic_vel: "/joy"
+                topic_btn: "/btn"
+                port: "/dev/ttyUSB0"
+                rate: "2020"
