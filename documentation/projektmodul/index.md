@@ -247,7 +247,12 @@ Matek Systems GPS Ublox SAM-M8Q
 https://github.com/KumarRobotics/ublox
 https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
-### ROS2-Bridge
+
+# IMU
+udev rules:
+https://forum.up-community.org/discussion/2141/solved-tutorial-gpio-i2c-spi-access-without-root-permissions
+## ROS2-Bridge
+
 
 ## RaspberryPi
 
