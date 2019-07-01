@@ -249,8 +249,7 @@ https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
 
 # IMU
-udev rules:
-https://forum.up-community.org/discussion/2141/solved-tutorial-gpio-i2c-spi-access-without-root-permissions
+i2c access for non root: sudo usermod -G i2c ubuntu
 ## ROS2-Bridge
 
 
