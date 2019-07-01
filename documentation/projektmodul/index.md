@@ -250,6 +250,27 @@ https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
 # IMU
 i2c access for non root: sudo usermod -G i2c ubuntu
+
+https://github.com/jusgomen/ros-mpu9250-imu
+Kompiliert nicht, arduino sketch läuft aber
+
+https://github.com/wolfeidau/ros-mpu9250-node
+Kompiliert, schmeißt aber error wegen ungültigem serial port
+
+
+-> https://github.com/jeskesen/i2c_imu läuft
+Build dependency:
+https://github.com/RTIMULib/RTIMULib2
+git clone https://github.com/RTIMULib/RTIMULib2.git
+cd RTIMULib2/RTIMULib
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig
+
+
+
 ## ROS2-Bridge
 
 
