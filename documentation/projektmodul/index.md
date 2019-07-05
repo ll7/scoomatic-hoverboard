@@ -11,42 +11,61 @@ TODO
 
 
 # Konfiguration Ubuntu
-Ubuntu 18.04 mit ROS Melodic und ROS2 Crystal
-TODO Imagedownload URL https://wiki.ubuntu.com/ARM/RaspberryPi
-Login: ubuntu:notubuntu
+Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert.
+
+TODO Imagedownload URL 
+## Verbindung zum Pi
+Auf dem Raspberry Pi läuft standardmäßig ein SSH-Server, mit dem man sich über folgenden Befehl verbinden kann.
+```bash
+ssh -X ubuntu@scoomatic_ip
+```
+Das *-X* Flag ermöglicht es bei Verwendung eines Linux-PCs als Client, grafische Programme wie rviz über SSH auf dem Pi auszufürhren und am lokalen Desktop auszuführen (s. [X11-Forwarding über SSH](http://www.tacticalcode.de/2013/02/x11-forwarding-uber-ssh.html))
+
+Statt scoomatic_ip muss die IP Adresse des Pis im lokalen Netzwerk eingetragen werden
+Das Password für den nutzer *ubuntu* wurde als *notubuntu* festgelegt
 ## Netzwerkkonfiguration
-TODO: wifi connect mit nmcli
-eth0: dhcp
+Die Netzwerkkonfiguration auf dem von Ubuntu bereitgestellten Image war kaputt und wurde manuell wie folgt festgelegt:
+Die Verwaltung des LAN Ports (eth0) erfolgt klassisch über die Datei /etc/network/interfaces und stellt bei Verbinden eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP
+
+Die WLAN-Schinttstelle wlan0 ließ sich nicht über den selben Weg konfigureieren und wird deshalb über Ubuntus network-manager Paket verwaltet. Über das Tool nmcli können Verbindungen hergestellt werden.
+
+
+```bash
+sudo nmcli device wifi rescan
+sudo nmcli device wifi list
+sudo nmcli device wifi connect SSID-Name password wireless-password
+```
+
+Das *rt* Netzwerk ist bereits eingerichtet und der Pi verbindet sich damit automatisch.
+
 
 ## Dateisystemstruktur
+Grundsätzlich ist das Dateisystem aufgebaut wie in jeder Linux Installation ([Linux File System/Structure Explained](https://www.youtube.com/watch?v=HbgzrKJvDRw))
+Im Nutzerverzeichnis `/home/ubuntu` (`~`) wurde  das Verzeichnis git angelegt, in das alle genutzten git-Repositorys geklont wurden. Sofern es sich bei den Repositorys um ROS1 oder 2 Pakete handelte, wurde ein Symlink in den src Ordner des jeweiligen Workspaces erzeugt (`ln -s /home/ubuntu/git/somerepo /home/ubuntu/catkin_ws/src)`)
 
+Der Workspace für ROS1 liegt unter `~/catkin_ws`, der für ROS2 unter `~/ros2_ws`
 
+Die ROS Installationen wurden nach den offiziellen Anleitungen über die Ubuntu Paketverwaltung Installiert und befinden sich in den Verzeichnissen `/opt/ros/melodic` bzw. `/opt/ros/crystal`.
 
+Neue ROS-Paket können über `apt-cache search Suchbegriff` gesucht, und über `sudo apt install -y paketname` installiert werden
+> **Hinweis:** In letzter Zeit scheint Ubuntu immer wieder den gespeicherten Key für die ROS Repos zu vergessen. Sollte es während der Ausführung von `sudo apt update` zu Problemen mit den ROS Paketquellen kommen, einfach den Befehl `sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654` ausführen und erneut updaten.
 
-git repos gehören in ~/git mit Symlink in den jeweiligen workspace
-ros1 ws in ~/catkin_ws
-ros2 ws in ~/ros2_ws
-
-
-/home/ubuntu/git
-/home/ubuntu/catkin_ws
-/home/ubuntu/ros2_ws
-/opt/ros/melodic
-/opt/ros/crystal
-
+TODO .bashrc
 ## ROS2 bedienung
-standardmäßig wird crystal gesourced, source /opt/ros/melodic/setup.bash für melodic
+Für die Nutzung einer ROS-Version muss immer eine setup.bash datei der jeweiligen Version über den `source` befehl geladen werden. Standardmäßig werden beim öffnen einer neuen bash Shell die Dateien `/opt/ros/crystal/setup.bash` und `~/ros2_ws/install/setup.bash` geladen. Dadurch wird die ROS2 Umgebung inklusive der im ROS2 Workspace installierten Pakete geladen.
 
+Pakete aus git Repositorys sind über symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
 
-Pakete aus git repos sind über symlinks vom repo in den src Ordner eingefügt
+Nachdem für ROS2 noch kaum Dokumentation existiert, wird hier die Nutzung einiger wichtiger tools für ROS2 erklärt. 
 
+Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in ~/.bashrc aliase für die beiden Funktionen erstellt
+```bash
+alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash"
+alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/")
+```
 
-aliases rbuild (alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash") für ros2ws bauen, rclean (alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/") für ros2ws cleanen
+Das Steuern von ROS2 erfolgt über das `ros2` binary
 
-
-
-
-ros2 bedienung über ros2 binary
 ```bash
 usage: ros2 [-h] Call `ros2 <command> -h` for more detailed usage. ...
 
@@ -72,26 +91,45 @@ Commands:
 
   Call `ros2 <command> -h` for more detailed usage.
 ```
+Die Kommandos `topic`, `srv`, `node` und `msg`  haben jeweils die Möglichkeit über `list` eine Auflistung aller Verfügbaren Möglichekeiten anzuzeigen oder über `info` Details zu einzelnen topics / nodes / services / messages abzurufen
 
-topic, srv, node, msg, srv haben list, info
-
-node starten über
-```bash
-ros2 run scoomatic_drivers node_name
+Besipiele
+```bash 
+ros2 srv list
+ros2 topic info /cmd_vel
 ```
 
-launchfile starten über
+
 ```bash
-ros2 launch scoomatic_drivers stuff
+ros2 topic echo /sonar # Gibt alle Nachrichen in Topic /sonar aus
 ```
+In ROS2 gibt es wie in ROS1 die Unterscheidung zwischen dem Start einzelner Nodes und dem Start von launch files, die mehrere Nodes Starten können. Anders als in ROS1 muss beim Starten einzelner Nodes vorher kein Master gestartet werden.
 
-umschalten zwischen Workspaces über
 
+```bash
+ros2 run package_name node_name # Node starten
+ros2 run scoomatic_drivers motor_driver # Motortreiber starten
+
+ros2 launch package_name launchfile_name
+```
+Eine Shell kann über den folgenden Befehl für die Nutzung einer anderen ROS-Version Konfiguriert werden
 ```bash
 source /opt/ros/[crystal oder melodic]/setup.bash
+source [~/ros2_ws/install/setup.bash oder ~/catkin_ws/devel/setup.bash]
 ```
 
+# ROS1 Bedienung
+Standardmäßig wird eine neue Shell Session für ROS2 Crystal initialisiert. Durch die ausführung des nachfolgenden Befehls kann die Umgebung allerdings auf ROS1 umgestellt werden
+```bash 
+source /opt/ros/melodic/setup.bash
+source ~/catkin_ws/devel/setup.bash
+
+Pakete aus git Repositorys sind über symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
+
+Die Kommandozeilentools für ROS1 sind [im ROS Wiki](http://wiki.ros.org/ROS/CommandLineTools) detailliert erklärt.
+
 ## ROS2-Bridge
+TODO
 # Hardware
 ## Hoverboard
 [Bezugsquelle Verwendetes Board](https://www.toysstoregmbh.de/10-hoverboard-smart-self-balance-board-bluetooth-luftbereifung-elektroroller-tuev-ce_343_1442)
@@ -411,6 +449,7 @@ https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-wi
 
 
 # Sonstiges
+Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html)
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
 Der Logic Analyzer wurde mit der Software [sigrok](https://sigrok.org/wiki/Main_Page) zusammen mit der dazugehörigen GUI PulseView verwendet.
