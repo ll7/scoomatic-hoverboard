@@ -123,7 +123,7 @@ Standardmäßig wird eine neue Shell Session für ROS2 Crystal initialisiert. Du
 ```bash 
 source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
-
+```
 Pakete aus git Repositorys sind über symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
 
 Die Kommandozeilentools für ROS1 sind [im ROS Wiki](http://wiki.ros.org/ROS/CommandLineTools) detailliert erklärt.
