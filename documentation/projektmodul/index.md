@@ -58,7 +58,7 @@ Pakete aus git Repositorys sind über symlinks vom Repo in `~/git` in den `src` 
 
 Nachdem für ROS2 noch kaum Dokumentation existiert, wird hier die Nutzung einiger wichtiger tools für ROS2 erklärt. 
 
-Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in ~/.bashrc aliase für die beiden Funktionen erstellt
+Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in `~/.bashrc` aliase für die beiden Funktionen erstellt
 ```bash
 alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash"
 alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/")
@@ -420,6 +420,8 @@ https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
 
 ### IMU
+verbunden über i2c (todo: schematic)
+
 i2c access for non root: sudo usermod -G i2c ubuntu
 
 https://github.com/jusgomen/ros-mpu9250-imu
@@ -440,7 +442,7 @@ make
 sudo make install
 sudo ldconfig
 
-## RaspberryPi
+
 
 ### XBOX One Controller
  sudo apt install sysfsutils
