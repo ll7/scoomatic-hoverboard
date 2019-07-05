@@ -297,11 +297,23 @@ Der Arduino liest, nachdem er mit einer Stromquelle verbunden wurde, periodisch 
 
 
 ### Motortreiber
+Für ROS2 wurde ein Treiber erstellt, welcher auf standardmäßig einen Listener vom Typ [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html) auf /cmd_vel erstellt und die darin empfangenen werte (jeweils zw. -1 und 1) an den Motor weitergibt. Für die Bewegung nach vorne bzw hinten wird der Wert linear.x und für die Drehung um die eigene Achse der Wert angular.z ausgewertet.
+
+Für die Ansteuerung des Motortreiberboards wurde die UART2 Schnittstelle über einen USB UART adapter mit dem Pi verbunden
+
+
+Parameter:
+```yaml
+motor_driver:
+       ros__parameters:
+               topic: "/cmd_vel"
+               port: "/dev/ttyUSB0" 
+```
+
 
 ### Motor Debug
- b'1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n'
-
-
+Die alternative Firmware für das Hoverboard liefert auf dem ersten UART die folgenden Diagnoseinformationen in periodischen Abständen
+```
 1: ADC1
 2: ADC2
 3: output speed R 0-1000
@@ -310,19 +322,39 @@ Der Arduino liest, nachdem er mit einer Stromquelle verbunden wurde, periodisch 
 6: for verifying battery voltage
 7: for board temperature calibration
 8: for verifying board temperature calibration
+```
+
+Dafür wird der folgender ASCII String gesendet:
+
+ ```
+ 1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
+ ```
+
+TODO topicprefix auch auserten
 
 
 
-int32 adc1
-int32 adc2
-int32 wheelspeed_l # (0..1000)
-int32 wheelspeed_r  # (0..1000)
-int32 battery_voltage_calibration_value
-float32 battery_voltage
-int32 board_temperature_calibration_value
-int32 board_temperature
+Anschließend werden die Werte in zugehörige Topics gepostet. Dabei wird beim Topicnamen ein gemeinsames, wählbares Prefix (standardmäßig `hoverdiag`) vorangestellt.
+Messagetyp | Topicname (Ohne Prefix)
+---------- | -------- 
+int32 | /adc1
+int32 | /adc2
+int32 | /wheelspeed_l # (0..1000)
+int32 | /wheelspeed_r  # (0..1000)
+int32 | /battery_voltage_calibration_value
+float32 | /battery_voltage
+int32 | /board_temperature_calibration_value
+int32 | /board_temperature
 
 
+Parameter:
+```yaml
+motor_diag:
+        ros__parameters:
+                topic: "/motor_diag" # prfix
+                port: "/dev/ttyUSB0" # Serial Port
+                rate: "5"            # Updaterate für Topics
+```
 
 ## Ultraschall
 Das Ultraschallsensorarray basiert auf dem [Sonic Disc](https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/) Projekt von Dimitris Platis. Der Hardwareaufbau wurde analog  zum dort verwendeten Schaltplan durchgeführt. Allerdings wurde ein Arduino Nano Board genutzt und dieses mithilfe von steckbaren Kabeln mit dem Nano verbunden.
@@ -331,11 +363,12 @@ Das Ultraschallsensorarray basiert auf dem [Sonic Disc](https://platis.solutions
 
 Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" installiert. Zum Uploaden muss als Prozessor in der Arduino IDE "Atmega 328P (old bootloader)" gewählt werden, sonst klappt das flashen nicht.
 
-Der SonicDisc sketch benötigt eine akutelle version der Arduino IDE (1.8.8 getestet und funktioniert). Mit der Version 1.0.5 aus den Ubuntu-Paketquellen kompiliert der sketch nicht.
+Der SonicDisc sketch benötigt eine akutelle version der Arduino IDE (1.8.8 und 1.8.9 getestet). Mit der Version 1.0.5 aus den Ubuntu-Paketquellen kompiliert der sketch nicht.
 
-Firmware: /code/Arduino Firmware/scoomatic-sonar
-ROS-Treiber: /code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py
-starten: ros2 run scoomatic_drivers sonar_driver __params:=params.yaml
+Die Firmware für den Arduino liegt im git unter `/code/Arduino Firmware/scoomatic-sonar`, der ROS2 Treiber  befindet sich in  `/code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py` und kann über folgenden Befehl gestartet werden:
+```bash
+ros2 run scoomatic_drivers sonar_driver __params:=~/ros2_ws/src/ros2_drivers/config/params.yaml
+```
 Parameter:
 ```yaml
 sonar_driver:
