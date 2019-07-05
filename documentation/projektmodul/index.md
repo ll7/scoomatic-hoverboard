@@ -325,10 +325,13 @@ int32 board_temperature
 
 
 ## Ultraschall
+Das Ultraschallsensorarray basiert auf dem [Sonic Disc](https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/) Projekt von Dimitris Platis. Der Hardwareaufbau wurde analog  zum dort verwendeten Schaltplan durchgeführt. Allerdings wurde ein Arduino Nano Board genutzt und dieses mithilfe von steckbaren Kabeln mit dem Nano verbunden.
+
+> **Hinweis:** Die Kabel sind Durchnummeriert und Farbig Kodiert. Gleiche Nummer zu gleicher Nummer und gleiche Farbe zu gleicher Farbe. Die Polarität der Stecker ist über eine weiße Farbmarkierung an Stecker und Buchse erkennbar.
+
 Auf den Arduino Nanos (FTDI-Version von az-delivery) ist der "alte Bootloader" installiert. Zum Uploaden muss als Prozessor in der Arduino IDE "Atmega 328P (old bootloader)" gewählt werden, sonst klappt das flashen nicht.
 
 Der SonicDisc sketch benötigt eine akutelle version der Arduino IDE (1.8.8 getestet und funktioniert). Mit der Version 1.0.5 aus den Ubuntu-Paketquellen kompiliert der sketch nicht.
-https://platis.solutions/blog/2017/08/27/sonicdisc-360-ultrasonic-scanner/
 
 Firmware: /code/Arduino Firmware/scoomatic-sonar
 ROS-Treiber: /code/ROS-Drivers/scoomatic_drivers/scoomatic_drivers/sonar_driver.py
