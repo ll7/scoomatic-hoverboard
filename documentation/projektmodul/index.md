@@ -335,16 +335,17 @@ TODO topicprefix auch auserten
 
 
 Anschließend werden die Werte in zugehörige Topics gepostet. Dabei wird beim Topicnamen ein gemeinsames, wählbares Prefix (standardmäßig `hoverdiag`) vorangestellt.
-Messagetyp | Topicname (Ohne Prefix)
----------- | -------- 
-int32 | /adc1
-int32 | /adc2
-int32 | /wheelspeed_l # (0..1000)
-int32 | /wheelspeed_r  # (0..1000)
-int32 | /battery_voltage_calibration_value
-float32 | /battery_voltage
-int32 | /board_temperature_calibration_value
-int32 | /board_temperature
+
+| Messagetyp | Topicname (Ohne Prefix) |
+| ---        | --- |
+| int32      | /adc1 |
+| int32      | /adc2 |
+| int32      | /wheelspeed_l # (0..1000) |
+| int32      | /wheelspeed_r  # (0..1000) |
+| int32      | /battery_voltage_calibration_value |
+| float32    | /battery_voltage |
+| int32      | /board_temperature_calibration_value |
+| int32      | /board_temperature |
 
 
 Parameter:
