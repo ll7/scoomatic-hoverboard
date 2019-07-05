@@ -19,15 +19,15 @@ Auf dem Raspberry Pi läuft standardmäßig ein SSH-Server, mit dem man sich üb
 ```bash
 ssh -X ubuntu@scoomatic_ip
 ```
-Das *-X* Flag ermöglicht es bei Verwendung eines Linux-PCs als Client, grafische Programme wie rviz über SSH auf dem Pi auszufürhren und am lokalen Desktop auszuführen (s. [X11-Forwarding über SSH](http://www.tacticalcode.de/2013/02/x11-forwarding-uber-ssh.html))
+Das `-X` Flag ermöglicht es bei Verwendung eines Linux-PCs als Client, grafische Programme wie rviz über SSH auf dem Pi auszufürhren und am lokalen Desktop auszuführen (s. [X11-Forwarding über SSH](http://www.tacticalcode.de/2013/02/x11-forwarding-uber-ssh.html))
 
-Statt scoomatic_ip muss die IP Adresse des Pis im lokalen Netzwerk eingetragen werden
-Das Password für den nutzer *ubuntu* wurde als *notubuntu* festgelegt
+Statt `scoomatic_ip` muss die IP Adresse des Pis im lokalen Netzwerk eingetragen werden
+Das Passwort für den nutzer `ubuntu` wurde als `notubuntu` festgelegt
 ## Netzwerkkonfiguration
 Die Netzwerkkonfiguration auf dem von Ubuntu bereitgestellten Image war kaputt und wurde manuell wie folgt festgelegt:
-Die Verwaltung des LAN Ports (eth0) erfolgt klassisch über die Datei /etc/network/interfaces und stellt bei Verbinden eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP
+Die Verwaltung des LAN Ports (`eth0`) erfolgt klassisch über die Datei `/etc/network/interfaces` und stellt bei Verbinden eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP
 
-Die WLAN-Schinttstelle wlan0 ließ sich nicht über den selben Weg konfigureieren und wird deshalb über Ubuntus network-manager Paket verwaltet. Über das Tool nmcli können Verbindungen hergestellt werden.
+Die WLAN-Schinttstelle `wlan0` ließ sich nicht über den selben Weg konfigureieren und wird deshalb über Ubuntus `network-manager` Paket verwaltet. Über das Tool `nmcli` können Verbindungen hergestellt werden.
 
 
 ```bash
@@ -36,7 +36,7 @@ sudo nmcli device wifi list
 sudo nmcli device wifi connect SSID-Name password wireless-password
 ```
 
-Das *rt* Netzwerk ist bereits eingerichtet und der Pi verbindet sich damit automatisch.
+Das `rt` Netzwerk ist bereits eingerichtet und der Pi verbindet sich damit automatisch.
 
 
 ## Dateisystemstruktur
