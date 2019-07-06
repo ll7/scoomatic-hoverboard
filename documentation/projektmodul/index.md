@@ -13,7 +13,7 @@ TODO
 # Konfiguration Ubuntu
 Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert.
 
-TODO Imagedownload URL 
+TODO Imagedownload URL
 ## Verbindung zum Pi
 Auf dem Raspberry Pi läuft standardmäßig ein SSH-Server, mit dem man sich über folgenden Befehl verbinden kann.
 ```bash
@@ -56,7 +56,7 @@ Für die Nutzung einer ROS-Version muss immer eine setup.bash datei der jeweilig
 
 Pakete aus git Repositorys sind über symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
 
-Nachdem für ROS2 noch kaum Dokumentation existiert, wird hier die Nutzung einiger wichtiger tools für ROS2 erklärt. 
+Nachdem für ROS2 noch kaum Dokumentation existiert, wird hier die Nutzung einiger wichtiger tools für ROS2 erklärt.
 
 Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in `~/.bashrc` aliase für die beiden Funktionen erstellt
 ```bash
@@ -94,7 +94,7 @@ Commands:
 Die Kommandos `topic`, `srv`, `node` und `msg`  haben jeweils die Möglichkeit über `list` eine Auflistung aller Verfügbaren Möglichekeiten anzuzeigen oder über `info` Details zu einzelnen topics / nodes / services / messages abzurufen
 
 Besipiele
-```bash 
+```bash
 ros2 srv list
 ros2 topic info /cmd_vel
 ```
@@ -120,7 +120,7 @@ source [~/ros2_ws/install/setup.bash oder ~/catkin_ws/devel/setup.bash]
 
 # ROS1 Bedienung
 Standardmäßig wird eine neue Shell Session für ROS2 Crystal initialisiert. Durch die ausführung des nachfolgenden Befehls kann die Umgebung allerdings auf ROS1 umgestellt werden
-```bash 
+```bash
 source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 ```
@@ -307,7 +307,7 @@ Parameter:
 motor_driver:
        ros__parameters:
                topic: "/cmd_vel"
-               port: "/dev/ttyUSB0" 
+               port: "/dev/ttyUSB0"
 ```
 
 
@@ -420,20 +420,21 @@ https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
 
 
 ### IMU
-verbunden über i2c (todo: schematic)
+Als IMU kommt das [MPU9250 Board](https://www.sparkfun.com/products/13762?_ga=2.80323807.954031109.1562450120-313791285.1548811828) von Sparkfun zum Einsatz. Dieses ist direkt über I2C mit dem Pi verbunden. Die Verkabelung kann dem folgenden Diagramm entnommen werden.
+![Schaltplan IMU](./images/IMU_SCH.png)
 
-i2c access for non root: sudo usermod -G i2c ubuntu
+Um auf einer neuen Installation oder mit einem anderen Nutzer ohne root-Rechte auf die i2c Schnittstelle zugreifen zu können, muss der Nutzer (in dem Fall `ubuntu`) in die Gruppe `i2c` aufgenommen werden.
 
-https://github.com/jusgomen/ros-mpu9250-imu
-Kompiliert nicht, arduino sketch läuft aber
+```bash
+sudo usermod -G i2c ubuntu
+sudo reboot
+```
+Für den MPU9250-Chip existieren mehrere, meist veraltete Pakete für ROS1, [ros-mpu9250-imu](https://github.com/jusgomen/ros-mpu9250-imu) kompiliert nicht, der im Repo enthaltene Arduino-Sketch liefert aber Daten zurück. [ros-mpu9250-node](https://github.com/wolfeidau/ros-mpu9250-node) kompiliert zwar, schmeißt aber einen Fehler wegen Zugriffsproblemen auf die i2c Schnittstelle.
 
-https://github.com/wolfeidau/ros-mpu9250-node
-Kompiliert, schmeißt aber error wegen ungültigem serial port
+Letztendlich funktionierte nur das Paket [i2c_imu](https://github.com/jeskesen/i2c_imu)
+Dieses ist auf dem Image installiert. Im falle einer Installation auf einem anderen System muss die Builddependency [RTIMULib2](https://github.com/RTIMULib/RTIMULib2) folgendermaßen installiert werden:
 
-
--> https://github.com/jeskesen/i2c_imu läuft
-Build dependency:
-https://github.com/RTIMULib/RTIMULib2
+```bash
 git clone https://github.com/RTIMULib/RTIMULib2.git
 cd RTIMULib2/RTIMULib
 mkdir build && cd build
@@ -441,50 +442,42 @@ cmake ..
 make
 sudo make install
 sudo ldconfig
+```
+
+Der eigentliche Start des Nodes erfolgt in einem ROS1 Workspace über den folgenden Befehl
+```bash
+ros run TODO
+```
 
 
 
 ### XBOX One Controller
- sudo apt install sysfsutils
- sudo nano /etc/sysfs.conf
- place the following at the end of the file.
- "/module/bluetooth/parameters/disable_ertm=1"
-
-
-Bluetooth auf image aktivieren
-sudo apt-get install bluetooth blueman
-sudo modprobe btusb
-sudo systemctl start bluetooth
-# sudo systemctl start hciuart
-
-
-### gamepad_driver
+Der `gamepad_driver` ermöglicht das Steuern des Scoomatic über einen beliebigen von Linux unterstützen Gamecontroller. Dabei wird auf das [Inputs](https://pypi.org/project/inputs/) Framework zurückgegriffen. Bei einem XBOX One Controller dient der linke Analogstick zur Lenkung und die Trigger links und rechts zum Festlegen der Geschwindigkeit nach vorne oder hinten. Zusätzlich muss immer der **A**-Button als eine Art Totmannschalter gehalten werden, sonst wird keine Bewegung ausgeführt.
+Der Treiber kann über den folgenden Befehl gestartet werden.
+```bash
 ros2 run scoomatic_drivers gamepad_driver __params:=params.yaml
+```
 
-Joystickbelegung:
-btn_sout (0,1) = A = Arm
-ABS_RZ (0..1023) = RT = Speed
+Der Treiber publisht eine Message vom Typ geometry_msgs/Twist, deren Inhalt direkt kompatibel zum Motortreiber ist. Es wird also auch hier die Geschwindigkeit in `linear.x` und die Drehgeschwindigkeit in `angular.z` gespeichert.
 
-ABS_Z (0..1023) = RT = Reverse Speed
-ABS_Y = (-32768.32767) = LStick lr = Lenken
-
-params:
+Parameter:
 ```yaml
 gamepad_driver:
         ros__parameters:
                 topic: "/gamepad" # Topic for geometry_msgs/Twist message
                 rate: 10 # Updaterate for Topic
 ```
-Aufbau Message:
-msg.linear.x = Vorwärts / Rückwärts -1..1
-msg.angluar.z = Richtung Links / Rechts -1..1
 
+#### Verbindung XBOX One Controller über Bluetooth
+Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg))
+```bash
+ sudo apt install sysfsutils
+ sudo nano /etc/sysfs.conf
+ # place the following at the end of the file.
+ "/module/bluetooth/parameters/disable_ertm=1"
+```
 
-https://www.youtube.com/watch?v=bAI4vnlQhPg
-https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html
-
-
-
+[Tutorial Bluetooth Controller mit Pi verbinden](https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html)
 
 
 # Sonstiges
