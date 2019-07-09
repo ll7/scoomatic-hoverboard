@@ -1,19 +1,27 @@
 Dokumentation Projektmodul
 =========
+TODO: TOC
 # Softwarearchitektur
-* Kombination aus ROS1 Melodic und ROS2 Crystal auf Ubuntu 18.04 (Weil nur da unterstützt)
+* ROS2 Weil requirements erfüllt werden
+* Modularer, flexibler Aufbau
+* Echtzeitfähige Kommunikation
+* Kommunikationslayer muss nicht extra implementiert werden
+* Publish / Subscribe Nachrichtenstruktur als Basis für Kommunikation
+* Große Community
+* Noch nicht viele Funktionen Implementiert, wird aber stark weiterentwickelt
+* -> Kombination aus ROS1 Melodic und ROS2 Crystal auf Ubuntu 18.04 (Weil nur da unterstützt)
 * Angebotene Services werden im Hardwareteil genauer erklärt
 ![Deployment Diagramm](./images/Deployment.png)
-
+Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
 TODO
 * topics und nodes
 * launchfiles und nodes übersicht
 
 
 # Konfiguration Ubuntu
-Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert.
+Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
 
-TODO Imagedownload URL
+
 ## Verbindung zum Pi
 Auf dem Raspberry Pi läuft standardmäßig ein SSH-Server, mit dem man sich über folgenden Befehl verbinden kann.
 ```bash
@@ -138,13 +146,15 @@ Das Mainboard unterscheidet sich sowohl in der Geometrie als auch vom Prozessor 
 
 ![Bild Hoverboard Mainboard](../images/mainboard.jpg)
 
+![Bild Hoverboard Mainboard](https://raw.githubusercontent.com/NiklasFauth/hoverboard-firmware-hack/master/pinout.png)
+[Quelle](https://github.com/NiklasFauth/hoverboard-firmware-hack)
 Zu den auf dem Board verwendeten MOSFETs vom Typ HN75N09AP war kein Datenblatt auffindbar. Die technischen Daten, die aus einer [Produktbeschreibung](http://dalincom.ru/goods-10601.html) entnommen werden konnten sind nachfolgend aufgelistet:
-| Bezeichnung | Wert |
-| --- | --- |
-| Typ | N-Channel |
-| Maximale Drain/Source Spannung   | 90V  |
-| Maximaler Storm Drain/Source  | 75A |
-| Gehäuse   | TO-220   |
+| Bezeichnung                      | Wert      |
+| ---                              | ---       |
+| Typ                              | N-Channel |
+| Maximale Drain/Source Spannung   | 90V       |
+| Maximaler Storm Drain/Source     | 75A       |
+| Gehäuse                          | TO-220    |
 
 ### Sensorboard
 
@@ -171,22 +181,22 @@ Die Pinbelegung der *Buchse* ist nachfolgen dargestellt:
 
 ![Versuchsaufbau](../images/experiment-stock-fw.jpg)
 Zum Ansteuern der Motoren mit der originalen Mainboard-Firmware wurde die serielle Kommunikation zwischen Sensor- und Mainboard analysiert. Hierfür kam ein [Logic-Analyzer](https://eur.saleae.com/products/saleae-logic-8?variant=10963959349291) zum Einsatz. Das ermittelte Protokoll ähnelt dem [hier](http://drewspewsmuse.blogspot.com/2016/06/how-i-hacked-self-balancing-scooter.html) vorgestellten. Die folgenden Parameter konnten für die serielle Verbindung ermittelt werden.
-| Bezeichnung | Wert |
-| --- | --- |
-| Baudrate | 27000 |
-| Datenbits | 8 |
-| Stopbits   | 1  |
-| Paritybits   | 0  |
-| Bitorder   | LSB first  |
+| Bezeichnung | Wert       |
+| ---         | ---        |
+| Baudrate    | 27000      |
+| Datenbits   | 8          |
+| Stopbits    | 1          |
+| Paritybits  | 0          |
+| Bitorder    | LSB first  |
 
-Da vom Mainboard aus scheinbar nusuddenr Befehle zum An- und Abschalten der LED-Beleuchtung gesendet werden, wurde nur die Kommunikation vom Sensor- zum Mainboard reverse-engineert.
+Da vom Mainboard aus scheinbar nur Befehle zum An- und Abschalten der LED-Beleuchtung gesendet werden, wurde nur die Kommunikation vom Sensor- zum Mainboard reverse-engineert.
 Das Sensorboard sendet wiederholt ein Datenpaket, welches die Geschwindigkeit des Motors vorgibt.
 
-| BYTE_0 | BYTE_1 | BYTE_2 | BYTE_3 | BYTE_4 | BYTE_5 | BYTE_6 | BYTE_7 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| STATE | SPD_L | SPD_H | SPD_L | SPD_H | UNK1 | UNK1 | TRAILER |
+| BYTE_0 | BYTE_1 | BYTE_2 | BYTE_3 | BYTE_4 | BYTE_5 | BYTE_6 | BYTE_7  |
+| ---    | ---    | ---    | ---    | ---    | ---    | ---    | ---     |
+| STATE  | SPD_L  | SPD_H  | SPD_L  | SPD_H  | UNK1   | UNK1   | TRAILER |
 
-In Byte0 des Pakets wird der Status der Lichtschranke (0x55 ^= mindestens eine Schranke unterbrochen -> Motor aktivieren, 0x TODO ^= keine Schranke unterbrochen, Motor abschalten) übermittelt. Anschließend wird zweimal das Low- und das High-Byte der Sollgeschwindigkeit übertragen. Die Geschwindigkeit ist hierbei als 16-Bit-Signed-Integer in 2K Darstellung codiert. Danach folgen weitere zwei Bytes, deren Wert immer gleich ist. Die Bedeutung dieser Bytes ist nicht bekannt. Welcher Wert hier übertragen wird, scheint aber keine Auswirkung auf die Funktion des Boards zu haben. Jedes Paket wird mit einem konstanten Trailerbyte mit dem Wert 0xC0 beendet.
+In Byte0 des Pakets wird der Status der Lichtschranke (0x55 ^= mindestens eine Schranke unterbrochen -> Motor aktivieren, 0x TODO ^= keine Schranke unterbrochen, Motor abschalten) übermittelt. Anschließend wird zweimal das Low- und das High-Byte der Sollgeschwindigkeit übertragen. Die Geschwindigkeit ist hierbei als 16-Bit-Signed-Integer in [2K Darstellung](https://de.wikipedia.org/wiki/Zweierkomplement) codiert. Danach folgen weitere zwei Bytes, deren Wert immer gleich ist. Die Bedeutung dieser Bytes ist nicht bekannt. Welcher Wert hier übertragen wird, scheint aber keine Auswirkung auf die Funktion des Boards zu haben. Jedes Paket wird mit einem konstanten Trailerbyte mit dem Wert 0xC0 beendet.
 
 > **Hinweis:** Um Beschädigungen am Hoverboard durch zu hohe Ströme bei Kurzschlüssen etc. zu vermeiden, wurde der Akku ausgebaut und ein Labornetzgerät mit Strombegrenzung mit der XT-60 Akkubuchse verbunden. Die Strombegrenzung kann auf 2A eingestellt werden, wenn nur ein Motor im Leerlauf betrieben wird. Die Eingangsspannung sollte 36-42V betragen.
 
@@ -265,7 +275,7 @@ Anschließend kann der ST-LinkV2 Programmieradapter an dem Header angeschlossen 
 
 ![Verbindung mit STLink](../images/connection-mainboard-stlink.jpg)
 
-Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labornetzgerät bei einer Spannung zwischen 36 und 42V verbunden und die beiden Pins des Anschalters am Board dauerhaft gebrückt. Anschließend wird der
+Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labornetzgerät bei einer Spannung zwischen 36 und 42V verbunden und die beiden Pins des Anschalters am Board dauerhaft gebrückt.
 
 > **Hinweis:** Um Beschädigungen am Hoverboard durch zu hohe Ströme bei Kurzschlüssen etc. zu vermeiden, wurde der Akku ausgebaut und ein Labornetzgerät mit Strombegrenzung mit der XT-60 Akkubuchse verbunden. Die Strombegrenzung kann auf 2A eingestellt werden, wenn nur ein Motor im Leerlauf betrieben wird. Die Eingangsspannung sollte 36-42V betragen.
 
@@ -319,33 +329,38 @@ Die alternative Firmware für das Hoverboard liefert auf dem ersten UART die fol
 3: output speed R 0-1000
 4: output speed L 0-1000
 5: battery voltage calibration
-6: for verifying battery voltage
+6: battery voltage * 100
 7: for board temperature calibration
-8: for verifying board temperature calibration
+8: board temperature
 ```
+Die Werte ADC1 und ADC2 sind die Werte der beiden Analog zu Digitalconverter am Board. An diese Eingänge können Analogsignale zwischen 0 und 3,3V angeschlossen werden. Die Spannungen an den Eingängen werden dann als Zahlenwert zwischen 0 und 4096 (12 Bit ADC im STM32F103) in den entsprechenden ROS Topics angezeigt.
 
+Die Geschwindigkeit hat keine genaue Einheit.
+Für die Kalibrierung der Batteriespannung und Boardtemperatur sei auf das [Hoverboard Firmware Hack Video](https://www.youtube.com/watch?v=qnQSL9DBPaE) verwiesen.
+
+> **Hinweis:** Wo die ADCs herausgeführt werden kann aus der Abbildung im Abschnitt [Mainboard](#mainboard) entnommen werden.
 Dafür wird der folgender ASCII String gesendet:
 
  ```
  1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
  ```
 
-TODO topicprefix auch auserten
+TODO topicprefix auch auswerten
 
 
 
 Anschließend werden die Werte in zugehörige Topics gepostet. Dabei wird beim Topicnamen ein gemeinsames, wählbares Prefix (standardmäßig `hoverdiag`) vorangestellt.
 
-| Messagetyp | Topicname (Ohne Prefix) |
-| ---        | --- |
-| int32      | /adc1 |
-| int32      | /adc2 |
-| int32      | /wheelspeed_l # (0..1000) |
-| int32      | /wheelspeed_r  # (0..1000) |
-| int32      | /battery_voltage_calibration_value |
-| float32    | /battery_voltage |
+| Messagetyp | Topicname (Ohne Prefix)              |
+| ---        | ---                                  |
+| int32      | /adc1                                |
+| int32      | /adc2                                |
+| int32      | /wheelspeed_l # (0..1000)            |
+| int32      | /wheelspeed_r  # (0..1000)           |
+| int32      | /battery_voltage_calibration_value   |
+| float32    | /battery_voltage                     |
 | int32      | /board_temperature_calibration_value |
-| int32      | /board_temperature |
+| int32      | /board_temperature                   |
 
 
 Parameter:
