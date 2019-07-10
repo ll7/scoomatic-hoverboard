@@ -494,7 +494,9 @@ Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte si
 
 [Tutorial Bluetooth Controller mit Pi verbinden](https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html)
 
-
+### Joystick
+TODO 
+TODO Protokoll dokumentieren, Protokoll sonar?
 # Sonstiges
 Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html)
 ## Verwendete Software
