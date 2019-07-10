@@ -233,8 +233,6 @@ Die Firmware wurde unter Ubuntu 18.04 kompiliert. Zuerst müssen die notwendigen
   sudo apt install gcc-arm-embedded build-essential openocd git
 ```
 
-> **Hinweis:** Die aktuellste Ubuntu Version mit der sich das Paket TODO aus den Fremdquellen derzeit (Januar 2019) installieren lässt scheint 18.04 zu sein. Für 18.10 existieren noch keine Pakete
-
 > **Hinweis:** Die Anweisungen zum kompilieren unter Windows finden sich [hier](https://github.com/NiklasFauth/hoverboard-firmware-hack/wiki/Build-Instruction:-TranspOtter#24-toolchain)
 
 Anschließend kann die Firmware heruntergeladen werden
@@ -394,9 +392,15 @@ sonar_driver:
 ```
 
 ## LIDAR
-* Treiber schon installiert und startet automatisch (ROS1)
-* Publisht Pointcloud2 message nach TODO
-* Kann in Config file TODO geändert werden
+Der [Treiber für den RPLIDAR A1](http://wiki.ros.org/rplidar) (ROS1) ist schon installiert und startet automatisch
+Soll er manuell gestartet werden, muss folgender Befehl ausgeführt werden:
+```bash
+source /opt/ros/melodic/setup.bash # ROS1 Sourcen
+rosrun rplidar_ros rplidarNode serial_port:=/dev/ttyUSB... # Node Starten
+```
+Der Serial Port muss natürlich durch den aktuellen Port des Lidars ersetzt werden.
+
+Der Treiber publisht Nachrichten vom Typ sensor_msgs/PointCloud2 nach /scan
 
 ### Installation der Treiber
 Auf dem Installierten Image sind die Treiber für den LIDAR bereits installiert. Soll der LIDAR an einem anderen Rechner betrieben werden, muss das Paket [ros-melodic-rplidar-ros](http://wiki.ros.org/rplidar) aus den ROS1 Paketquellen installiert werden.
