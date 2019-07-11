@@ -37,7 +37,7 @@ def parselatandlong(long, long_dir, lat, lat_dir):
     dd = int(float(lat) / 100)
     ss = float(lat) - float(dd * 100)
     lat = dd + ss / 60
-    #print(dd, ss, lat)
+
     # calculation for latitude
     ddd = int(float(long) / 100)
     ss = float(long) - ddd * 100
@@ -64,11 +64,10 @@ def parse_gaa(input_gaa):
         lat_dir = gaa[GGAEnum.Lat_dir.value]
         ret['lat'], ret['lon'] = parselatandlong(long, long_dir, lat, lat_dir)
         ret['alt'] = float(gaa[GGAEnum.Alt.value])
-#        node.get_logger().info("Lat= %s and Long= %s" %( ret['lat'], ret['lon']))
-        node.get_logger().info("Number of satellites %s "%gaa[GGAEnum.numberofsatellites.value])
-#        node.get_logger().info("Altitude= %s"% ret['alt'])
+        #        node.get_logger().info("Lat= %s and Long= %s" %( ret['lat'], ret['lon']))
+        node.get_logger().info("Number of satellites %s " % gaa[GGAEnum.numberofsatellites.value])
+        #        node.get_logger().info("Altitude= %s"% ret['alt'])
         return ret
-
 
 
 def main(args=None):
@@ -108,7 +107,7 @@ def main(args=None):
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
             timeout=1
-                ) as ser:
+    ) as ser:
 
         node.get_logger().info("Serial Port %s opened with %s Baud" % (port, baud))
         while rclpy.ok():
@@ -132,7 +131,7 @@ def main(args=None):
                         publisher.publish(msg_no_fix)
             except Exception as e:
                 node.get_logger().warn("Exception!")
-                print (e)
+                print(e)
                 publisher.publish(msg_no_fix)
 
             #    msg.header.stamp = rclpy.time() # Not implemented yet
@@ -148,4 +147,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-

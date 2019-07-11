@@ -31,7 +31,6 @@ setup(
             'sonar_driver = scoomatic_drivers.sonar_driver:main',
             'motor_driver = scoomatic_drivers.motor_driver:main',
             'gamepad_driver = scoomatic_drivers.gamepad_driver:main',
-            'test = scoomatic_drivers.test:main',
             'motor_diag = scoomatic_drivers.motor_diag:main',
             'joy_driver = scoomatic_drivers.joy_driver:main',
             'gps_driver = scoomatic_drivers.gps_driver:main'

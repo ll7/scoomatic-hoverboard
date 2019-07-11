@@ -21,7 +21,9 @@ import serial
 import rclpy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
+
 node = None
+
 
 def read_serial(ser):
     # read line
@@ -31,20 +33,20 @@ def read_serial(ser):
         data = data.decode('ascii').split(";")
     except UnicodeDecodeError:
         node.get_logger().warn("Corrupt Package from Joystick (could not decode)")
-        return [0,0,0]
+        return [0, 0, 0]
 
     newdata = []
     if data[0] != "JOY":
         node.get_logger().warn("Corrupt Package or wrong device selected (%s)" % node.get_parameter('port').value)
-        return[0,0,0]
+        return [0, 0, 0]
     data.remove("JOY")
-    for s in data: # Convert string values to integer
+    for s in data:  # Convert string values to integer
         i = int(s)
         newdata.append(i)
     data = newdata
     if (len(data) is not 3):
         node.get_logger().warn("Corrupt Package from Joystick (Have you used the right port?")
-        return [0,0,0]
+        return [0, 0, 0]
     return data
 
 
@@ -62,9 +64,7 @@ def main(args=None):
     publisher_vel = node.create_publisher(Twist, topic_vel)
     publisher_btn = node.create_publisher(Bool, topic_btn)
 
-
-
-    node.get_logger().info("Using Serial Port "+str(node.get_parameter('port').value))
+    node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
     port = node.get_parameter('port').value
 
     # open serial port
@@ -77,8 +77,8 @@ def main(args=None):
             # Create pointcloud message for the sensor values
             msg_vel = Twist()
             #    msg.header.stamp = rclpy.time() # Not implemented yet
-            msg_vel.linear.x = float((vel/-512.0) -1)
-            msg_vel.angular.z = float((rot/512.0)-1)
+            msg_vel.linear.x = float((vel / -512.0) - 1)
+            msg_vel.angular.z = float((rot / 512.0) - 1)
 
             msg_btn = Bool()
             msg_btn.data = bool(btn_pressed)
@@ -86,7 +86,7 @@ def main(args=None):
             # publish messages
             publisher_vel.publish(msg_vel)
             publisher_btn.publish(msg_btn)
-            sleep(1/rate)  # seconds
+            sleep(1 / rate)  # seconds
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
