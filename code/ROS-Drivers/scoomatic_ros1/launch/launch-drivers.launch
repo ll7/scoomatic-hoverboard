@@ -2,10 +2,9 @@
 <launch>
 
     <!-- IMU -->
-    <include file="$(find i2c_imu)/launch/mpu_9250.launch"/>
+    <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
 
     <!-- LIDAR -->
     <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen"/>
 
 </launch>
-
