@@ -37,7 +37,7 @@ def parselatandlong(long, long_dir, lat, lat_dir):
     dd = int(float(lat) / 100)
     ss = float(lat) - float(dd * 100)
     lat = dd + ss / 60
-    print(dd, ss, lat)
+    #print(dd, ss, lat)
     # calculation for latitude
     ddd = int(float(long) / 100)
     ss = float(long) - ddd * 100
@@ -53,7 +53,6 @@ def parselatandlong(long, long_dir, lat, lat_dir):
 
 
 def parse_gaa(input_gaa):
-    print(input_gaa)
     gaa = input_gaa.split(",")
     if gaa[GGAEnum.Fixquality.value] == 0:
         node.get_logger().warn("Invalid Data")
@@ -63,24 +62,13 @@ def parse_gaa(input_gaa):
         long_dir = gaa[GGAEnum.Long_dir.value]
         lat = gaa[GGAEnum.Lat.value]
         lat_dir = gaa[GGAEnum.Lat_dir.value]
-        ret['lat'], ret['long'] = parselatandlong(long, long_dir, lat, lat_dir)
-        ret['alt'] = gaa[GGAEnum.Alt.value]
-        node.get_logger().info("Lat= ", ret['lat'], "and Long= ", ret['long'])
-        node.get_logger().info("Number of satellites", gaa[GGAEnum.numberofsatellites.value])
-        node.get_logger().info("Altitude", ret['alt'])
+        ret['lat'], ret['lon'] = parselatandlong(long, long_dir, lat, lat_dir)
+        ret['alt'] = float(gaa[GGAEnum.Alt.value])
+#        node.get_logger().info("Lat= %s and Long= %s" %( ret['lat'], ret['lon']))
+        node.get_logger().info("Number of satellites %s "%gaa[GGAEnum.numberofsatellites.value])
+#        node.get_logger().info("Altitude= %s"% ret['alt'])
         return ret
 
-
-device_file = sys.argv[1]
-ser = serial.Serial(
-
-    port=device_file,
-    baudrate=9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1
-)
 
 
 def main(args=None):
@@ -94,7 +82,7 @@ def main(args=None):
     topic = node.get_parameter('topic').value
 
     # Cerate publisher
-    publisher = node.create_publisher(PointCloud2, topic)
+    publisher = node.create_publisher(NavSatFix, topic)
 
     # Create NavSatFix message for the sensor values
     msg = NavSatFix()
@@ -106,14 +94,22 @@ def main(args=None):
 
     # create message to send when there is no fix
     msg_no_fix = NavSatFix()
-    msg_no_fix.latitude = 0
-    msg_no_fix.longitude = 0
-    msg_no_fix.altitude = 0
+    msg_no_fix.latitude = 0.0
+    msg_no_fix.longitude = 0.0
+    msg_no_fix.altitude = 0.0
     msg_no_fix.status.service = 1
     msg_no_fix.status.status = -1
 
     # open serial port
-    with serial.Serial(port, baud) as ser:
+    with serial.Serial(
+            port=port,
+            baudrate=baud,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1
+                ) as ser:
+
         node.get_logger().info("Serial Port %s opened with %s Baud" % (port, baud))
         while rclpy.ok():
             #  read line from serial port
@@ -134,7 +130,9 @@ def main(args=None):
                         publisher.publish(msg)
                     else:
                         publisher.publish(msg_no_fix)
-            except:
+            except Exception as e:
+                node.get_logger().warn("Exception!")
+                print (e)
                 publisher.publish(msg_no_fix)
 
             #    msg.header.stamp = rclpy.time() # Not implemented yet
@@ -151,4 +149,3 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 
-while 1:
