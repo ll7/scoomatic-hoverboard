@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<launch>
+	<node pkg="tf" type="static_transform_publisher" name="imu_to_base" 
+		args="0 0 .1 0 0 0 base_link imu_link 50" />	
+
+	<node name="i2c_imu_node" pkg="i2c_imu" type="i2c_imu_node" ns="imu" output="screen">
+		<param name="imu_frame" value="imu_link" />
+
+		<param name="i2c_bus" value="1" />
+
+		<param name="i2c_slave_address" value="104" />
+		<!--imu_type:
+			0 = Auto discover
+			1 = Null (used when data is provided from a remote IMU
+			2 = InvenSense MPU-9150
+			3 = STM L3GD20H + LSM303D
+			4 = STM L3GD20 + LSM303DLHC
+			5 = STM LSM9DS0
+			6 = STM LSM9DS1
+			7 = InvenSense MPU-9250
+			8 = STM L3GD20H + LSM303DLHC
+			9 = Bosch BMX055
+			10 = Bosch BNX055
+		-->
+		<param name="imu_type" value="7" />
+
+		<!--fusion_type:
+			0 = RTFUSION_TYPE_NULL: just a dummy to keep things happy if not needed
+			1 = RTFUSION_TYPE_KALMANSTATE4: kalman state is the quaternion pose
+			2 = RTFUSION_TYPE_RTQF: RT quaternion fusion
+		-->
+		<param name="fusion_type" value="2" />
+
+		<!-- mpu9250/gyro_accel_sample_rate: 5 - 1000 Hz -->
+		<param name="mpu9250/gyro_accel_sample_rate" value="80" />
+
+		<!-- mpu9250/compass_sample_rate: 1 - 100 Hz -->
+		<param name="mpu9250/compass_sample_rate" value="40" />	
+			
+		<!-- mpu9250/gyro_low_pass_filter:
+			0x11 - 8800Hz, 0.64mS delay
+			0x10 - 3600Hz, 0.11mS delay
+			0x00 - 250Hz, 0.97mS delay
+			0x01 - 184Hz, 2.9mS delay
+			0x02 - 92Hz, 3.9mS delay
+			0x03 - 41Hz, 5.9mS delay
+			0x04 - 20Hz, 9.9mS delay
+			0x05 - 10Hz, 17.85mS delay
+			0x06 - 5Hz, 33.48mS delay
+		-->
+		<param name="mpu9250/gyro_low_pass_filter" value="3" />
+		
+		<!-- mpu9250/accel_low_pass_filter:
+			0x00 - 460Hz, 1.94mS delay
+			0x01 - 184Hz, 5.80mS delay
+			0x02 - 92Hz, 7.80mS delay
+			0x03 - 41Hz, 11.80mS delay
+			0x04 - 20Hz, 19.80mS delay
+			0x05 - 10Hz, 35.70mS delay
+			0x06 - 5Hz, 66.96mS delay
+		-->
+		<param name="mpu9250/accel_low_pass_filter" value="3" />
+
+		<!-- mpu9250/gyro_full_scale_range:
+			0 +/- 250 degress per second
+			8 +/- 500 degress per second
+			16 +/- 1000 degress per second
+			24 +/- 2000 degress per second
+		-->
+		<param name="mpu9250/gyro_full_scale_range" value="16" />
+
+		<!-- mpu9250/accel_full_scale_range:
+			0 +/- 2g
+			8 +/- 4g
+			16 +/- 8g
+			24 +/- 16g
+		-->
+		<param name="mpu9250/accel_full_scale_range" value="16" />
+	</node>
+</launch>
