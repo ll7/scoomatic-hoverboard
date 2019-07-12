@@ -1,4 +1,4 @@
-Dokumentation Projektmodul
+GAMDokumentation Projektmodul
 =========
 TODO: TOC
 # Softwarearchitektur
@@ -481,6 +481,12 @@ ros2 run scoomatic_drivers gamepad_driver __params:=params.yaml
 
 Der Treiber publisht eine Message vom Typ geometry_msgs/Twist, deren Inhalt direkt kompatibel zum Motortreiber ist. Es wird also auch hier die Geschwindigkeit in `linear.x` und die Drehgeschwindigkeit in `angular.z` gespeichert.
 
+Dependencies:
+Der Treiber benutzt die `inputs` library von python. Bei der neuinstallation des Treibers auf einem anderen System muss diese deshalb folgendermaßen installiert werden:
+```bash
+pip install inputs
+```
+
 Parameter:
 ```yaml
 gamepad_driver:
@@ -488,6 +494,8 @@ gamepad_driver:
                 topic: "/gamepad" # Topic for geometry_msgs/Twist message
                 rate: 10 # Updaterate for Topic
 ```
+
+
 
 #### Verbindung XBOX One Controller über Bluetooth
 Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg))
