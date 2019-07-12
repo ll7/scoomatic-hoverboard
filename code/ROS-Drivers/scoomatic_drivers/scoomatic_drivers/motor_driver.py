@@ -14,7 +14,16 @@ import rclpy
 from geometry_msgs.msg import Twist
 
 node = None
+
 last_bytes = bytearray([0, 0, 0, 0])
+
+
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
 
 
 # Limits value to +- max
@@ -68,13 +77,13 @@ def main(args=None):
     node = rclpy.create_node('motor_driver')
 
     # Open serial port
-    port = node.get_parameter('port').value
+    port = get_param('port', '/dev/ttyUSB0')
+    topic = get_param('topic', '/cmd_vel')
 
     # Hoverboard expects packets at ~50Hz
     sleeptime = 1 / 50
 
     # Listen for command messages
-    topic = node.get_parameter('topic').value
     node.get_logger().info("Topic name: %s" % topic)
 
     subscription = node.create_subscription(Twist, topic, callback)

@@ -36,6 +36,13 @@ from std_msgs.msg import Int32, Float32
 
 node = None
 
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
+
 
 def read_serial(ser):
     # read line
@@ -66,8 +73,12 @@ def main(args=None):
     rclpy.init(args=args)
     # Start node
     node = rclpy.create_node('motor_diag')
+
     # Read parameter
-    topic_prefix = node.get_parameter('topic').value
+    topic_prefix = get_param('topic', '/motor_diag')
+    port = get_param('port', '/dev/ttyUSB0')
+    rate = get_param('rate', 5)
+
     # Cerate publisher
     p1 = node.create_publisher(Int32, '/%s/adc1' % topic_prefix)
     p2 = node.create_publisher(Int32, '/%s/adc2' % topic_prefix)
@@ -89,9 +100,8 @@ def main(args=None):
     m7 = Int32()
     m8 = Int32()
 
-    node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
-    port = node.get_parameter('port').value
-    rate = node.get_parameter('rate').value
+    node.get_logger().info("Using Serial Port " + str(port))
+
 
     # open serial port
     with serial.Serial(port, 115200) as ser:

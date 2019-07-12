@@ -32,6 +32,12 @@ speed = 0.0  # +- 1
 node = None
 thread_active = True
 
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
 
 def handle_game_controller():
     global armed, direction, speed, node
@@ -68,8 +74,8 @@ def main(args=None):
     node = rclpy.create_node('gamepad_driver')
 
     # Read parameters
-    topic = node.get_parameter('topic').value
-    rate = node.get_parameter('rate').value
+    topic = get_param('topic')
+    rate = get_param('rate')
 
     # Cerate publisher
     publisher = node.create_publisher(Twist, topic)
@@ -77,7 +83,7 @@ def main(args=None):
     # Create  message for the sensor values
     msg = Twist()
 
-    # Start GameController update Thread 
+    # Start GameController update Thread
     t1 = threading.Thread(target=gamepad_thread)
     t1.start()
 

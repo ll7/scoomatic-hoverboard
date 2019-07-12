@@ -19,7 +19,13 @@ import rclpy
 from sensor_msgs.msg import NavSatFix
 
 GGA = []
-
+node = None
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
 
 class GGAEnum(Enum):
     UTCtime = 1
@@ -78,16 +84,17 @@ def main(args=None):
     node = rclpy.create_node('gps_driver')
 
     # Read parameter
-    topic = node.get_parameter('topic').value
+    topic = get_param('topic', '/fix')
+    port = get_param('port', '/dev/ttyUSB0')
+    baud = get_param('baudrate', '9600')
 
     # Cerate publisher
     publisher = node.create_publisher(NavSatFix, topic)
 
     # Create NavSatFix message for the sensor values
     msg = NavSatFix()
-    node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
-    port = node.get_parameter('port').value
-    baud = node.get_parameter('baudrate').value
+    node.get_logger().info("Using Serial Port " + str(port))
+
 
     rate = 20  # Max update rate is 18 Hz so this should do
 

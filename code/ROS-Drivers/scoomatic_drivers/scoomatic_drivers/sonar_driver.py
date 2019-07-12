@@ -18,6 +18,12 @@ import rclpy
 from sensor_msgs.msg import PointCloud2, PointField
 
 node = None
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
 
 
 def read_serial(ser):
@@ -46,9 +52,12 @@ def main(args=None):
     rclpy.init(args=args)
     # Start node
     node = rclpy.create_node('sonar_driver')
-    # Read parameter
-    topic = node.get_parameter('topic').value
-    rate = int(node.get_parameter('rate').value)
+    # Read parameters
+    topic = get_param('topic', '/sonar')
+    rate = int(get_param('rate', 3))
+    port = get_param('port', '/dev/ttyUSB0')
+    baud = get_param('baudrate', 115200)
+
     # Cerate publisher
     publisher = node.create_publisher(PointCloud2, topic)
     # Create pointcloud message for the sensor values
@@ -67,12 +76,11 @@ def main(args=None):
     msg.row_step = 8
     msg.data = [0, 0, 0, 0, 0, 0, 0, 0]
     msg.is_dense = True
-    node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
-    port = node.get_parameter('port').value
-    baud = node.get_parameter('baudrate').value
+    node.get_logger().info("Using Serial Port " + str(port))
+
 
     # open serial port
-    with serial.Serial(port, 115200) as ser:
+    with serial.Serial(port, baud) as ser:
         node.get_logger().info("Serial Port %s opened with %s Baud" % (port, baud))
         while rclpy.ok():
             #  read line from serial port

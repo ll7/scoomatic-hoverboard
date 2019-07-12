@@ -24,6 +24,13 @@ from std_msgs.msg import Bool
 
 node = None
 
+def get_param(param_name, default_value):
+    ret = node.get_parameter(param_name).value
+    if(ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+        return default_value
+    return ret
+
 
 def read_serial(ser):
     # read line
@@ -56,16 +63,17 @@ def main(args=None):
     # Start node
     node = rclpy.create_node('joy_driver')
     # Read parameter
-    topic_vel = node.get_parameter('topic_vel').value
-    topic_btn = node.get_parameter('topic_btn').value
-    rate = node.get_parameter('rate').value
+    topic_vel = get_param('topic_vel', '/joy')
+    topic_btn = get_param('topic_btn', '/btn')
+    rate = get_param('rate', 30)
+    port = get_param('port', '/dev/ttyUSB0')
 
     # Cerate publishers for cmd_vel message and button
     publisher_vel = node.create_publisher(Twist, topic_vel)
     publisher_btn = node.create_publisher(Bool, topic_btn)
 
     node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
-    port = node.get_parameter('port').value
+
 
     # open serial port
     with serial.Serial(port, 115200) as ser:

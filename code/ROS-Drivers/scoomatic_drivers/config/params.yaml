@@ -2,7 +2,7 @@ sonar_driver:
         ros__parameters:
                 port: "/dev/ttyUSB0"
                 topic: "/sonar"
-                rate: "10"
+                rate: 10
                 baudrate: 115200
 gamepad_driver:
         ros__parameters:
@@ -12,21 +12,21 @@ gamepad_driver:
 motor_driver:
        ros__parameters:
                topic: "/cmd_vel"
-               port: "/dev/ttyUSB0" 
+               port: "/dev/ttyUSB0"
 
 motor_diag:
         ros__parameters:
                 topic: "/motor_diag"
                 port: "/dev/ttyUSB0"
-                rate: "5"
+                rate: 5
 joy_driver:
         ros__parameters:
                 topic_vel: "/joy"
                 topic_btn: "/btn"
                 port: "/dev/ttyUSB0"
-                rate: "2020"
+                rate: 20
 gps_driver:
         ros__parameters:
                 port: "/dev/ttyUSB0"
                 topic: "/fix"
-                baudrate: 9600 
+                baudrate: 9600
