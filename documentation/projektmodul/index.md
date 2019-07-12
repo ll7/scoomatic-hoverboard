@@ -1,4 +1,4 @@
-GAMDokumentation Projektmodul
+Dokumentation Projektmodul
 =========
 TODO: TOC
 # Softwarearchitektur
@@ -17,9 +17,12 @@ TODO
 * topics und nodes
 * launchfiles und nodes übersicht
 
+TODO autolaunch scripts
 
 # Konfiguration Ubuntu
 Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
+
+> **Hinweis:** Inzwischen gibt es auch 64-Bit Images von [Ubuntu Mate](https://ubuntu-mate.org/download/) für den Raspberry Pi. Diese sind allerdings noch als experimental eingestuft.
 
 
 ## Verbindung zum Pi
@@ -148,6 +151,7 @@ Das Mainboard unterscheidet sich sowohl in der Geometrie als auch vom Prozessor 
 
 ![Bild Hoverboard Mainboard](https://raw.githubusercontent.com/NiklasFauth/hoverboard-firmware-hack/master/pinout.png)
 [Quelle](https://github.com/NiklasFauth/hoverboard-firmware-hack)
+
 Zu den auf dem Board verwendeten MOSFETs vom Typ HN75N09AP war kein Datenblatt auffindbar. Die technischen Daten, die aus einer [Produktbeschreibung](http://dalincom.ru/goods-10601.html) entnommen werden konnten sind nachfolgend aufgelistet:
 | Bezeichnung                      | Wert      |
 | ---                              | ---       |
@@ -173,8 +177,8 @@ Das Protokoll, über das das Sensorboard dem Mainboard die Motorgeschwindigkeit 
 
 ![Pinout Sensorboard](../images/pinout-sensorboard.png)
 ### Netzteil
-Das beim Hoverboard mitgelieferte Netzteil hat eine Spannung von 42V und liefert einen maximalen Strom von 2A. Der Stecker für die Verbindung zum Board ist vom Typ TODO
-Die Pinbelegung der *Buchse* ist nachfolgen dargestellt:
+Das beim Hoverboard mitgelieferte Netzteil hat eine Spannung von 42V und liefert einen maximalen Strom von 2A.
+Die Pinbelegung der **Buchse** ist nachfolgen dargestellt:
 
 ![Pinbelegung Ladebuchse](../images/pinout-chargingport.png)
 ### Ansteuerung der Motoren mit Originalfirmware
@@ -255,7 +259,11 @@ Die folgenden Änderungen wurden dabei durchgführt:
   //#define ADC2_MIN 0                // min ADC2-value while poti at minimum-position (0 - 4095)
   //#define ADC2_MAX 4095               // max ADC2-value while poti at maximum-position (0 - 4095)
 
+  #define SPEED_COEFFICIENT   -1.0  // higher value == stronger. 0.0 to ~2.0?
 ```
+> **Hinweis:** Sollte die Leistung / Geschwindigkeit der Motoren nicht ausreichen, könnte der SPEED_COEFFICIENT noch hochgesetzt werden. Ebenso kann der STEER_COEFFICIENT erhöht werden, um höhere Drehgeschwindigkeiten zu erreichen.
+
+Das komplette Konfigurationsdatei und eine kompilierte Firmwaredatei finden sich im Repository unter `/code/hoverboard-firmware/`
 
 Jetzt kann die Firmware durch Ausführen von make im Wurzelverzeichnis des Repos gebaut werden.
 
@@ -368,7 +376,7 @@ Parameter:
 ```yaml
 motor_diag:
         ros__parameters:
-                topic: "/motor_diag" # prfix
+                topic: "/motor_diag" # prefix
                 port: "/dev/ttyUSB0" # Serial Port
                 rate: "5"            # Updaterate für Topics
 ```
@@ -386,12 +394,16 @@ Die Firmware für den Arduino liegt im git unter `/code/Arduino Firmware/scoomat
 ```bash
 ros2 run scoomatic_drivers sonar_driver __params:=~/ros2_ws/src/ros2_drivers/config/params.yaml
 ```
+
+TODO: Pinout,  Protokoll sonar, schematic pcb
 Parameter:
 ```yaml
 sonar_driver:
         ros__parameters:
                 port: "/dev/ttyUSB0"  # Serial port des Sensors
                 topic: "/sonar"       # Topic in das gepublisht werden soll
+                baudrate: 115200
+                rate: 10
 ```
 
 ## LIDAR
@@ -435,7 +447,7 @@ Die Konfiguration von rviz erfolgt dann wie im vorherigen Abschnitt.
 
 ## GPS
 Matek Systems GPS Ublox SAM-M8Q
-
+TODO
 ### ROS1
 https://github.com/KumarRobotics/ublox
 https://www.fpv24.com/de/matek-systems/matek-systems-gps-ublox-sam-m8q
@@ -477,9 +489,9 @@ roslaunch i2c_imu mpu_9250.launch
 
 ### XBOX One Controller
 Der `gamepad_driver` ermöglicht das Steuern des Scoomatic über einen beliebigen von Linux unterstützen Gamecontroller. Dabei wird auf das [Inputs](https://pypi.org/project/inputs/) Framework zurückgegriffen. Bei einem XBOX One Controller dient der linke Analogstick zur Lenkung und die Trigger links und rechts zum Festlegen der Geschwindigkeit nach vorne oder hinten. Zusätzlich muss immer der **A**-Button als eine Art Totmannschalter gehalten werden, sonst wird keine Bewegung ausgeführt.
-Der Treiber kann über den folgenden Befehl gestartet werden.
+Der Treiber kann manuell über den folgenden Befehl gestartet werden.
 ```bash
-ros2 run scoomatic_drivers gamepad_driver __params:=params.yaml
+ros2 run scoomatic_drivers gamepad_driver __params:=~/ros2_ws/src/scoomatic_drivers/config/params.yaml
 ```
 
 Der Treiber publisht eine Message vom Typ geometry_msgs/Twist, deren Inhalt direkt kompatibel zum Motortreiber ist. Es wird also auch hier die Geschwindigkeit in `linear.x` und die Drehgeschwindigkeit in `angular.z` gespeichert.
@@ -500,8 +512,8 @@ gamepad_driver:
         ros__parameters:
                 topic: "/gamepad" # Topic for geometry_msgs/Twist message
                 rate: 10 # Updaterate for Topic
-                gain_lin: 2.0
-                gain_ang: 0.5
+                gain_lin: 2.0 # Multiplikator für Geschwindigkeit
+                gain_ang: 0.5 # Multiplikator für Drehrate
 ```
 
 Gain Parameter sind für den Afterglow AP.2  Controller. Der XBOX One Controller benötigt evtl andere Parameter.
@@ -518,7 +530,45 @@ Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte si
 
 ### Joystick
 TODO
-TODO Protokoll dokumentieren, Protokoll sonar?
+TODO Protokoll dokumentieren,?
+
+Die vom Joystick gesendeten Datenpakete sind folgendermaßen aufgebaut:
+```
+JOY;JOY_X;JOY_Y;BTN_PRESSED\r\n
+```
+Dabei können `JOY_X` und `JOY_Y` Werte von 0 bis 1023 annehmen und entsprechen der Joystickauslenkung auf der jeweiligen Achse. `BTN_PRESSED` ist 1, wenn der Button des Joysticks gedrückt ist, andernfalls 0.
+
+Beispiel:
+```
+JOY;242;823;0\r\n
+```
+
+Diese Werte werden über den USB-Serial Port des Arduinos an den Raspberry Pi übertragen. Der ROS2 Node `joy_driver` aus dem `scoomatic_drivers` Paket liest diese Werte aus und publisht sie als zwei Nachrichtentypen. Es wird jeweils eine Nachricht vom Typ `std_msgs/Bool` und `geometry_msgs/Twist` gepublisht. Die Nachricht vom Typ Bool enthält den aktuellen Zustand des Buttons. Die Twist-Nachricht enthält wie beim gamepad_driver Steuerinformationen für den Motortreiber. Auch hier ist die Geschwindigkeit nach vorne / hinten im Attribut linear.x und die Drehgeschwindigkeit in angular.z gespeichert.
+
+Der Treiber kann manuell über den folgenden Befehl gestartet werden.
+```bash
+ros2 run scoomatic_drivers joy_driver __params:=~/ros2_ws/src/scoomatic_drivers/config/params.yaml
+```
+
+Parameter:
+```yaml
+joy_driver:
+        ros__parameters:
+                topic_vel: "/joy" # Topic for Joystick message
+                topic_btn: "/btn" # Topic for Button pressed / not pressed mesage
+                port: "/dev/ttyUSB0" # Serial Port of Joystick
+                rate: "30" # Update Rate (Set to higher than 25Hz)
+```
+
+### Stromversorgung
+TODO
+
+#### Schalterboard
+
+# Known Bugs
+TODO
+- bluetooth
+- sonar 0 bug
 # Sonstiges
 Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html)
 ## Verwendete Software
@@ -526,5 +576,14 @@ Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/) 
 Der Logic Analyzer wurde mit der Software [sigrok](https://sigrok.org/wiki/Main_Page) zusammen mit der dazugehörigen GUI PulseView verwendet.
 Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](http://fritzing.org/home/) erstellt.
 
-TODO
+# TODO
+## Doku
+
+schematics
+usb serial ports
+## Rest
 image dumpen wenn fertig
+fusion dateien git
+
+
+gamepad_driver + joy mergen (Neue default params + gain)
