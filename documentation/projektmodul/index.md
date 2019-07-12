@@ -343,9 +343,12 @@ Dafür wird der folgender ASCII String gesendet:
  1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
  ```
 
-TODO topicprefix auch auswerten
 
+> **Hinweis:** Durch die hohe baudrate von 115200 und das lange Kabel vom Board zum Serial-Adapter kommen einige Pakete korrupt an. Der Treiber meldet das dann mit der nachfolgenden Meldung. Dadurch gehen einige Pakete verloren. Sollte das ein Problem werden, sollte sich dies lösen lassen, indem das Kabel vom Hoverboard zum Serial Adapter gekürzt und die restliche Strecke mittels eines USB Verlängerungskabels überbrückt wird.
 
+```
+WARN] [motor_diag]: Serial package Invalid. Did you set the right port?
+```
 
 Anschließend werden die Werte in zugehörige Topics gepostet. Dabei wird beim Topicnamen ein gemeinsames, wählbares Prefix (standardmäßig `hoverdiag`) vorangestellt.
 
