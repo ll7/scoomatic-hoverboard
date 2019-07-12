@@ -500,10 +500,11 @@ gamepad_driver:
         ros__parameters:
                 topic: "/gamepad" # Topic for geometry_msgs/Twist message
                 rate: 10 # Updaterate for Topic
+                gain_lin: 2.0
+                gain_ang: 0.5
 ```
 
-
-
+Gain Parameter sind für den Afterglow AP.2  Controller. Der XBOX One Controller benötigt evtl andere Parameter.
 #### Verbindung XBOX One Controller über Bluetooth
 Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg))
 ```bash
