@@ -487,6 +487,10 @@ Der Treiber benutzt die `inputs` library von python. Bei der neuinstallation des
 pip install inputs
 ```
 
+Außerdem muss der Nutzer in diesem Fall `ubuntu` zugriffsrechte auf `input` Geräte bekommen
+```bash
+sudo usermod -G input ubuntu
+```
 Parameter:
 ```yaml
 gamepad_driver:
