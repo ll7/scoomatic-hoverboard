@@ -579,11 +579,9 @@ Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](h
 # TODO
 ## Doku
 
-schematics
-usb serial ports
+* schematics
+* usb serial ports
 ## Rest
-image dumpen wenn fertig
-fusion dateien git
-
-
-gamepad_driver + joy mergen (Neue default params + gain)
+* image dumpen wenn fertig
+* fusion dateien git
+* gamepad_driver + joy mergen (Neue default params + gain)
