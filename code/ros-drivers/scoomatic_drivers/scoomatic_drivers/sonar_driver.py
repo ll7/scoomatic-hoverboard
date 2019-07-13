@@ -18,10 +18,12 @@ import rclpy
 from sensor_msgs.msg import PointCloud2, PointField
 
 node = None
+
+
 def get_param(param_name, default_value):
     ret = node.get_parameter(param_name).value
-    if(ret == None):
-        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+    if (ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)" % (param_name, default_value))
         return default_value
     return ret
 
@@ -77,7 +79,6 @@ def main(args=None):
     msg.data = [0, 0, 0, 0, 0, 0, 0, 0]
     msg.is_dense = True
     node.get_logger().info("Using Serial Port " + str(port))
-
 
     # open serial port
     with serial.Serial(port, baud) as ser:

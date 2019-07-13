@@ -20,8 +20,8 @@ last_bytes = bytearray([0, 0, 0, 0])
 
 def get_param(param_name, default_value):
     ret = node.get_parameter(param_name).value
-    if(ret == None):
-        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+    if (ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)" % (param_name, default_value))
         return default_value
     return ret
 

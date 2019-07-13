@@ -24,10 +24,11 @@ from std_msgs.msg import Bool
 
 node = None
 
+
 def get_param(param_name, default_value):
     ret = node.get_parameter(param_name).value
-    if(ret == None):
-        node.get_logger().warn("No value set for parameter %s using default value (%s)"%(param_name, default_value))
+    if (ret == None):
+        node.get_logger().warn("No value set for parameter %s using default value (%s)" % (param_name, default_value))
         return default_value
     return ret
 
@@ -73,7 +74,6 @@ def main(args=None):
     publisher_btn = node.create_publisher(Bool, topic_btn)
 
     node.get_logger().info("Using Serial Port " + str(node.get_parameter('port').value))
-
 
     # open serial port
     with serial.Serial(port, 115200) as ser:
