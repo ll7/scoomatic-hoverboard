@@ -1,24 +1,34 @@
 Dokumentation Projektmodul
 =========
 TODO: TOC
-TODO Einleitung
-# Softwarearchitektur
-TODO Ausformulieren
-* ROS2 Weil requirements erfüllt werden
-* Modularer, flexibler Aufbau
-* Echtzeitfähige Kommunikation
-* Kommunikationslayer muss nicht extra implementiert werden
-* Publish / Subscribe Nachrichtenstruktur als Basis für Kommunikation
-* Große Community
-* Noch nicht viele Funktionen Implementiert, wird aber stark weiterentwickelt
-* -> Kombination aus ROS1 Melodic und ROS2 Crystal auf Ubuntu 18.04 (Weil nur da unterstützt)
-* Angebotene Services werden im Hardwareteil genauer erklärt
-![Deployment Diagramm](./images/Deployment.png)
-Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
-TODO
-* topics und nodes
-* launchfiles und nodes übersicht
+# Vorstellung des Projekts
+In dieser Dokumentation sollen die in der Seminararbeit erarbeiteten Kenntnisse genutzt werden, um einen Prototypen zu entwickeln, der die dort definierten Anforderungen erfüllt. Der Prototyp hält sich dabei weitestgehend an den Bauvorschlag 2: Hoverboard aus der Arbeit. Aus diesem Grund wird der grundsätzliche Aufbau hier nicht genauer erklärt und nur auf die Seminararbeit verwiesen. Im Folgenden wird zunächst die Softwarearchitektur des Scoomatic erklärt und dabei auch auf die Bedienung des Bordcomputers eingegangen. Anschließend wird die Hardware, ihre Treiber und das Zusammenspiel der Elektronischen Komponenten genauer erklärt. Abschließend wird noch kurz auf den mechanischen Aufbau eingegangen.
 
+# Softwarearchitektur
+Als Softwareframework wurde ROS2 ausgewählt, das es die im Seminar aufgestellten Requirements erfüllt und damit ein flexibles, modulares Framework bietet, dass echtzeitfähige Kommunikation der Komponenten erlaubt und bereits viele Tools, Treiber sowie eine Kommunikationsinfrastruktur mitbringt.
+
+Ein weiterer Punkt, der für die Verwendung von ROS spricht, ist die große Community, die Treiber und Tools für verschiedene Geräte wie z.B. Sensoren bereitstellt. Dadurch kann erheblicher Implementierungsaufwand gespart werden.
+
+Der Kommunikationslayer basiert auf einer Publish / Subscribe Nachrichtenarchitektur mit verschiedenen Kanälen (sogenannten Topics). Jedes Programm ist ein Node und kann in Topics schreiben (publish) und über neue Nachrichten informiert werden (subscribe). Darauf aufbauend gibt es für Nodes auch die möglichkeit Services und Actions anzubieten, die von anderen Nodes aufgerufen werden können. Der Unterschiede zwischen Services und Actions liegt dabei in der Ausführungsdauer. Service Calls blockieren in der Regel nicht bzw terminieren innerhalb von kurzer Zeit (z.B. Das Scharfschalten von Motoren bei Quadcoptern). Actions benötigen längere Zeit um ausgeführt zu werden (z.B. Das fahren einer Bewegung mit einem Roboterarm). Zu diesem Zweck bieten Actions zusätzlich die Möglichkeit, den aktuellen Fortschritt mitzuteilen. Zur Organisation von Nodes können diese in Pakete gruppiert und so verteilt werden. Nodes können nativ in C++ oder Python implementiert werden, es gibt aber einige Communityprojekte, die das Schreiben von Nodes mit anderen Sprachen wie z.B. C# oder Java ermöglichen.
+
+Dadurch, dass die Version 2 von ROS noch in den Kinderschuhen steckt, sind noch wenige Pakete von ROS1 portiert und die momentane Treiber- und Toolunterstützung lässt noch zu wünschen übrig. Um die umfangreichen ROS1 Pakete dennoch nutzen zu können, existiert eine ROS1 Bridge, die es ermöglicht, ROS1 und ROS2 parallel nebeneinander auszuführen und auf die Daten der jeweils anderen Version zuzugreifen.
+
+Um so von den Vorteilen beider ROS Versionen gebrauch machen zu können, wurde eine Kombination aus ROS1 und ROS2 auf dem Bordcomputer installiert. Dabei wurde die akutelle LTS version von ROS1 (Melodic) und die zum Start der Arbeit aktuelle ROS2 Version (Crystal) installiert. Diese wurden beide für die Installation auf Ubuntu 18.04 ausgelegt.
+
+Hier wird nun ein kurzer Überblick über die Architektur der Software gegeben, die verwendeten Treiber für die einzelnen Geräte werden später genau erklärt.
+
+Für den verwendeten LIDAR Sensor und die IMU existierten bereits ROS1 Treiber, die sich problemlos verwenden ließen. Daher wurden diese nicht auf ROS2 implementiert bzw portiert.
+Der ROS1 Ublox-Treiber für das GPS-Modul war leider veraltet und unterstütze den vewendeten SAM M8Q Chip nicht, weshalb ein eigener Treiber in ROS2 implementiert wurde. Der Treiber für das Gamepad war in python leicht zu implementieren, weswegen nicht auf ein ROS1 Paket zurückgegriffen wurde. Bei den anderen Treibern handelt es sich um Eigenentwicklungen bzw. Geräte die nicht in ROS1 unterstützt werden, weswegen ein eigener ROS2 Treiber implementiert wurde.
+
+Im Aktuellen Stand laufen also der Treiber für den LIDAR und die IMU auf ROS1 und sind über die ROS1 Bridge in ROS2 verfügbar. Sämtliche anderen Treiber laufen unter ROS2
+
+
+![Deployment Diagramm](./images/Deployment.png)
+
+
+> **Hinweis:** Ein Großteil der verwendeten Hardware ist über USB zu Serial Adaptern an den Pi angeschlossen. Leider entscheidet Linux beim Start zufällig, welcher USB Serial Adapter welchen port unter /dev/ttyUSB* bekommt. Um die Beispielscripte und Configdateien zu nutzen, müssen momentan nach jedem Start alle Geräte, die Seriell über USB kommunizieren (Auch die Arduinos) abgesteckt werden und anschließend in der auf den Steckern gelabelten Reihenfolge wieder angeschlossen werden. Dieses Verhalten könnte möglicherweise mit [diesem Trick](https://rolfblijleven.blogspot.com/2015/02/howto-persistent-device-names-on.html) abgestellt werden.
+
+Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
 
 # Konfiguration Ubuntu
 Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetztigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
@@ -145,6 +155,9 @@ Das Skript `~/catkin_ws/src/scoomatic_ros1/start_ros1.bash` startet alle ROS1 No
 ## ROS2-Bridge
 TODO
 # Hardware
+Im Folgenden werden die Hardwareelemente und ihre Treiber genauer vorgestellt. Dabei wird zuerst das Reverseengineering des Hoverboards genauer erklärt und anschließend auf die Sensoren und Eingabegeräte eingegangen.
+
+
 ## Hoverboard
 [Bezugsquelle Verwendetes Board](https://www.toysstoregmbh.de/10-hoverboard-smart-self-balance-board-bluetooth-luftbereifung-elektroroller-tuev-ce_343_1442)
 ### Mainboard
@@ -618,31 +631,33 @@ Die Pinbelegung ist auf dem Board angebracht und sollte selbsterklärend sein. D
 
 Über das Schalterboard lassen sich Motortreiber und Zubehörgeräte an- und abschalten. Der Schalter mit der Beschriftung `Motor` ist der alte anschalter des Hoverboards. Dieser wurde lediglich an den Lenker verlegt. Durch einfaches drücken lässt sich damit der Motortreiber an- und abschalten. Eine rot blinkende LED (Und leichtes fiepsen aus dem bereich des Hoverboards...) zeigt dabei ein angeschaltetes Motortreiberboard an. Über den Wippschalter mit der Aufschrift `AUX` lässt sich die Zubehörelektronik an- und abschalten. Dazu zählen der Raspberry Pi, sämtliche Senosren und die Stromversorgung für das Auxilliary Power Module. Eine grüne LED weist dabei auf eine aktive Stromversorgung hin.
 
+# Mechanischer Aufbau
+## Chassis
+![Render Scoomatic](./images/render.png)
+  Das Chassis wurde weitestgehend aus Bosch-Rexeroth Profilschienen und den zugehörigen Verbindungselementen erstellt. Für den genauen Aufbau sei auf das CAD-Modell unter `/dokcumentation/cad/f360` und die eigentliche Hardware verwiesen. Das Chassis des Hoverboards wurde weitestegehend unverändert übernommen. Die beiden Chassishälften wurden getrennt und über ein längeres 30mm Stahlrohr mit 2mm Wandstärke miteinander verbunden. Vorher wurde der Zapfen zur Begrenzung des rotatorischen Spiels entfernt. Das längere Rohr ermöglicht es, das Aluprofil der Chassisunterseite zwischen den Hoverboardhälften zu befestigen. Dafür wurde in dieses Profil ein 30mm Loch gefräst.
+  Um die beiden Hoverboardhälften am Chassis zu befestigen, wurde je ein Loch durch jede Hälfte und das Chassis gebohrt. Diese Löcher, die auch durch das Stahlrohr reichen, ermöglichen die Installation von M8 Schrauben, die verhindern, dass sich die Boardhälften auf dem Rohr drehen oder davon abfallen können.
+## Brackets
+## Anhänger
+![Anhänger](./images/anhaenger.png)
+Ursprünglich war angedacht, den Scoomatic in zwei Teilen aufzubauen. Der vordere Teil sollte so wie er momentan implementiert ist eine Lenkstange besitzen, aber in der finalen Version ohne Hinterteil selbstbalanciert fahren. Der hintere Teil sollte als Anhänger ausgelegt und bei Bedarf getrennt werden können. Dafür wurde eine Anhängerkupplung aus Stehlagern und einer Stahlachse konstruiert, welche ein schnelles An- und Abtrennen des Anhängers ermöglichen sollte. Der Anhänger, welcher mit zusätzlichen Batterien und Motoren zur Reichweitenerhöhung dienen sollte, erwies sich in der abkuppelbaren Ausführung als zu Komplex für einen ersten Prototypen und wurde deshalb durch das jetzt verbaute, durchgängige Rahmenprofil ersetzt. Einer Implementierung des Designs zu einem späteren Zeitpunkt steht allerdings nichts im Wege.
+
+
+# Sonstiges
+
 ## Known Bugs
 
 - bluetooth
 - sonar 0 bug
-
-# Mechanischer Aufbau
-TODO
-## Brackets
-## Anhänger
-## Chassis
-# Sonstiges
-Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html)
-
+- ein und ausstecken usb serial
 
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/), Powerpoint sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
 Der Logic Analyzer wurde mit der Software [sigrok](https://sigrok.org/wiki/Main_Page) zusammen mit der dazugehörigen GUI PulseView verwendet.
-Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](http://fritzing.org/home/) erstellt. Für die Schaltpläne und das Board des Ultraschallmoduls kam das webtool [easyESA](https://easyeda.com) zum Einsatz.
+Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](http://fritzing.org/home/) erstellt. Für die Schaltpläne und das Board des Ultraschallmoduls kam das webtool [easyESA](https://easyeda.com) zum Einsatz. Als CAD-Software kam [Autodesk Fusion 360]
 
+Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html) oder nutzt eine virtuelle Maschine
 
-# TODO
-## Doku
-
-* usb serial ports
 ## Rest
+* ros bridge + doku ros bridge
 * image dumpen wenn fertig
-* fusion dateien git
 * gamepad_driver + joy mergen (Neue default params + gain)
