@@ -26,8 +26,6 @@ Im Aktuellen Stand laufen also der Treiber für den LIDAR und die IMU auf ROS1 u
 ![Deployment Diagramm](./images/Deployment.png)
 
 
-> **Hinweis:** Ein Großteil der verwendeten Hardware ist über USB zu Serial Adaptern an den Pi angeschlossen. Leider entscheidet Linux beim Start zufällig, welcher USB Serial Adapter welchen port unter /dev/ttyUSB* bekommt. Um die Beispielscripte und Configdateien zu nutzen, müssen momentan nach jedem Start alle Geräte, die Seriell über USB kommunizieren (Auch die Arduinos) abgesteckt werden und anschließend in der auf den Steckern gelabelten Reihenfolge wieder angeschlossen werden. Dieses Verhalten könnte möglicherweise mit [diesem Trick](https://rolfblijleven.blogspot.com/2015/02/howto-persistent-device-names-on.html) abgestellt werden.
-
 Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
 
 # Konfiguration Ubuntu
@@ -625,6 +623,8 @@ Die Stromversorgung ist in zwei Teile aufgeteilt. Wie schon beim originalen Hove
 Das Accessory Power Module bietet über [2A Step-Down](https://www.az-delivery.de/products/lm2596s-dc-dc-step-down-modul-1?_pos=1&_sid=25486a72e&_ss=r&ls=de) Module die Möglichkeit zusätzliche Geräte mit 3,3V, 5V oder 12V zu versorgen. Das Board ist momentan mit 2A am Eingang Abgesichert, in Anbetracht der Tatsache, dass das [24V Schaltnetzteil von Meanwell](https://www.conrad.de/de/p/dc-dc-wandler-mean-well-psd-45c-24-1-875-a-1292639.html), dass das APM versorgt nur 1,87A liefern kann, wäre eine Absicherung auf 1,5A wahrscheinlich sinnvoller. Dafür muss lediglich die eingeklipste Glassicherung getauscht werden.
 
 Die Pinbelegung ist auf dem Board angebracht und sollte selbsterklärend sein. Der Schaltplan ist ebenfalls recht unspektakulär und wurde deshalb nicht extra aufgezeichnet. Die 24V Eingangsspannung kommen von dem Schraubterminal und gehen direkt in die Feinsicherung. Anschließend werden die 24V parallel auf den Eingang der drei Step-Down Module gegeben und gehen von dort an das jeweilige Ausgangsterminal.
+#### Ladebuchse
+Die originale Ladebuchse des Hoverboards wurde mittels eines gelben Brackets zwischen Hoverboard und Trittbrett des Anhängers verlegt. Dort kann das ursprüngliche Hoverboardnetzteil angeschlossen und damit der Akku geladen werden.
 
 #### Schalterboard
 ![Schalterboard](./images/schalterboard.jpg)
@@ -632,23 +632,39 @@ Die Pinbelegung ist auf dem Board angebracht und sollte selbsterklärend sein. D
 Über das Schalterboard lassen sich Motortreiber und Zubehörgeräte an- und abschalten. Der Schalter mit der Beschriftung `Motor` ist der alte anschalter des Hoverboards. Dieser wurde lediglich an den Lenker verlegt. Durch einfaches drücken lässt sich damit der Motortreiber an- und abschalten. Eine rot blinkende LED (Und leichtes fiepsen aus dem bereich des Hoverboards...) zeigt dabei ein angeschaltetes Motortreiberboard an. Über den Wippschalter mit der Aufschrift `AUX` lässt sich die Zubehörelektronik an- und abschalten. Dazu zählen der Raspberry Pi, sämtliche Senosren und die Stromversorgung für das Auxilliary Power Module. Eine grüne LED weist dabei auf eine aktive Stromversorgung hin.
 
 # Mechanischer Aufbau
+Im folgenden wird kurz der mechanische Aufbau des Boards beschrieben. Der Großteil der Konstruktion ist allerdings recht selbsterklärend und einfach, weshalb bei Unklarheiten eine Inspektion des Geräts selbst empfohlen wird.
 ## Chassis
+
 ![Render Scoomatic](./images/render.png)
-  Das Chassis wurde weitestgehend aus Bosch-Rexeroth Profilschienen und den zugehörigen Verbindungselementen erstellt. Für den genauen Aufbau sei auf das CAD-Modell unter `/dokcumentation/cad/f360` und die eigentliche Hardware verwiesen. Das Chassis des Hoverboards wurde weitestegehend unverändert übernommen. Die beiden Chassishälften wurden getrennt und über ein längeres 30mm Stahlrohr mit 2mm Wandstärke miteinander verbunden. Vorher wurde der Zapfen zur Begrenzung des rotatorischen Spiels entfernt. Das längere Rohr ermöglicht es, das Aluprofil der Chassisunterseite zwischen den Hoverboardhälften zu befestigen. Dafür wurde in dieses Profil ein 30mm Loch gefräst.
-  Um die beiden Hoverboardhälften am Chassis zu befestigen, wurde je ein Loch durch jede Hälfte und das Chassis gebohrt. Diese Löcher, die auch durch das Stahlrohr reichen, ermöglichen die Installation von M8 Schrauben, die verhindern, dass sich die Boardhälften auf dem Rohr drehen oder davon abfallen können.
+
+Das Chassis wurde weitestgehend aus Bosch-Rexeroth Profilschienen und den zugehörigen Verbindungselementen erstellt. Für den genauen Aufbau sei auf das CAD-Modell unter `/documentation/cad/f360` und die eigentliche Hardware verwiesen. Der Rahmen des Hoverboards wurde weitestegehend unverändert übernommen. Die beiden Chassishälften wurden getrennt und über ein längeres 30mm Stahlrohr mit 2mm Wandstärke miteinander verbunden. Vorher wurde der Zapfen zur Begrenzung des rotatorischen Spiels entfernt. Das längere Rohr ermöglicht es, das Aluprofil der Chassisunterseite zwischen den Hoverboardhälften zu befestigen. Dafür wurde in dieses Profil ein 30mm Loch gefräst.
+Um die beiden Hoverboardhälften am Chassis zu befestigen, wurde je ein Loch durch jede Hälfte und das Chassis gebohrt. Diese Löcher, die auch durch das Stahlrohr reichen, ermöglichen die Installation von M10 Schrauben, die verhindern, dass sich die Boardhälften auf dem Rohr drehen oder davon abfallen können.
+Um einen Besseren Sitz der Schraubenköpfe und Muttern zu gewährleisten, wurde ein Teil des Runden Hoverboardchassis plan gefräst.
+
+![Plangefrästes Chassis](./images/loecher.jpg)
+
 ## Brackets
+![Ultraschall Bracket](./images/bracket.jpg)
+
+Um die Sensorik, Elektronik und sonstiges Zubehör am Chassis zu befestigen, wurden Nutensteine aus dem Rexeroth Zubehör verwendet. An diese wurden diverse 3D-gedruckte Brackets verschraubt, auf denen die eigentlichen Teile sitzen. Diese Brackets wurden in einem handelsüblichen 3D-Drucker aus PLA ausgedruckt. Die Modelle befinden sich als druckbare Mesh-Dateien im Repository unter `documentation/cat/stl`, die CAD-Modelle befinden sich in `documentation/cat/f360`. Mit dieser Technik wurden Befestigungsmöglichkeiten für die Ultraschallsensoren und deren Steuerplatine, den Joystick, das Schalterpanel, den LIDAR und das GPS-Modul, diverse Platinen zur Stromversorgung und für die Ladebuchse des Hoverboards geschaffen.
+
 ## Anhänger
 ![Anhänger](./images/anhaenger.png)
+
 Ursprünglich war angedacht, den Scoomatic in zwei Teilen aufzubauen. Der vordere Teil sollte so wie er momentan implementiert ist eine Lenkstange besitzen, aber in der finalen Version ohne Hinterteil selbstbalanciert fahren. Der hintere Teil sollte als Anhänger ausgelegt und bei Bedarf getrennt werden können. Dafür wurde eine Anhängerkupplung aus Stehlagern und einer Stahlachse konstruiert, welche ein schnelles An- und Abtrennen des Anhängers ermöglichen sollte. Der Anhänger, welcher mit zusätzlichen Batterien und Motoren zur Reichweitenerhöhung dienen sollte, erwies sich in der abkuppelbaren Ausführung als zu Komplex für einen ersten Prototypen und wurde deshalb durch das jetzt verbaute, durchgängige Rahmenprofil ersetzt. Einer Implementierung des Designs zu einem späteren Zeitpunkt steht allerdings nichts im Wege.
 
+Der jetzige Anhänger besteht aus einer 21mm Siebdruckplatte, die über M8 Schrauben und Nutensteine am zentralen Chassis befestigt ist. An dieser Siebdruckplatte befinden sich links und Rechts zwei schwenkbare Schwerlastrollen mit einer Tragkraft von je 80kg, die über je einen 3D-Gedruckten Spacer die Platte auf die richtige Höhe heben. Die vorderen Ecken der Siebdruckplatte wurden entfernt, um großen Füßen mehr Raum zu lassen, wenn diese auf den Hoverboardtrittbrettern stehen.
 
 # Sonstiges
-
+Im Folgenden werden bekannte Fehler des Scoomatics aufgezählt und anschließend kurz die für die Arbeit verwendete Software vorgestellt.
 ## Known Bugs
-
-- bluetooth
-- sonar 0 bug
-- ein und ausstecken usb serial
+### Bluetoothstack vom Ubuntu Image
+Momentan kann aufgrund fehlernder Softwareunterstützung seitens Ubuntu auf dem Bordcomputer kein Bluetooth genutzt werden. Das gilt für das verbaute Bluetooth Modul und externe Bluetooth Sticks. Dadurch ist es momentan nicht möglich, den XBOX One Controller über Bluetooth mit dem Pi zu verbinden. Das Problem ist [bekannt](https://bugs.launchpad.net/ubuntu/+bug/1817133), allerdings scheint es zum jetzigen Zeitpunkt (Juli 2019) noch keine Lösung dafür zu geben.
+### Sonar Sensoren zeigen 0cm an
+Das Sonarsteuergerät schickt gelegentlich für einen oder mehrere Ultraschallsensoren kontinuierlich einen Wert von 0cm an ROS. Die Ursache für dieses Verhalten konnte noch nicht festgestellt werden. Ein Hardwareproblem lässt sich aber mit ziemlicher Sicherheit ausschließen, das Sensoren nach an- und abstecken weiterhin defekt bleiben und Sensoren, an deren Verkabelung nichts geändert wurde oftmals nach einem Reset des Arduinos wieder laufen. Aus diesem Grund wird als Ursache momentan ein Softwareproblem vermutet. Da der Code des [Sonic Disc Projekts](https://www.hackster.io/platisd/sonicdisc-a-360-ultrasonic-scanner-211e6a), das Grundlage für das Ultraschallmodul ist, allerdings recht komplex ist, war es nicht möglich, den Fehler bis zur Abgabe zu beheben.
+Als temporären Fix könnten bei einer Auswertung Werte von 0cm einfach ignoriert und der Sensor damit quasi abgeschaltet werden.
+### USB Serial Ports in zufälliger Reihenfolge
+Ein Großteil der verwendeten Hardware ist über USB zu Serial Adaptern an den Pi angeschlossen. Leider entscheidet Linux beim Start zufällig, welcher USB Serial Adapter welchen port unter /dev/ttyUSB* bekommt. Um die Beispielscripte und Configdateien zu nutzen, müssen momentan nach jedem Start alle Geräte, die Seriell über USB kommunizieren (Auch die Arduinos) abgesteckt werden und anschließend in der auf den Steckern gelabelten Reihenfolge wieder angeschlossen werden. Dieses Verhalten könnte möglicherweise mit [diesem Trick](https://rolfblijleven.blogspot.com/2015/02/howto-persistent-device-names-on.html) abgestellt werden.
 
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/), Powerpoint sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
@@ -658,6 +674,7 @@ Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](h
 Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html) oder nutzt eine virtuelle Maschine
 
 ## Rest
+* Foto fertiges Hoverboard
 * ros bridge + doku ros bridge
 * image dumpen wenn fertig
 * gamepad_driver + joy mergen (Neue default params + gain)
