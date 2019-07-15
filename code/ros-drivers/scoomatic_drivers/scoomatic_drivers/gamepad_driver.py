@@ -79,7 +79,7 @@ def main(args=None):
     node = rclpy.create_node('gamepad_driver')
 
     # Read parameters
-    gain_lin = float(node.get_param('gain_lin',1.0))
+    gain_lin = float(get_param('gain_lin',1.0))
     gain_ang = float(get_param('gain_ang',1.0))
     topic = get_param('topic', '/gamepad')
     rate = get_param('rate', 20)

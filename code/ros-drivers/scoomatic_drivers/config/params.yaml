@@ -1,4 +1,3 @@
-<<<<<<< HEAD:code/ROS-Drivers/scoomatic_drivers/config/params.yaml
 sonar_driver:
         ros__parameters:
                 port: "/dev/ttyUSB2"
