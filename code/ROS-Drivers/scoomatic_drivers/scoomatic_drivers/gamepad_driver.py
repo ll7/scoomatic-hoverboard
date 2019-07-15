@@ -22,7 +22,7 @@
 
 from time import sleep
 import rclpy
-from inputs import get_gamepad
+from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
 import threading
 
@@ -35,12 +35,14 @@ thread_active = True
 
 def handle_game_controller():
     global armed, direction, speed, node
+    
     events = None
     try:
         events = get_gamepad()
-    except:
+    except Exception as e:
+        print(e)
         node.get_logger().warn("Gamepad disconnected!")
-        sleep(5)
+        sleep(1)
         return
 
     for event in events:
@@ -48,14 +50,15 @@ def handle_game_controller():
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
-            speed = event.state / 1023.0
+            speed = event.state / 1024.0
         if event.code == 'ABS_Z':  # Reverse
-            speed = -(event.state / 1023.0)
+            speed = -(event.state / 1024.0)
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
 
-
 def gamepad_thread():
+    for device in devices:
+            node.get_logger().info("Found Device %s"%device)
     while thread_active:
         handle_game_controller()
 
@@ -70,7 +73,8 @@ def main(args=None):
     # Read parameters
     topic = node.get_parameter('topic').value
     rate = node.get_parameter('rate').value
-
+    gain_lin = float(node.get_parameter('gain_lin').value)
+    gain_ang = float(node.get_parameter('gain_ang').value)
     # Cerate publisher
     publisher = node.create_publisher(Twist, topic)
 
@@ -89,8 +93,8 @@ def main(args=None):
             msg.linear.x = 0.0
             msg.angular.z = 0.0
         else:
-            msg.linear.x = float(speed)
-            msg.angular.z = float(direction)
+            msg.linear.x = float(speed) * gain_lin
+            msg.angular.z = float(direction) * gain_ang
         # publish message
         publisher.publish(msg)
 

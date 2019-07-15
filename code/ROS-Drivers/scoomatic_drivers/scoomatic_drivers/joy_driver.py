@@ -73,12 +73,12 @@ def main(args=None):
         while rclpy.ok():
             #  read line from serial port
             [vel, rot, btn_pressed] = read_serial(ser)
-
+            #print("vel: %s, rot %s"%(vel,rot))
             # Create pointcloud message for the sensor values
             msg_vel = Twist()
             #    msg.header.stamp = rclpy.time() # Not implemented yet
-            msg_vel.linear.x = float((vel / -512.0) - 1)
-            msg_vel.angular.z = float((rot / 512.0) - 1)
+            msg_vel.linear.x = -float((vel / 512.0) - 1.0) * 0.5
+            msg_vel.angular.z = -float((rot / 512.0) - 1.0) * 0.5
 
             msg_btn = Bool()
             msg_btn.data = bool(btn_pressed)
