@@ -150,8 +150,36 @@ Die Kommandozeilentools für ROS1 sind [im ROS Wiki](http://wiki.ros.org/ROS/Com
 
 Das Skript `~/catkin_ws/src/scoomatic_ros1/start_ros1.bash` startet alle ROS1 Nodes auf einmal. Wichtig ist, dass die USB Serial Adapter in der richtigen Reihenfolge (s. Label) eingesteckt wurden, damit die Serial Ports den richtigen Nodes zugewiesen werden. Leider teilt Linux die Portnummern scheinbar zufällig zu, weshalb die Serial Adapter nach jedem Neustart an- und abgesteckt werden müssen.
 
-## ROS2-Bridge
-TODO
+## ROS1-Bridge
+Die [ROS1 Bridge](https://index.ros.org/p/ros1_bridge/github-ros2-ros1_bridge/#crystal) erlaubt es Nachrichten zwischen ROS1 und ROS2 auszutauschen. Dadurch ist es möglich, Sensoren, wie den LIDAR, die über den ROS1 Treiber in ein Topic publishen in ROS2 zu Nutzen. Die ROS1 Topics können dann unter ROS2 genauso verwendet werden wie *normale* Topics. Die Rückrichtung funktioniert ebenfalls. Außerdem lassen sich Services und Actions über die Bridge aufrufen.
+
+In der [offiziellen Anleitung](https://github.com/ros2/ros1_bridge) wird die Installation vom Source Code beschrieben, allerdings existieren für Ubuntu Pakete, die bequem über die offiziellen Paketquellen heruntergeladen werden können.
+
+```bash
+sudo apt install ros-crystal-ros1-bridge
+```
+
+Zur Verwendung der ROS1 Bridge sei auf den nächsten Abschnitt verwiesen.
+## Inbetriebnahme aller Treiber
+Um alle Treiber inklusive ROS1 Bridge in Betrieb zu nehmen, werden 3 Shells benötigt. Auf der ersten Shell werden ein ROS1 Core und die ROS1 Treiber gestartet
+```bash
+ ~/catkin_ws/src/scoomatic_ros1/start_ros1.bash
+```
+
+In der zweiten Shell wird die ROS1 Bridge gestartet.
+```bash
+. /opt/ros/melodic/setup.bash
+export ROS_MASTER_URI=http://localhost:11311
+ros2 run ros1_bridge dynamic_bridge
+```
+
+Zuletzt müssen noch die ROS2 Treiber gestartet werden
+```bash
+~/ros2_ws/src/scoomatic_drivers/start_ros2.bash
+```
+
+Anschließend kann eine weitere Shell geöffnet und mit den Sensordaten gearbeitet werden.
+
 # Hardware
 Im Folgenden werden die Hardwareelemente und ihre Treiber genauer vorgestellt. Dabei wird zuerst das Reverseengineering des Hoverboards genauer erklärt und anschließend auf die Sensoren und Eingabegeräte eingegangen.
 
@@ -533,7 +561,7 @@ source ~/catkin_ws/devel/setup.bash
 roslaunch i2c_imu mpu_9250.launch
 ```
 
-
+> **Hinweis:** Sollte es Verbindungsprobelme mit der IMU oder anderen i2c Geräten geben, hilft der Befehl `i2cdetect 1` dabei, zu testen, ob Geräte richtig am i2c bus angeschlossen sind und ob der Nutzer darauf zu greifen kann. Als Ausgabe erhält man den Scanbericht aller i2c Adressen. Nicht belegte Adressen werden mit `--` gekennzeichnet, Adressen auf denen ein Gerät antwortet mit der Adresse des Geräts.
 
 ### XBOX One Controller
 Der `gamepad_driver` ermöglicht das Steuern des Scoomatic über einen beliebigen von Linux unterstützen Gamecontroller. Dabei wird auf das [Inputs](https://pypi.org/project/inputs/) Framework zurückgegriffen. Bei einem XBOX One Controller dient der linke Analogstick zur Lenkung und die Trigger links und rechts zum Festlegen der Geschwindigkeit nach vorne oder hinten. Zusätzlich muss immer der **A**-Button als eine Art Totmannschalter gehalten werden, sonst wird keine Bewegung ausgeführt.
@@ -665,6 +693,10 @@ Das Sonarsteuergerät schickt gelegentlich für einen oder mehrere Ultraschallse
 Als temporären Fix könnten bei einer Auswertung Werte von 0cm einfach ignoriert und der Sensor damit quasi abgeschaltet werden.
 ### USB Serial Ports in zufälliger Reihenfolge
 Ein Großteil der verwendeten Hardware ist über USB zu Serial Adaptern an den Pi angeschlossen. Leider entscheidet Linux beim Start zufällig, welcher USB Serial Adapter welchen Port unter /dev/ttyUSB* bekommt. Um die Beispielscripte und Configdateien zu nutzen, müssen momentan nach jedem Start alle Geräte, die Seriell über USB kommunizieren (Auch die Arduinos) abgesteckt werden und anschließend in der auf den Steckern gelabelten Reihenfolge wieder angeschlossen werden. Dieses Verhalten könnte möglicherweise mit [diesem Trick](https://rolfblijleven.blogspot.com/2015/02/howto-persistent-device-names-on.html) abgestellt werden.
+
+### Fahrverhalten Hoverboard
+Die Drehgeschwindigkeit des Hoverboards ist in der Firmware heruntergeregelt. In der momentanen Einstellung lässt sich der Scoomatic nur schwer maneuverieren, wenn eine Person auf dem Fahrzeug steht. Um das Handling zu verbessern, muss der Wert `STEER_COEFFICIENT` in der Datei `Inc/config.h` erhöht werden.
+Außerdem bremst der Motortreiber noch sehr abrupt ab, was dazu fürhren kann, dass das Fahrzeug beim Bremsen nach vorne kippt. Dieses Problem könnte gelöst werden, indem die maximale Beschleunigung im Motortreiber begrenzt wird.
 
 ## Verwendete Software
 Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/), Powerpoint sowie die die Webapplikation [draw.io](https://www.draw.io/) verwendet. Die .svg Dateien können mit draw.io geöffnet und bearbeitet werden.
