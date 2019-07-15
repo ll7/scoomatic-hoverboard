@@ -48,7 +48,7 @@ def get_param(param_name, default_value):
 def read_serial(ser):
     # read line
     data = ser.readline()
-    print("Serial Data: %s" % data)
+    # print("Serial Data: %s" % data)
     # parse
     try:
         data = data.decode('ascii').replace("\r\n", "").split(' ')
@@ -62,7 +62,7 @@ def read_serial(ser):
         value = int(value)
         newdata.append(value)
     data = newdata
-    print("Serial Data 2 : %s" % data)
+    #print("Serial Data 2 : %s" % data)
     if (len(data) is not 8):
         node.get_logger().warn("Corrupt Package from ESC (LEN). Have you used the right port?")
         raise Exception()
@@ -81,14 +81,14 @@ def main(args=None):
     rate = get_param('rate', 5)
 
     # Cerate publisher
-    p1 = node.create_publisher(Int32, '/%s/adc1' % topic_prefix)
-    p2 = node.create_publisher(Int32, '/%s/adc2' % topic_prefix)
-    p3 = node.create_publisher(Int32, '/%s/speed_l' % topic_prefix)
-    p4 = node.create_publisher(Int32, '/%s/speed_r' % topic_prefix)
-    p5 = node.create_publisher(Int32, '/%s/battery_voltage_calibration_value' % topic_prefix)
-    p6 = node.create_publisher(Float32, '/%s/battery_voltage' % topic_prefix)
-    p7 = node.create_publisher(Int32, '/%s/termperature_calibration_value' % topic_prefix)
-    p8 = node.create_publisher(Int32, '/%s/temperature' % topic_prefix)
+    p1 = node.create_publisher(Int32, '%s/adc1' % topic_prefix)
+    p2 = node.create_publisher(Int32, '%s/adc2' % topic_prefix)
+    p3 = node.create_publisher(Int32, '%s/speed_l' % topic_prefix)
+    p4 = node.create_publisher(Int32, '%s/speed_r' % topic_prefix)
+    p5 = node.create_publisher(Int32, '%s/battery_voltage_calibration_value' % topic_prefix)
+    p6 = node.create_publisher(Float32, '%s/battery_voltage' % topic_prefix)
+    p7 = node.create_publisher(Int32, '%s/termperature_calibration_value' % topic_prefix)
+    p8 = node.create_publisher(Int32, '%s/temperature' % topic_prefix)
 
     # Create messages for the sensor values
 
@@ -126,7 +126,6 @@ def main(args=None):
             m8.data = data[7]
 
             # publish message
-            node.get_logger().info("Publishing")
             p1.publish(m1)
             p2.publish(m2)
             p3.publish(m3)
