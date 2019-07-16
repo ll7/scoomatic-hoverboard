@@ -1,6 +1,56 @@
 Adapter DateiDokumentation Projektmodul
 =========
-TODO: TOC
+<!-- TOC -->
+- [Vorstellung des Projekts](#vorstellung-des-projekts)
+- [Softwarearchitektur](#softwarearchitektur)
+- [Konfiguration Ubuntu](#konfiguration-ubuntu)
+  - [Verbindung zum Pi](#verbindung-zum-pi)
+  - [Netzwerkkonfiguration](#netzwerkkonfiguration)
+  - [Dateisystemstruktur](#dateisystemstruktur)
+  - [ROS2 bedienung](#ros2-bedienung)
+- [ROS1 Bedienung](#ros1-bedienung)
+  - [ROS1-Bridge](#ros1-bridge)
+  - [Inbetriebnahme aller Treiber](#inbetriebnahme-aller-treiber)
+- [Hardware](#hardware)
+  - [Hoverboard](#hoverboard)
+    - [Mainboard](#mainboard)
+    - [Sensorboard](#sensorboard)
+    - [Netzteil](#netzteil)
+    - [Ansteuerung der Motoren mit Originalfirmware](#ansteuerung-der-motoren-mit-originalfirmware)
+    - [Aufspielen einer anderen Firmware auf das Mainboard](#aufspielen-einer-anderen-firmware-auf-das-mainboard)
+      - [Kompilieren](#kompilieren)
+      - [Flashen des Boards](#flashen-des-boards)
+    - [Motortreiber](#motortreiber)
+    - [Motor Debug](#motor-debug)
+  - [Ultraschall](#ultraschall)
+  - [LIDAR](#lidar)
+    - [Installation der Treiber](#installation-der-treiber)
+    - [Manueller Start des Treibers](#manueller-start-des-treibers)
+    - [rviz auf anderem Rechner ausführen](#rviz-auf-anderem-rechner-ausf%C3%BChren)
+  - [GPS](#gps)
+  - [IMU](#imu)
+  - [Controller](#controller)
+    - [Verbindung XBOX One Controller über Bluetooth](#verbindung-xbox-one-controller-%C3%BCber-bluetooth)
+  - [Joystick](#joystick)
+  - [Stromversorgung](#stromversorgung)
+    - [Accessory Power Module](#accessory-power-module)
+    - [Ladebuchse](#ladebuchse)
+    - [Schalterboard](#schalterboard)
+    - [Notstopp](#notstopp)
+- [Mechanischer Aufbau](#mechanischer-aufbau)
+  - [Chassis](#chassis)
+  - [Brackets](#brackets)
+  - [Anhänger](#anh%C3%A4nger)
+- [Sonstiges](#sonstiges)
+  - [Known Bugs](#known-bugs)
+    - [Bluetoothstack vom Ubuntu Image](#bluetoothstack-vom-ubuntu-image)
+    - [Sonar Sensoren zeigen 0cm an](#sonar-sensoren-zeigen-0cm-an)
+    - [USB Serial Ports in zufälliger Reihenfolge](#usb-serial-ports-in-zuf%C3%A4lliger-reihenfolge)
+    - [Fahrverhalten Hoverboard](#fahrverhalten-hoverboard)
+  - [Verwendete Software](#verwendete-software)
+  - [TODO](#todo)
+
+<!-- /TOC -->
 # Vorstellung des Projekts
 In dieser Dokumentation sollen die in der Seminararbeit erarbeiteten Kenntnisse genutzt werden, um einen Prototypen zu entwickeln, der die dort definierten Anforderungen erfüllt. Der Prototyp hält sich dabei weitestgehend an den Bauvorschlag 2: Hoverboard aus der Arbeit. Aus diesem Grund wird der grundsätzliche Aufbau hier nicht genauer erklärt und nur auf die Seminararbeit verwiesen. Im Folgenden wird zunächst die Softwarearchitektur des Scoomatic erklärt und dabei auch auf die Bedienung des Bordcomputers eingegangen. Anschließend wird die Hardware, ihre Treiber und das Zusammenspiel der Elektronischen Komponenten genauer erklärt. Abschließend wird noch kurz auf den mechanischen Aufbau eingegangen.
 
@@ -527,7 +577,7 @@ gps_driver:
                 topic: "/fix"
                 baudrate: 9600
 ```
-### IMU
+## IMU
 Als IMU wird das [MPU9250 Board](https://www.sparkfun.com/products/13762?_ga=2.80323807.954031109.1562450120-313791285.1548811828) von Sparkfun genutzt. Dieses ist direkt über I2C mit dem Pi verbunden. Die Verkabelung kann dem folgenden Diagramm entnommen werden.
 
 ![Schaltplan IMU](./images/IMU_SCH.png)
@@ -563,7 +613,7 @@ roslaunch i2c_imu mpu_9250.launch
 
 > **Hinweis:** Sollte es Verbindungsprobelme mit der IMU oder anderen i2c Geräten geben, hilft der Befehl `i2cdetect 1` dabei, zu testen, ob Geräte richtig am i2c bus angeschlossen sind und ob der Nutzer darauf zu greifen kann. Als Ausgabe erhält man den Scanbericht aller i2c Adressen. Nicht belegte Adressen werden mit `--` gekennzeichnet, Adressen auf denen ein Gerät antwortet mit der Adresse des Geräts.
 
-### XBOX One Controller
+## Controller
 Der `gamepad_driver` ermöglicht das Steuern des Scoomatic über einen beliebigen von Linux unterstützen Gamecontroller. Dabei wird auf das [Inputs](https://pypi.org/project/inputs/) Framework zurückgegriffen. Bei einem XBOX One Controller dient der linke Analogstick zur Lenkung und die Trigger links und rechts zum Festlegen der Geschwindigkeit nach vorne oder hinten. Zusätzlich muss immer der **A**-Button als eine Art Totmannschalter gehalten werden, sonst wird keine Bewegung ausgeführt.
 Der Treiber kann manuell über den folgenden Befehl gestartet werden.
 ```bash
@@ -593,7 +643,7 @@ gamepad_driver:
 ```
 
 Gain Parameter sind für den Afterglow AP.2  Controller. Der XBOX One Controller benötigt evtl andere Parameter.
-#### Verbindung XBOX One Controller über Bluetooth
+### Verbindung XBOX One Controller über Bluetooth
 Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg))
 ```bash
  sudo apt install sysfsutils
@@ -604,7 +654,7 @@ Der Bluetoothstack von der verwendeten Ubuntu Installation ist broken, sollte si
 
 [Tutorial Bluetooth Controller mit Pi verbinden](https://core-electronics.com.au/tutorials/using-usb-and-bluetooth-controllers-with-python.html)
 
-### Joystick
+## Joystick
 Der Joystick befindet sich an der Lenkstange des Scoomatic und ermöglicht es z.B. das Gerät zu steuern. Das Verwendete [KY-023 Joystickmodul](https://www.az-delivery.de/products/joystick-modul?_pos=5&_sid=2067bb92a&_ss=r) ist mit einem Arduino verbunden. Dieser sendet in einer Frequenz von 20Hz Datenpakete an den Raspberry Pi.
 
 Die Verbindungen zwischen Joystick und Arduino sind im dazugehörigen Sketch unter `/code/arduino firmware/scoomatic-joy` wie folgt definiert.
@@ -642,22 +692,30 @@ joy_driver:
                 rate: "30" # Update Rate (Set to higher than 25Hz)
 ```
 
-### Stromversorgung
+## Stromversorgung
 ![Stromversorgung](./images/power.png)
 
 Die Stromversorgung ist in zwei Teile aufgeteilt. Wie schon beim originalen Hoverboard versorgt der Akku das Motortreiberboard mit Strom. Das Treiberboard besitzt auch weiterhin die ursprüngliche Ladebuchse des Hoverboards wodurch das ganze System mit dem originalen Netzteil geladen werden kann. Zusätzlich wurde ein weiterer Stromkreis verbaut, der über einen Hauptschalter am Schalterboard geschalten werden kann. Daran hängt ein 24V Schaltnetzteil, welches das Accessory Power Module und das [5V Netzteil](https://www.conrad.de/de/p/dc-dc-7-40v-to-1-2-35v-300w-8a-step-down-voltage-regulator-power-modul-with-led-802244052.html) für den Raspberry Pi mit Strom versorgt.
-#### Accessory Power Module
+### Accessory Power Module
 ![Accessory Power Module](./images/apm.jpg)
 Das Accessory Power Module bietet über [2A Step-Down](https://www.az-delivery.de/products/lm2596s-dc-dc-step-down-modul-1?_pos=1&_sid=25486a72e&_ss=r&ls=de) Module die Möglichkeit zusätzliche Geräte mit 3,3V, 5V oder 12V zu versorgen. Das Board ist momentan mit 2A am Eingang Abgesichert, in Anbetracht der Tatsache, dass das [24V Schaltnetzteil von Meanwell](https://www.conrad.de/de/p/dc-dc-wandler-mean-well-psd-45c-24-1-875-a-1292639.html), dass das APM versorgt nur 1,87A liefern kann, wäre eine Absicherung auf 1,5A wahrscheinlich sinnvoller. Dafür muss lediglich die eingeklipste Glassicherung getauscht werden.
 
 Die Pinbelegung ist auf dem Board angebracht und sollte selbsterklärend sein. Der Schaltplan ist ebenfalls recht unspektakulär und wurde deshalb nicht extra aufgezeichnet. Die 24V Eingangsspannung kommen von dem Schraubterminal und gehen direkt in die Feinsicherung. Anschließend werden die 24V parallel auf den Eingang der drei Step-Down Module gegeben und gehen von dort an das jeweilige Ausgangsterminal.
-#### Ladebuchse
+### Ladebuchse
 Die originale Ladebuchse des Hoverboards wurde mittels eines gelben Brackets zwischen Hoverboard und Trittbrett des Anhängers verlegt. Dort kann das ursprüngliche Hoverboardnetzteil angeschlossen und damit der Akku geladen werden.
 
-#### Schalterboard
+### Schalterboard
 ![Schalterboard](./images/schalterboard.jpg)
 
 Über das Schalterboard lassen sich Motortreiber und Zubehörgeräte an- und abschalten. Der Schalter mit der Beschriftung `Motor` ist der alte anschalter des Hoverboards. Dieser wurde lediglich an den Lenker verlegt. Durch einfaches drücken lässt sich damit der Motortreiber an- und abschalten. Eine rot blinkende LED (Und leichtes fiepsen aus dem bereich des Hoverboards...) zeigt dabei ein angeschaltetes Motortreiberboard an. Über den Wippschalter mit der Aufschrift `AUX` lässt sich die Zubehörelektronik an- und abschalten. Dazu zählen der Raspberry Pi, sämtliche Sensoren und die Stromversorgung für das Auxilliary Power Module. Eine grüne LED weist dabei auf eine aktive Stromversorgung hin.
+### Notstopp
+Ein Notstopp hat die Aufgabe, nach Betätigung alle beweglichen Teile (In diesem Fall die beiden Motoren) einer Maschine schnellstmöglich zum Stehen zu bringen. Um einen solchen Notstopp zu implementieren, wurden überlegungen angestellt, die allerdings nicht umgesetzt wurden. Grundsätzlich existieren mehrere Möglichkeiten, einen Notstopp in das Design zu Integrieren.
+Am einfachsten wäre es, einen Schalter direkt nach dem Akku zu installieren, der die komplette Stromversorgung zu allen Komponenten kappt. Damit wäre Sichergestellt, dass die Motoren nicht weiter mit Strom versorgt werden. Die Motoren können aber weiterhin ausrollen. Zudem schaltet sich bei dieser Vorgehensweise der Bordcomputer zwangsläufig mit aus, wodurch eine Fehlersuche, die nach Auslösen eines Notstopps oft nötig ist, erschwert wird.
+
+Ebenso denkbar wäre den Notstopp als ROS Node zu implementieren und als Software zu lösen. Momentan publisht das Eingabegerät (Joystick / Gamecontroller) in das Topic /cmd_vel, auf das der Motortreiber subscribed. Ein Softwarenotstopp könnte sich an dieser Stelle dazwischenschalten. Das Eingabegerät publisht dann in ein anderes Topic (z.B. /cmd_vel_safe) auf das der Notstopp Node hört. Ist der Notstopptaster nicht ausgelöst, gibt er die eingegebenen Daten weiter nach /cmd_vel, wo sie der Motortreiber empfängt. Ist der Notstopp ausgelöst, werden die Daten nicht mehr weiter übergeben, sondern mit Paketen mit der Motorgeschwindigkeit 0 überschrieben, womit die Motoren aktiv bremsen. Nachteil dieser Methode ist, dass wenn der Bordcomputer oder Teile der Software darauf abstürzen, der Notstopp möglicherweise nicht mehr auslöst.
+
+Als dritte Möglichkeit besteht darin, einen Microcontroller mit zwei seriellen Ports zwischen die Kommunikation von Bordcomputer und Motorboard zu schalten. Der Microcontroller übernimmt dann, ähnlich zu dem Notstopp Node aus dem letzten Lösungsvorschlag, die Aufgabe die an den Motortreiber gesendeten Befehle nur dann weiterzuleiten, wenn der Notstopp nicht ausgelöst wurde. Dabei wird der Bordcomputer an den ersten seriellen Port angeschlossen und das Motortreiberboard an den zweiten. Im normalen Betrieb werden eingehende Befehle über den ersten Port unverändert an den zweiten weitergegeben. Im Fall, dass der ebenfalls mit dem Mikrocontroller verbundene Notstoppschalter ausgelöst wird, wird kontinuierlich ein Befehl, die Motordrehzahl auf 0 zu reduzieren an den Motortreiber gesendet, bis der Notstopp wieder gelöst wird. Dieser Aufbau ist unabhängig vom Bordcomputer und funktioniert auch, wenn dieser abstürzt. Zusätzlich werden hier die Motoren aktiv gebremst.
+Als Hardware für den letzten Vorschlag ließe sich ein Arduino Nano verwenden, an dem ein [Not-Aus Schalter](https://www.reichelt.de/not-halt-aus-taster-1-no-und-1-nc-eaton-216525-p152956.html) über die Digitaleingänge verbunden ist. Der Arduino kann über die USB-Serial Schnittstelle Daten vom Bordcomputer entgegennehmen und diese über die [SoftSerial](https://www.arduino.cc/en/Reference/SoftwareSerial) library über einen Software Serial Port an das Motortreiberboard weitergeben. Aufgrund der limitierten Rechenleistung des Arduino Nano könnte die Baudrate auf dem Weg vom Nano zum Hoverboard reduziert werden müssen. Dafür muss die Firmware des Motortreiberboards neu kompiliert werden und vorher der Wert von `#define CONTROL_BAUD` von `19200` in der Datei `/Inc/config.h` auf einen niedrigeren eingestellt werden.
 
 # Mechanischer Aufbau
 Im folgenden wird kurz der mechanische Aufbau des Boards beschrieben. Der Großteil der Konstruktion ist allerdings recht selbsterklärend und einfach, weshalb bei Unklarheiten eine Inspektion des Geräts selbst empfohlen wird.
@@ -705,8 +763,6 @@ Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](h
 
 Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html) oder nutzt eine virtuelle Maschine
 
-## Rest
-* Foto fertiges Hoverboard
+## TODO
 * ros bridge + doku ros bridge
 * image dumpen wenn fertig
-* gamepad_driver + joy mergen (Neue default params + gain)
