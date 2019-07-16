@@ -1,4 +1,4 @@
-Adapter DateiDokumentation Projektmodul
+Dokumentation Projektmodul Scoomatic
 =========
 <!-- TOC -->
 - [Vorstellung des Projekts](#vorstellung-des-projekts)
@@ -52,25 +52,25 @@ Adapter DateiDokumentation Projektmodul
 
 <!-- /TOC -->
 # Vorstellung des Projekts
-In dieser Dokumentation sollen die in der Seminararbeit erarbeiteten Kenntnisse genutzt werden, um einen Prototypen zu entwickeln, der die dort definierten Anforderungen erfüllt. Der Prototyp hält sich dabei weitestgehend an den Bauvorschlag 2: Hoverboard aus der Arbeit. Aus diesem Grund wird der grundsätzliche Aufbau hier nicht genauer erklärt und nur auf die Seminararbeit verwiesen. Im Folgenden wird zunächst die Softwarearchitektur des Scoomatic erklärt und dabei auch auf die Bedienung des Bordcomputers eingegangen. Anschließend wird die Hardware, ihre Treiber und das Zusammenspiel der Elektronischen Komponenten genauer erklärt. Abschließend wird noch kurz auf den mechanischen Aufbau eingegangen.
+In dieser Dokumentation wird ein Prototyp vorgestellt und entwickelt, welcher die Anforderungen aus der beiliegenden Seminararbeit erfüllt. Dieser hält sich dabei weitestgehend an den "Bauvorschlag 2: Hoverboard". Aus diesem Grund wird der grundsätzliche Aufbau hier nicht genauer erklärt und nur auf die Seminararbeit verwiesen. Im Folgenden wird zunächst die Softwarearchitektur des Scoomatic erklärt und dabei auch auf die Bedienung des Bordcomputers eingegangen. Anschließend wird die Hardware, ihre Treiber und das Zusammenspiel der elektronischen Komponenten sowie deren mechanischer Aufbau näher beschrieben.
 
 # Softwarearchitektur
-Als Softwareframework wurde ROS2 ausgewählt, das es die im Seminar aufgestellten Requirements erfüllt und damit ein flexibles, modulares Framework bietet, dass echtzeitfähige Kommunikation der Komponenten erlaubt und bereits viele Tools, Treiber sowie eine Kommunikationsinfrastruktur mitbringt.
+Als Softwareframework wurde ROS2 ausgewählt, das es die im Seminar aufgestellten Anforderungen erfüllt. Darüber hinaus bietet es ein flexibles und modulares Framework, dass echtzeitfähige Kommunikation der Komponenten erlaubt und bereits viele Tools, Treiber sowie eine Kommunikationsinfrastruktur mitbringt.
 
 Ein weiterer Punkt, der für die Verwendung von ROS spricht, ist die große Community, die Treiber und Tools für verschiedene Geräte wie z.B. Sensoren bereitstellt. Dadurch kann erheblicher Implementierungsaufwand gespart werden.
 
-Der Kommunikationslayer basiert auf einer Publish / Subscribe Nachrichtenarchitektur mit verschiedenen Kanälen (sogenannten Topics). Jedes Programm ist ein Node und kann in Topics schreiben (publish) und über neue Nachrichten informiert werden (subscribe). Darauf aufbauend gibt es für Nodes auch die Möglichkeit Services und Actions anzubieten, die von anderen Nodes aufgerufen werden können. Der Unterschiede zwischen Services und Actions liegt dabei in der Ausführungsdauer. Service Calls blockieren in der Regel nicht bzw. terminieren innerhalb von kurzer Zeit (z.B. Das Scharfschalten von Motoren bei Quadcoptern). Actions benötigen längere Zeit um ausgeführt zu werden (z.B. Das fahren einer Bewegung mit einem Roboterarm). Zu diesem Zweck bieten Actions zusätzlich die Möglichkeit, den aktuellen Fortschritt mitzuteilen. Zur Organisation von Nodes können diese in Pakete gruppiert und so verteilt werden. Nodes können nativ in C++ oder Python implementiert werden, es gibt aber einige Communityprojekte, die das Schreiben von Nodes mit anderen Sprachen wie z.B. C# oder Java ermöglichen.
+Das Kommunikationslayer basiert auf einer Publish / Subscribe Nachrichtenarchitektur mit verschiedenen Kanälen (sogenannten Topics). Jedes Programm ist ein Node, kann in Topics schreiben (publish) und über neue Nachrichten informiert werden (subscribe). Darauf aufbauend gibt es für Nodes auch die Möglichkeit, Services und Actions anzubieten, die von anderen Nodes aufgerufen werden können. Der Unterschiede zwischen Services und Actions liegt dabei in der Ausführungsdauer. Service Calls blockieren in der Regel nicht bzw. terminieren innerhalb von kurzer Zeit (z.B. das Scharfschalten von Motoren bei Quadcoptern). Actions benötigen längere Zeit, um ausgeführt zu werden (z.B. das Fahren einer Bewegung mit einem Roboterarm). Zu diesem Zweck können mithilfe von Actions zudem aktuelle Fortschritte mitgeteilt werden. Zur Organisation von Nodes können diese in Pakete gruppiert und so verteilt werden. Nodes sind nativ in C++ oder Python implementiert; es existieren jedoch auch einige Communityprojekte, die das Schreiben von Nodes mit anderen Sprachen, wie z.B. C# oder Java, ermöglichen.
 
-Dadurch, dass die Version 2 von ROS noch in den Kinderschuhen steckt, sind noch wenige Pakete von ROS1 portiert und die momentane Treiber- und Toolunterstützung lässt noch zu wünschen übrig. Um die umfangreichen ROS1 Pakete dennoch nutzen zu können, existiert eine ROS1 Bridge, die es ermöglicht, ROS1 und ROS2 parallel nebeneinander auszuführen und auf die Daten der jeweils anderen Version zuzugreifen.
+TODO: --Dadurch, dass die Version 2 von ROS noch in den Kinderschuhen steckt--, sind noch wenige Pakete von ROS1 portiert und die momentanen Treiber- und Toolunterstützung ist lückenhaft. Um die umfangreichen ROS1 Pakete dennoch nutzen zu können, existiert eine ROS1 Bridge, die es ermöglicht, ROS1 und ROS2 parallel nebeneinander auszuführen und auf die Daten der jeweils anderen Version zuzugreifen.
 
-Um so von den Vorteilen beider ROS Versionen Gebrauch machen zu können, wurde eine Kombination aus ROS1 und ROS2 auf dem Bordcomputer installiert. Dabei wurde die aktuelle LTS Version von ROS1 (Melodic) und die zum Start der Arbeit aktuelle ROS2 Version (Crystal) installiert. Diese wurden beide für die Installation auf Ubuntu 18.04 ausgelegt.
+Um von den Vorteilen beider ROS Versionen Gebrauch machen zu können, läuft eine Kombination aus ROS1 und ROS2 auf dem Bordcomputer. Dabei wurde die aktuelle LTS Version von ROS1 (Melodic) und die zum Start der Arbeit aktuelle ROS2 Version (Crystal) installiert. Diese wurden beide für die Installation auf Ubuntu 18.04 ausgelegt.
 
-Hier wird nun ein kurzer Überblick über die Architektur der Software gegeben, die verwendeten Treiber für die einzelnen Geräte werden später genau erklärt.
+Im Folgenden wird ein kurzer Überblick über die Architektur der Software gegeben, die verwendeten Treiber für die einzelnen Geräte werden später genau erklärt.
 
 Für den verwendeten LIDAR Sensor und die IMU existierten bereits ROS1 Treiber, die sich problemlos verwenden ließen. Daher wurden diese nicht auf ROS2 implementiert bzw. portiert.
-Der ROS1 Ublox-Treiber für das GPS-Modul war leider veraltet und unterstütze den vewendeten SAM M8Q Chip nicht, weshalb ein eigener Treiber in ROS2 implementiert wurde. Der Treiber für das Gamepad war in python leicht zu implementieren, weswegen nicht auf ein ROS1 Paket zurückgegriffen wurde. Bei den anderen Treibern handelt es sich um Eigenentwicklungen bzw. Geräte die nicht in ROS1 unterstützt werden, weswegen ein eigener ROS2 Treiber implementiert wurde.
+Der ROS1 Ublox-Treiber für das GPS-Modul war leider veraltet und unterstütze den vewendeten SAM M8Q Chip nicht, weshalb ein eigener Treiber in ROS2 implementiert wurde. Der Treiber für das Gamepad war in Python leicht zu implementieren, weswegen nicht auf ein ROS1 Paket zurückgegriffen wurde. Bei den anderen Treibern handelt es sich um Eigenentwicklungen bzw. Geräte, die nicht in ROS1 unterstützt werden. Daher wurde ein eigener ROS2 Treiber implementiert.
 
-Im Aktuellen Stand laufen also der Treiber für den LIDAR und die IMU auf ROS1 und sind über die ROS1 Bridge in ROS2 verfügbar. Sämtliche anderen Treiber laufen unter ROS2
+Im aktuellen Stand laufen daher der Treiber für den LIDAR und die IMU auf ROS1 und sind über die ROS1 Bridge in ROS2 verfügbar. Sämtliche anderen Treiber laufen unter ROS2.
 
 
 ![Deployment Diagramm](./images/Deployment.png)
@@ -79,9 +79,9 @@ Im Aktuellen Stand laufen also der Treiber für den LIDAR und die IMU auf ROS1 u
 Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
 
 # Konfiguration Ubuntu
-Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetzigen Zeitpunkt (Stand Juni 2019) die Einzige, die es ermöglicht, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
+Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetzigen Zeitpunkt (Stand Juni 2019) die einzige Möglichkeit, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
 
-> **Hinweis:** Inzwischen gibt es auch 64-Bit Images von [Ubuntu Mate](https://ubuntu-mate.org/download/) für den Raspberry Pi. Diese sind allerdings noch als experimental eingestuft.
+> **Hinweis:** Inzwischen gibt es auch 64-Bit Images von [Ubuntu Mate](https://ubuntu-mate.org/download/) für den Raspberry Pi. Diese sind allerdings noch als experimentell eingestuft.
 
 
 ## Verbindung zum Pi
@@ -89,13 +89,13 @@ Auf dem Raspberry Pi läuft standardmäßig ein SSH-Server, mit dem man sich üb
 ```bash
 ssh -X ubuntu@scoomatic_ip
 ```
-Das `-X` Flag ermöglicht es bei Verwendung eines Linux-PCs als Client, grafische Programme wie rviz über SSH auf dem Pi auszuführen und am lokalen Desktop auszuführen (s. [X11-Forwarding über SSH](http://www.tacticalcode.de/2013/02/x11-forwarding-uber-ssh.html))
+Das `-X` Flag ermöglicht es bei Verwendung eines Linux-PCs als Client, grafische Programme wie rviz über SSH auf dem Pi und am lokalen Desktop auszuführen (s. [X11-Forwarding über SSH](http://www.tacticalcode.de/2013/02/x11-forwarding-uber-ssh.html))
 
-Statt `scoomatic_ip` muss die IP Adresse des Pis im lokalen Netzwerk eingetragen werden
-Das Passwort für den nutzer `ubuntu` wurde als `notubuntu` festgelegt
+Statt `scoomatic_ip` muss die IP Adresse des Pis im lokalen Netzwerk eingetragen werden.
+Das Passwort für den Nutzer `ubuntu` wurde als `notubuntu` festgelegt.
 ## Netzwerkkonfiguration
-Die Netzwerkkonfiguration auf dem von Ubuntu bereitgestellten Image war kaputt und wurde manuell wie folgt festgelegt:
-Die Verwaltung des LAN Ports (`eth0`) erfolgt klassisch über die Datei `/etc/network/interfaces` und stellt bei Verbinden eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP
+Die Netzwerkkonfiguration auf dem von Ubuntu bereitgestellten Image war defekt und wurde manuell wie folgt festgelegt:
+Die Verwaltung des LAN Ports (`eth0`) erfolgt klassisch über die Datei `/etc/network/interfaces` und stellt bei Anbindung eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP.
 
 Die WLAN-Schinttstelle `wlan0` ließ sich nicht über den selben Weg konfigurieren und wird deshalb über Ubuntus `network-manager` Paket verwaltet. Über das Tool `nmcli` können Verbindungen hergestellt werden.
 
@@ -110,30 +110,30 @@ Das `rt` Netzwerk ist bereits eingerichtet und der Pi verbindet sich damit autom
 
 
 ## Dateisystemstruktur
-Grundsätzlich ist das Dateisystem aufgebaut wie in jeder Linux Installation ([Linux File System/Structure Explained](https://www.youtube.com/watch?v=HbgzrKJvDRw))
-Im Nutzerverzeichnis `/home/ubuntu` (`~`) wurde  das Verzeichnis git angelegt, in das alle genutzten git-Repositorys geklont wurden. Sofern es sich bei den Repositorys um ROS1 oder 2 Pakete handelte, wurde ein Symlink in den src Ordner des jeweiligen Workspaces erzeugt (`ln -s /home/ubuntu/git/somerepo /home/ubuntu/catkin_ws/src)`)
+Grundsätzlich ist das Dateisystem in Anlehnung an gewöhnliche Linux Installationen aufgebaut ([Linux File System/Structure Explained](https://www.youtube.com/watch?v=HbgzrKJvDRw))
+Im Nutzerverzeichnis `/home/ubuntu` (`~`) wurde  das Verzeichnis "git" angelegt, in das alle genutzten git-Repositorys geklont wurden. Sofern es sich bei den Repositorys um ROS1 oder 2 Pakete handelte, wurde ein Symlink in den src Ordner des jeweiligen Workspaces erzeugt (`ln -s /home/ubuntu/git/somerepo /home/ubuntu/catkin_ws/src)`).
 
 Der Workspace für ROS1 liegt unter `~/catkin_ws`, der für ROS2 unter `~/ros2_ws`
 
 Die ROS Installationen wurden nach den offiziellen Anleitungen über die Ubuntu Paketverwaltung Installiert und befinden sich in den Verzeichnissen `/opt/ros/melodic` bzw. `/opt/ros/crystal`.
 
-Neue ROS-Paket können über `apt-cache search Suchbegriff` gesucht, und über `sudo apt install -y paketname` installiert werden
+Neue ROS-Paket können über `apt-cache search Suchbegriff` gesucht und über `sudo apt install -y paketname` installiert werden
 > **Hinweis:** In letzter Zeit scheint Ubuntu immer wieder den gespeicherten Key für die ROS Repos zu vergessen. Sollte es während der Ausführung von `sudo apt update` zu Problemen mit den ROS Paketquellen kommen, einfach den Befehl `sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654` ausführen und erneut updaten.
 
 ## ROS2 bedienung
-Für die Nutzung einer ROS-Version muss immer eine setup.bash Datei der jeweiligen Version über den `source` befehl geladen werden. Standardmäßig werden beim öffnen einer neuen bash Shell die Dateien `/opt/ros/crystal/setup.bash` und `~/ros2_ws/install/setup.bash` geladen. Dadurch wird die ROS2 Umgebung inklusive der im ROS2 Workspace installierten Pakete geladen.
+Für die Nutzung einer ROS-Version muss stets eine setup.bash Datei der jeweiligen Version über den `source` Befehl geladen werden. Standardmäßig werden beim Öffnen einer neuen bash Shell die Dateien `/opt/ros/crystal/setup.bash` und `~/ros2_ws/install/setup.bash` geladen. Dadurch wird die ROS2 Umgebung inklusive der im ROS2 Workspace installierten Pakete TODO: neues Wort, geladen ist oben schon! --geladen--.
 
-Pakete aus git Repositorys sind über Symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
+Pakete aus git Repositorys sind über Symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten.
 
 Nachdem für ROS2 noch kaum Dokumentation existiert, wird hier die Nutzung einiger wichtiger Tools für ROS2 erklärt.
 
-Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in `~/.bashrc` aliase für die beiden Funktionen erstellt
+Nachdem die Befehle für das Erstellen und Cleanen eines Workspaces recht sperrig sind, wurden in `~/.bashrc` Aliase für die beiden Funktionen erstellt.
 ```bash
 alias rbuild="cd ~/ros2_ws && colcon build --symlink-install && source install/setup.bash"
 alias rclean="cd ~/ros2_ws && rm -rf build/ install/ log/")
 ```
 
-Das Steuern von ROS2 erfolgt über das `ros2` binary
+Das Steuern von ROS2 erfolgt über das `ros2` binary.
 
 ```bash
 usage: ros2 [-h] Call `ros2 <command> -h` for more detailed usage. ...
@@ -160,9 +160,9 @@ Commands:
 
   Call `ros2 <command> -h` for more detailed usage.
 ```
-Die Kommandos `topic`, `srv`, `node` und `msg`  haben jeweils die Möglichkeit über `list` eine Auflistung aller Verfügbaren Möglichkeiten anzuzeigen oder über `info` Details zu einzelnen topics / nodes / services / messages abzurufen
+Die Kommandos `topic`, `srv`, `node` und `msg`  haben jeweils die Möglichkeit über `list` eine Auflistung aller Verfügbaren Möglichkeiten anzuzeigen oder über `info` Details zu einzelnen topics / nodes / services / messages abzurufen.
 
-Besipiele
+Bespiele:
 ```bash
 ros2 srv list
 ros2 topic info /cmd_vel
@@ -172,7 +172,7 @@ ros2 topic info /cmd_vel
 ```bash
 ros2 topic echo /sonar # Gibt alle Nachrichen in Topic /sonar aus
 ```
-In ROS2 gibt es wie in ROS1 die Unterscheidung zwischen dem Start einzelner Nodes und dem Start von launch files, die mehrere Nodes Starten können. Anders als in ROS1 muss beim Starten einzelner Nodes vorher kein Master gestartet werden.
+In ROS2 gibt es, wie in ROS1, die Unterscheidung zwischen dem Start einzelner Nodes und dem Start von launch files, die mehrere Nodes starten können. Anders als in ROS1 muss beim Starten einzelner Nodes vorher kein Master gestartet werden.
 
 
 ```bash
@@ -181,7 +181,7 @@ ros2 run scoomatic_drivers motor_driver # Motortreiber starten
 
 ros2 launch package_name launchfile_name
 ```
-Eine Shell kann über den folgenden Befehl für die Nutzung einer anderen ROS-Version Konfiguriert werden
+Eine Shell kann über den folgenden Befehl für die Nutzung einer anderen ROS-Version konfiguriert werden.
 ```bash
 source /opt/ros/[crystal oder melodic]/setup.bash
 source [~/ros2_ws/install/setup.bash oder ~/catkin_ws/devel/setup.bash]
@@ -189,12 +189,12 @@ source [~/ros2_ws/install/setup.bash oder ~/catkin_ws/devel/setup.bash]
 Das Skript `~/ros2_ws/src/scoomatic_drivers/start_ros2.bash` startet alle ROS2 Nodes auf einmal. Wichtig ist, dass die USB Serial Adapter in der richtigen Reihenfolge (s. Label) eingesteckt wurden, damit die Serial Ports den richtigen Nodes zugewiesen werden. Leider teilt Linux die Portnummern scheinbar zufällig zu, weshalb die Serial Adapter nach jedem Neustart an- und abgesteckt werden müssen.
 
 # ROS1 Bedienung
-Standardmäßig wird eine neue Shell Session für ROS2 Crystal initialisiert. Durch die ausführung des nachfolgenden Befehls kann die Umgebung allerdings auf ROS1 umgestellt werden
+Standardmäßig wird eine neue Shell Session für ROS2 Crystal initialisiert. Durch die ausführung des nachfolgenden Befehls kann die Umgebung allerdings auf ROS1 umgestellt werden.
 ```bash
 source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 ```
-Pakete aus git Repositorys sind über Symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten
+Pakete aus git Repositorys sind über Symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten.
 
 Die Kommandozeilentools für ROS1 sind [im ROS Wiki](http://wiki.ros.org/ROS/CommandLineTools) detailliert erklärt.
 
@@ -211,7 +211,7 @@ sudo apt install ros-crystal-ros1-bridge
 
 Zur Verwendung der ROS1 Bridge sei auf den nächsten Abschnitt verwiesen.
 ## Inbetriebnahme aller Treiber
-Um alle Treiber inklusive ROS1 Bridge in Betrieb zu nehmen, werden 3 Shells benötigt. Auf der ersten Shell werden ein ROS1 Core und die ROS1 Treiber gestartet
+Um alle Treiber inklusive ROS1 Bridge in Betrieb zu nehmen, werden drei Shells benötigt. Auf der ersten Shell werden ein ROS1 Core und die ROS1 Treiber gestartet
 ```bash
  ~/catkin_ws/src/scoomatic_ros1/start_ros1.bash
 ```
@@ -223,7 +223,7 @@ export ROS_MASTER_URI=http://localhost:11311
 ros2 run ros1_bridge dynamic_bridge
 ```
 
-Zuletzt müssen noch die ROS2 Treiber gestartet werden
+Zuletzt müssen die ROS2 Treiber gestartet werden.
 ```bash
 ~/ros2_ws/src/scoomatic_drivers/start_ros2.bash
 ```
