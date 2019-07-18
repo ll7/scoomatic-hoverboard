@@ -79,7 +79,7 @@ Im aktuellen Stand laufen daher der Treiber für den LIDAR und die IMU auf ROS1 
 Das Motortreiberboards verfügt über zwei UARTs. Davon wird einer für die Ansteuerung der Motoren verwendet, während der andere Debuginformationen zurücksendet. Daraus resultieren die zwei separaten Verbindungen zum Motortreiberboard.
 
 # Konfiguration Ubuntu
-Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetzigen Zeitpunkt (Stand Juni 2019) die einzige Möglichkeit, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann unter TODO heruntergeladen werden und passt auf SD-Karten ab 32GB Größe.
+Auf dem Raspberry Pi lauft die [64-Bit Arm-Version von Ubuntu 18.04](https://wiki.ubuntu.com/ARM/RaspberryPi). Die Kombination aus Raspberry Pi 3B und diesem Ubuntu Image ist zum jetzigen Zeitpunkt (Stand Juni 2019) die einzige Möglichkeit, ROS Melodic und ROS2 Crystal parallel zu installieren. Dementsprechend sind diese beiden ROS Versionen auch auf dem Image vorinstalliert. Das Image kann vom Betreuer bezogen werden und passt auf SD-Karten ab 32GB Größe.
 
 > **Hinweis:** Inzwischen gibt es auch 64-Bit Images von [Ubuntu Mate](https://ubuntu-mate.org/download/) für den Raspberry Pi. Diese sind allerdings noch als experimentell eingestuft.
 
