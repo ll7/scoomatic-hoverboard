@@ -61,7 +61,7 @@ Ein weiterer Punkt, der für die Verwendung von ROS spricht, ist die große Comm
 
 Das Kommunikationslayer basiert auf einer Publish / Subscribe Nachrichtenarchitektur mit verschiedenen Kanälen (sogenannten Topics). Jedes Programm ist ein Node, kann in Topics schreiben (publish) und über neue Nachrichten informiert werden (subscribe). Darauf aufbauend gibt es für Nodes auch die Möglichkeit, Services und Actions anzubieten, die von anderen Nodes aufgerufen werden können. Der Unterschiede zwischen Services und Actions liegt dabei in der Ausführungsdauer. Service Calls blockieren in der Regel nicht bzw. terminieren innerhalb von kurzer Zeit (z.B. das Scharfschalten von Motoren bei Quadcoptern). Actions benötigen längere Zeit, um ausgeführt zu werden (z.B. das Fahren einer Bewegung mit einem Roboterarm). Zu diesem Zweck können mithilfe von Actions zudem aktuelle Fortschritte mitgeteilt werden. Zur Organisation von Nodes können diese in Pakete gruppiert und so verteilt werden. Nodes sind nativ in C++ oder Python implementiert; es existieren jedoch auch einige Communityprojekte, die das Schreiben von Nodes mit anderen Sprachen, wie z.B. C# oder Java, ermöglichen.
 
-TODO: --Dadurch, dass die Version 2 von ROS noch in den Kinderschuhen steckt--, sind noch wenige Pakete von ROS1 portiert und die momentanen Treiber- und Toolunterstützung ist lückenhaft. Um die umfangreichen ROS1 Pakete dennoch nutzen zu können, existiert eine ROS1 Bridge, die es ermöglicht, ROS1 und ROS2 parallel nebeneinander auszuführen und auf die Daten der jeweils anderen Version zuzugreifen.
+Dadurch, dass die Version 2 von ROS noch in den Kinderschuhen steckt, sind nur wenige Pakete von ROS1 portiert und die momentanen Treiber- und Toolunterstützung ist lückenhaft. Um die umfangreichen ROS1 Pakete dennoch nutzen zu können, existiert eine ROS1 Bridge, die es ermöglicht, ROS1 und ROS2 parallel nebeneinander auszuführen und auf die Daten der jeweils anderen Version zuzugreifen.
 
 Um von den Vorteilen beider ROS Versionen Gebrauch machen zu können, läuft eine Kombination aus ROS1 und ROS2 auf dem Bordcomputer. Dabei wurde die aktuelle LTS Version von ROS1 (Melodic) und die zum Start der Arbeit aktuelle ROS2 Version (Crystal) installiert. Diese wurden beide für die Installation auf Ubuntu 18.04 ausgelegt.
 
@@ -95,7 +95,7 @@ Statt `scoomatic_ip` muss die IP Adresse des Pis im lokalen Netzwerk eingetragen
 Das Passwort für den Nutzer `ubuntu` wurde als `notubuntu` festgelegt.
 ## Netzwerkkonfiguration
 Die Netzwerkkonfiguration auf dem von Ubuntu bereitgestellten Image war defekt und wurde manuell wie folgt festgelegt:
-Die Verwaltung des LAN Ports (`eth0`) erfolgt klassisch über die Datei `/etc/network/interfaces` und stellt bei Anbindung eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP.
+Die Verwaltung des LAN Ports (`eth0`) erfolgt klassisch über die Datei `/etc/network/interfaces` und stellt beim Einstecken eines Kabels automatisch eine Verbindung her und bezieht eine Netzwerkadresse über DCHP.
 
 Die WLAN-Schinttstelle `wlan0` ließ sich nicht über den selben Weg konfigurieren und wird deshalb über Ubuntus `network-manager` Paket verwaltet. Über das Tool `nmcli` können Verbindungen hergestellt werden.
 
@@ -111,7 +111,7 @@ Das `rt` Netzwerk ist bereits eingerichtet und der Pi verbindet sich damit autom
 
 ## Dateisystemstruktur
 Grundsätzlich ist das Dateisystem in Anlehnung an gewöhnliche Linux Installationen aufgebaut ([Linux File System/Structure Explained](https://www.youtube.com/watch?v=HbgzrKJvDRw))
-Im Nutzerverzeichnis `/home/ubuntu` (`~`) wurde  das Verzeichnis "git" angelegt, in das alle genutzten git-Repositorys geklont wurden. Sofern es sich bei den Repositorys um ROS1 oder 2 Pakete handelte, wurde ein Symlink in den src Ordner des jeweiligen Workspaces erzeugt (`ln -s /home/ubuntu/git/somerepo /home/ubuntu/catkin_ws/src)`).
+Im Nutzerverzeichnis `/home/ubuntu` (`~`) wurde  das Verzeichnis `~/git` angelegt, in das alle genutzten git-Repositorys geklont wurden. Sofern es sich bei den Repositorys um ROS1 oder 2 Pakete handelte, wurde ein Symlink in den src Ordner des jeweiligen Workspaces erzeugt (`ln -s /home/ubuntu/git/somerepo /home/ubuntu/catkin_ws/src)`).
 
 Der Workspace für ROS1 liegt unter `~/catkin_ws`, der für ROS2 unter `~/ros2_ws`
 
@@ -121,7 +121,7 @@ Neue ROS-Paket können über `apt-cache search Suchbegriff` gesucht und über `s
 > **Hinweis:** In letzter Zeit scheint Ubuntu immer wieder den gespeicherten Key für die ROS Repos zu vergessen. Sollte es während der Ausführung von `sudo apt update` zu Problemen mit den ROS Paketquellen kommen, einfach den Befehl `sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654` ausführen und erneut updaten.
 
 ## ROS2 bedienung
-Für die Nutzung einer ROS-Version muss stets eine setup.bash Datei der jeweiligen Version über den `source` Befehl geladen werden. Standardmäßig werden beim Öffnen einer neuen bash Shell die Dateien `/opt/ros/crystal/setup.bash` und `~/ros2_ws/install/setup.bash` geladen. Dadurch wird die ROS2 Umgebung inklusive der im ROS2 Workspace installierten Pakete TODO: neues Wort, geladen ist oben schon! --geladen--.
+Für die Nutzung einer ROS-Version muss stets eine setup.bash Datei der jeweiligen Version über den `source` Befehl eingelesen werden. Standardmäßig werden beim Öffnen einer neuen bash Shell die Dateien `/opt/ros/crystal/setup.bash` und `~/ros2_ws/install/setup.bash` geladen. Dadurch wird die ROS2 Umgebung inklusive der im ROS2 Workspace installierten Pakete geladen.
 
 Pakete aus git Repositorys sind über Symlinks vom Repo in `~/git` in den `src` Ordner verlinkt. Somit können nicht mehr benötigte Pakete durch Löschen des Symlinks aus dem `src` Ordner entfernt werden, bleiben aber trotzdem auf der Platte erhalten.
 
@@ -237,7 +237,7 @@ Im Folgenden werden die Hardwareelemente und ihre Treiber genauer vorgestellt. D
 ## Hoverboard
 [Bezugsquelle Verwendetes Board](https://www.toysstoregmbh.de/10-hoverboard-smart-self-balance-board-bluetooth-luftbereifung-elektroroller-tuev-ce_343_1442)
 ### Mainboard
-TODO: Satz umschreiben -- Das Mainboard unterscheidet sich sowohl in der Geometrie als auch vom Prozessor zu dem von [Fauth et al](https://www.youtube.com/watch?v=qnQSL9DBPaE&t=1788s) vorgestellten sowohl in der Boardgeometrie als auch im verwendeten Hauptprozessor. Statt des STM32F103 kommt ein [GD32F103](https://smdprutser.nl/blog/stm32f103-vs-gd32f103/) zum Einsatz, welcher dem STM zwar ähnelt, sich aber durch mehr Speicher und eine höhere Taktrate von ihm unterscheidet. Allerdings ist die Firmware zwischen den beiden Chips und Boards kompatibel.
+Das Mainboard unterscheidet sich sowohl in der Geometrie als auch vom Prozessor zu dem von [Fauth et al](https://www.youtube.com/watch?v=qnQSL9DBPaE&t=1788s) vorgestellten.  Statt des STM32F103 kommt ein [GD32F103](https://smdprutser.nl/blog/stm32f103-vs-gd32f103/) zum Einsatz, welcher dem STM zwar ähnelt, sich aber durch mehr Speicher und eine höhere Taktrate von ihm unterscheidet. Allerdings ist die Firmware zwischen den beiden Chips und Boards kompatibel.
 
 ![Bild Hoverboard Mainboard](./images/mainboard.jpg)
 
@@ -260,7 +260,7 @@ Auf der linken und rechten Hälfte des Hoverboards befindet sich je ein *Sensorb
 Auf dem Sensorboard befindet sich ein MindMotion [MM32F031 Datasheet](http://www.mindmotion.com.cn/userfiles/images/mm32f031wendangziliao/ds_mm32f031_ver2.0.pdf) Mikrocontroller, welcher ein Klon des [STM032F031](https://www.st.com/resource/en/datasheet/stm32f031c4.pdf) ist. Ebenso finden sich auf dem Board Steckverbinder für die LED-Beleuchtungs- und Anzeigemodule der jeweiligen Seite.
 Um zu erkennen, ob eine Person auf dem Board steht, sind je zwei Lichtschranken eingebaut. 
 
--- Todo: Satz ändern, unklar: -- Diese werden unterbrochen, wenn eine Person auf das Hoverboard steigt und damit ein sich über den Lichtschranken befindendes Silikonteil in den Erkennungsbereich letzterer drückt. 
+Diese werden unterbrochen, wenn eine Person auf das Hoverboard steigt und damit ein sich über den Lichtschranken befindendes Silikonteil in den Erkennungsbereich des Sensors drückt. 
 
 Es genügt dabei, eine der beiden Lichtschranken zu unterbrechen, um den Motor der jeweiligen Seite anzuschalten. Für Testzwecke kann im ausgebauten Zustand ein Stück Schrumpfschlauch über eine der Lichtschranken gezogen werden, um den Motor zu aktivieren.
 
@@ -318,7 +318,7 @@ Durch den beschriebenen Versuchsaufbau lassen sich also beide Räder des Hoverbo
 * Der Motortreiber schaltet sich nach einigen Minuten aus, wenn keiner der Motoren aktiviert wurde. Danach muss er erst wieder über den Anschalter aktiviert werden.
 * Für die Ansteuerung beider Motoren müssen beide seriellen Schnittstellen verwendet werden.
 * Die Baudrate ist keine Standardgeschwindigkeit und wird nativ von wenigen Mikrocontrollern unterstützt.
-* Das Kommunikationsprotokoll ist seltsam aufgebaut. - TODO: seltsam klingt so unprofessionell -
+* Das Kommunikationsprotokoll scheint keinem bekannten Standard zu entsprechen.
 
 Diese Nachteile ließen sich durch den Einsatz einer anderen Firmware lösen. Wie sich dieses Vorhaben umsetzen lässt, wird im nachfolgenden Kapitel beschrieben.
 ### Aufspielen einer anderen Firmware auf das Mainboard
@@ -377,9 +377,9 @@ Anschließend kann der ST-LinkV2 Programmieradapter an dem Header angeschlossen 
 
 ![Verbindung mit STLink](./images/connection-mainboard-stlink.jpg)
 
-Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labornetzgerät bei einer Spannung zwischen 36 und 42V verbunden und die beiden Pins des Anschalters am Board dauerhaft gebrückt. -TODO: ist 'gebrückt' ein Wort? -
+Zum Übertragen (*Flashen*) der Firmware auf das Board wird dieses mit dem Labornetzgerät bei einer Spannung zwischen 36 und 42V verbunden und die beiden Pins des Anschalters am Board dauerhaft gebrückt.
 
-> **Hinweis:** Um Beschädigungen am Hoverboard durch zu hohe Ströme bei Kurzschlüssen etc. zu vermeiden, wurde der Akku ausgebaut und ein Labornetzgerät mit Strombegrenzung mit der XT-60 Akkubuchse verbunden. Die Strombegrenzung kann auf 2A eingestellt werden, wenn nur ein Motor im Leerlauf betrieben wird. Die Eingangsspannung sollte 36-42V betragen.
+> **Hinweis:** Um Beschädigungen am Hoverboard durch zu hohe Ströme bei Kurzschlüssen etc. zu vermeiden, wurde der Akku ausgebaut und ein Labornetzgerät mit Strombegrenzung mit der XT-60 Akkubuchse verbunden. Die Strombegrenzung kann auf 2A eingestellt werden, wenn nur ein Motor im Leerlauf betrieben wird. Die Eingangsspannung muss 36-42V betragen.
 
 
 Vor dem ersten Flashen des Mainboards muss die *Readout-Protection* (ROP) des GD32F103-Chips entfernt werden. Diese verhindert das Auslesen der ursprünglichen Firmware des Boards, aber auch Aufspielen neuer Software. Der Vorgang muss nur einmal durchgeführt werden und ist bei späteren Updates nicht mehr nötig.
@@ -392,7 +392,7 @@ Durch Auswählen von Target -> Option Bytes..
 
 ![Read out protection entfernen](./images/read-out-protection2.png)
 
-öffnet sich ein Dialogfenster, in welchem 'Read Out Protection' auf 'Disabled' gesetzt werden kann.
+öffnet sich ein Dialogfenster, in welchem *Read Out Protection* auf *Disabled* gesetzt werden kann.
 
 ![Read out protection entfernen](./images/read-out-protection3.png)
 
@@ -434,7 +434,7 @@ Die alternative Firmware für das Hoverboard liefert auf dem ersten UART die fol
 7: for board temperature calibration
 8: board temperature
 ```
--- TODO: Satz verstehe ich nicht: Die Werte ADC1 und ADC2 sind die Werte der beiden Analog zu Digitalconverter am Board. -- An diese Eingänge können Analogsignale zwischen 0 und 3,3V angeschlossen werden. Die Spannungen an den Eingängen werden dann als Zahlenwert zwischen 0 und 4096 (12 Bit ADC im STM32F103) in den entsprechenden ROS Topics angezeigt.
+Die Werte ADC1 und ADC2 sind die Werte der beiden [Analog-zu-Digitalconverter](https://de.wikipedia.org/wiki/Analog-Digital-Umsetzer) am Board. An diese Eingänge können Analogsignale zwischen 0 und 3,3V angeschlossen werden. Die Spannungen an den Eingängen werden dann als Zahlenwert zwischen 0 und 4096 (12 Bit ADC im STM32F103) in den entsprechenden ROS Topics angezeigt.
 
 Die Geschwindigkeit hat keine genaue Einheit.
 Für die Kalibrierung der Batteriespannung und Boardtemperatur sei auf das [Hoverboard Firmware Hack Video](https://www.youtube.com/watch?v=qnQSL9DBPaE) verwiesen.
@@ -447,7 +447,7 @@ Dafür wird der folgender ASCII String gesendet:
  ```
 
 
-> **Hinweis:** Durch die hohe Baudrate von 115200 und das lange Kabel vom Board zum Serial-Adapter kommen einige Pakete -- TODO: heißt das korrupt? -- korrupt an. Der Treiber meldet das mit der nachfolgenden Meldung. Dadurch gehen einige Pakete verloren. Sollte das ein Problem werden, so lässt es sich lösen, indem das Kabel vom Hoverboard zum Serial Adapter gekürzt und die restliche Strecke mittels eines USB Verlängerungskabels überbrückt wird.
+> **Hinweis:** Durch die hohe Baudrate von 115200 und das lange Kabel vom Board zum Serial-Adapter kommt es bei einigen Paketen zu Übertragungsfehlern. Der Treiber meldet das mit der nachfolgenden Meldung. Dadurch gehen einige Pakete verloren. Sollte das ein Problem werden, so lässt es sich lösen, indem das Kabel vom Hoverboard zum Serial Adapter gekürzt und die restliche Strecke mittels eines USB Verlängerungskabels überbrückt wird.
 
 ```
 WARN] [motor_diag]: Serial package Invalid. Did you set the right port?
@@ -550,7 +550,7 @@ Auf dem installierten Image sind die Treiber für den LIDAR bereits installiert.
 > **Hinweis:** Die rviz GUI lässt sich nur über SSH starten, wenn man sich von einem Linux mit X-Server aus verbindet.
 
 ![rviz mit RPLIDAR](./images/rviz-rplidar.png)
-In rviz das 'Laser Scan' Plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen. -- TODO: irgendwie ist Satz unvollständig --
+In rviz das 'Laser Scan' Plugin hinzufügen und bei Fehlern mit tf 'laser_frame' als FixedFrame setzen.
 
 
 ### rviz auf anderem Rechner ausführen
@@ -648,7 +648,7 @@ gamepad_driver:
 
 Gain Parameter sind für den Afterglow AP.2 Controller. Der XBOX One Controller benötigt evtl. andere Parameter.
 ### Verbindung XBOX One Controller über Bluetooth
-Der Bluetoothstack der verwendeten Ubuntu Installation ist -- TODO: ist broken hier das richtige Wort? -- broken. Sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg)):
+Der Bluetoothstack der verwendeten Ubuntu Installation ist zum aktuellen Zeitpunkt (7/19) nicht funktionstüchtig. Sollte sich das allerdings einmal ändern, müssen folgende Schritte ausgeführt werden, damit der XBOX One Controller die Verbindung über Bluetooth zuverlässig hält ([Quelle](https://www.youtube.com/watch?v=bAI4vnlQhPg)):
 ```bash
  sudo apt install sysfsutils
  sudo nano /etc/sysfs.conf
@@ -699,7 +699,7 @@ joy_driver:
 ## Stromversorgung
 ![Stromversorgung](./images/power.png)
 
-Die Stromversorgung ist in zwei Teile aufgeteilt. Wie schon beim originalen Hoverboard versorgt der Akku das Motortreiberboard mit Strom. Das Treiberboard besitzt auch weiterhin die ursprüngliche Ladebuchse des Hoverboards, wodurch das ganze System mit dem originalen Netzteil geladen werden kann. Zusätzlich wurde ein weiterer Stromkreis verbaut, der über einen Hauptschalter am Schalterboard -- TODO: anderes Wort für geschaltet, sonst so viel schaltet -- geschalten werden kann. Daran hängt ein 24V Schaltnetzteil, welches das Accessory Power Module und das [5V Netzteil](https://www.conrad.de/de/p/dc-dc-7-40v-to-1-2-35v-300w-8a-step-down-voltage-regulator-power-modul-with-led-802244052.html) für den Raspberry Pi mit Strom versorgt.
+Die Stromversorgung ist in zwei Teile aufgeteilt. Wie schon beim originalen Hoverboard versorgt der Akku das Motortreiberboard mit Strom. Das Treiberboard besitzt auch weiterhin die ursprüngliche Ladebuchse des Hoverboards, wodurch das ganze System mit dem originalen Netzteil geladen werden kann. Zusätzlich wurde ein weiterer Stromkreis verbaut, der über einen Hauptschalter am Schalterboard aktiviert werden kann. Daran hängt ein 24V Schaltnetzteil, welches das Accessory Power Module und das [5V Netzteil](https://www.conrad.de/de/p/dc-dc-7-40v-to-1-2-35v-300w-8a-step-down-voltage-regulator-power-modul-with-led-802244052.html) für den Raspberry Pi mit Strom versorgt.
 ### Accessory Power Module
 ![Accessory Power Module](./images/apm.jpg)
 Das Accessory Power Module bietet über [2A Step-Down](https://www.az-delivery.de/products/lm2596s-dc-dc-step-down-modul-1?_pos=1&_sid=25486a72e&_ss=r&ls=de) Module die Möglichkeit, zusätzliche Geräte mit 3, 3V, 5V oder 12V zu versorgen. Das Board ist momentan mit 2A am Eingang abgesichert. In Anbetracht der Tatsache, dass das [24V Schaltnetzteil von Meanwell](https://www.conrad.de/de/p/dc-dc-wandler-mean-well-psd-45c-24-1-875-a-1292639.html), welches das APM versorgt, nur 1,87A liefern kann, wäre eine Absicherung auf 1,5A wahrscheinlich sinnvoller. Dafür muss lediglich die eingeklipste Glassicherung getauscht werden.
@@ -751,7 +751,7 @@ Im Folgenden werden bekannte Fehler des Scoomatics aufgezählt und anschließend
 ### Bluetoothstack vom Ubuntu Image
 Momentan kann aufgrund fehlernder Softwareunterstützung seitens Ubuntu auf dem Bordcomputer kein Bluetooth genutzt werden. Das gilt für das verbaute Bluetooth Modul und externe Bluetooth Sticks. Dadurch ist es momentan nicht möglich, den XBOX One Controller über Bluetooth mit dem Pi zu verbinden. Das Problem ist [bekannt](https://bugs.launchpad.net/ubuntu/+bug/1817133), allerdings scheint es zum jetzigen Zeitpunkt (Juli 2019) noch keine Lösung dafür zu geben.
 ### Sonar Sensoren zeigen 0cm an
-Das Sonarsteuergerät schickt gelegentlich für einen oder mehrere Ultraschallsensoren kontinuierlich einen Wert von 0cm an ROS. Die Ursache für dieses Verhalten konnte noch nicht festgestellt werden. -- TODO: der Satz ist passt nicht: Ein Hardwareproblem lässt sich aber mit großer Wahrscheinlichkeit ausschließen, das Sensoren nach An- und Abstecken weiterhin defekt bleiben und Sensoren, an deren Verkabelung nichts geändert wurde, oftmals nach einem Reset des Arduinos wieder laufen. -- Aus diesem Grund wird als Ursache momentan ein Softwareproblem vermutet. Da der Code des [Sonic Disc Projekts](https://www.hackster.io/platisd/sonicdisc-a-360-ultrasonic-scanner-211e6a), das Grundlage für das Ultraschallmodul ist, komplex ist, war es nicht möglich, den Fehler bis zur Abgabe zu beheben.
+Das Sonarsteuergerät schickt gelegentlich für einen oder mehrere Ultraschallsensoren kontinuierlich einen Wert von 0cm an ROS. Die Ursache für dieses Verhalten konnte noch nicht festgestellt werden. Ein Hardwareproblem lässt sich aber mit großer Wahrscheinlichkeit ausschließen, da Sensoren nach An- und Abstecken weiterhin defekt bleiben. Ebenso laufen Sensoren, an deren Verkabelung nichts geändert wurde, oftmals nach einem Reset des Arduinos wieder. Aus diesem Grund wird als Ursache momentan ein Softwareproblem vermutet. Da der Code des [Sonic Disc Projekts](https://www.hackster.io/platisd/sonicdisc-a-360-ultrasonic-scanner-211e6a), das Grundlage für das Ultraschallmodul ist, komplex ist, war es nicht möglich, den Fehler bis zur Abgabe zu beheben.
 Als temporären Fix könnten bei einer Auswertung Werte von 0cm einfach ignoriert und der Sensor damit abgeschaltet werden.
 ### USB Serial Ports in zufälliger Reihenfolge
 Ein Großteil der verwendeten Hardware ist über USB zu Serial Adaptern an den Pi angeschlossen. Leider entscheidet Linux beim Start zufällig, welcher USB Serial Adapter welchen Port unter /dev/ttyUSB* bekommt. Um die Beispielscripte und Configdateien zu nutzen, müssen momentan nach jedem Start alle Geräte, welche seriell über USB kommunizieren (auch die Arduinos) abgesteckt werden und anschließend in der auf den Steckern gelabelten Reihenfolge wieder angeschlossen werden. Dieses Verhalten könnte möglicherweise mit [diesem Trick](https://rolfblijleven.blogspot.com/2015/02/howto-persistent-device-names-on.html) abgestellt werden.
@@ -765,7 +765,7 @@ Für die Erstellung der Bilder wurde die Software [GIMP](https://www.gimp.org/),
 Der Logic Analyzer wurde mit der Software [sigrok](https://sigrok.org/wiki/Main_Page) zusammen mit der dazugehörigen GUI PulseView verwendet.
 Die Schaltpläne für die Versuchsaufbauten wurden mit der Software [fritzing](http://fritzing.org/home/) erstellt. Für die Schaltpläne und das Board des Ultraschallmoduls kam das webtool [easyESA](https://easyeda.com) zum Einsatz. Als CAD-Software wurde [Autodesk Fusion 360] genutzt.
 
-Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. -- TODO: weiß nicht, ob du das so schreiben kannst... -- Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html) oder nutzt eine virtuelle Maschine.
+Die Befehle in dieser Dokumentation sind, sofern nicht anders angegeben, in einer Linux Shell auszuführen und in bash getestet. Wer sich das Leben schwer machen und Windows verwenden will, [installiert am besten das Linux Subsystem für Windows](https://www.netzwelt.de/tutorial/164359-windows-10-so-installiert-aktiviert-linux-subsystem-bash.html) oder nutzt eine virtuelle Maschine.
 
 ## TODO
 * ros bridge + doku ros bridge
