@@ -88,14 +88,4 @@ Projektplan
 
 ## 5. Risiken
 
-* Einarbeitung in das Projekt von Martin dauert zu lange oder bereitet zu viele Probleme.
-* Rechenleistung reicht nicht aus, Nachbestellung eines SBC dauert zu lange
-* Arbeitsplatz einrichten
-  * Ubuntu Desktop
-  * RT-Zugriffspunkt
-  * MAC-Adressen Anmeldung
-* Hardware beschädigt:
-  * Neukauf dauert lange -> Gewissenhafter Umgang.
-* Weihnachtszeit:
-  * Lennart schlechter zu erreichen, Uni ggfs. geschlossen.
-  * [x] Schlüssel besorgen
+<https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard/wiki/risiken>
