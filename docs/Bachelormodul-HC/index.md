@@ -7,6 +7,7 @@
 * [3. Zeitplan](#3-zeitplan)
 * [4. Resourcen](#4-resourcen)
 * [5. Risiken](#5-risiken)
+* [Projektmanagement](#projektmanagement)
 
 ## 1. Rahmenbedingungen
 
@@ -89,3 +90,9 @@ Projektplan
 ## 5. Risiken
 
 <https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard/wiki/risiken>
+
+## Projektmanagement
+
+[OpenProject Scoomatic-Hoverboard](https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard)
+
+[Folien zum Projektmanagement](https://megastore.uni-augsburg.de/get/ZL9yp11bC8/)
