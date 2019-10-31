@@ -86,6 +86,7 @@ Projektplan
   * Duckietown
   * self driving golf cart
 * Ros Robotics Buch
+* <http://wiki.ros.org/navigation>
 
 ## 5. Risiken
 
