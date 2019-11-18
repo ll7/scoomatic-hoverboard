@@ -4,3 +4,12 @@ Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wik
 
 ## Verbinden mit Raspi
 Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu.local``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu.local```.
+
+## udev Regeln 
+Liegen unter ```/etc/udev/rules.d/10-local.rules```. Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
+
+Sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```
+Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
+
+## Mehrere Fenster in einer Shell
+Mit ```tmux```.
