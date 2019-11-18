@@ -20,3 +20,10 @@ Mit ```tmux```.
 ```startros2``` startet ros2.
 Sind in ~/.bashrc hinterlegt.
 Dann kann ROS2 selbst gestartet werden: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```.
+
+# ToDos
+- [ ] Neuen ROS1 Workspace erstellen
+- [ ] Lennarts Repo klonen
+- [ ] Catkin Workspace einrichten
+  - [ ] Nodes installieren
+- [ ] ROS2 Nodes migrieren
