@@ -13,3 +13,10 @@ Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 
 ## Mehrere Fenster in einer Shell
 Mit ```tmux```.
+
+
+## ROS2 starten
+```sourceros2``` sourced alle ros2 files.
+```startros2``` startet ros2.
+Sind in ~/.bashrc hinterlegt.
+Dann kann ROS2 selbst gestartet werden: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```.
