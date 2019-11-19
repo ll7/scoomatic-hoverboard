@@ -29,7 +29,7 @@ Engineering:
 
 Engineering + Recherche
 
-* SLAM
+* [SLAM](https://de.wikipedia.org/wiki/Simultaneous_Localization_and_Mapping)
 * Wegpunkte abfahren
 * Hindernissvermeidung
   * Anhalten
@@ -86,6 +86,8 @@ Projektplan
   * Duckietown
   * self driving golf cart
 * Ros Robotics Buch
+  * <https://megastore.uni-augsburg.de/file/a902559c1a1435b248311676f18daa8f/5dd3b45c/hvqHO0f7nj/9781783554713-ROS_ROBOTICS_PROJECTS.pdf>
+* [Probabilistic Robotics](https://github.com/liulinbo/slam/blob/master/Probabilistic%20Robotics%20_Sebastian%20Thrun%20et%20al..pdf)
 * <http://wiki.ros.org/navigation>
 
 ## 5. Risiken
