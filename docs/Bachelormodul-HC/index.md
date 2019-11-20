@@ -1,13 +1,14 @@
 # Bachelorarbeit Henri Chilla
 
-* [1. Rahmenbedingungen](#1-rahmenbedingungen)
-* [2. Ziel](#2-ziel)
-  * [2.1. BA Ablauf](#21-ba-ablauf)
-  * [2.2. Erweiterte Ziele](#22-erweiterte-ziele)
-* [3. Zeitplan](#3-zeitplan)
-* [4. Resourcen](#4-resourcen)
-* [5. Risiken](#5-risiken)
-* [Projektmanagement](#projektmanagement)
+- [Bachelorarbeit Henri Chilla](#bachelorarbeit-henri-chilla)
+  - [1. Rahmenbedingungen](#1-rahmenbedingungen)
+  - [2. Ziel](#2-ziel)
+    - [2.1. BA Ablauf](#21-ba-ablauf)
+    - [2.2. Erweiterte Ziele](#22-erweiterte-ziele)
+  - [3. Zeitplan](#3-zeitplan)
+  - [4. Resourcen](#4-resourcen)
+  - [5. Risiken](#5-risiken)
+  - [Projektmanagement](#projektmanagement)
 
 ## 1. Rahmenbedingungen
 
@@ -62,7 +63,7 @@ Bachelor Kolloquium
 
 Git-Doku:
 
-* Bedeinungsanleitung mit Beispielen
+* Bedienungsanleitung mit Beispielen
 * Code 1:1 Dokumentieren, an jede Stelle springen und in 5 Minuten verstehen, was da passiert
 
 Projektplan
