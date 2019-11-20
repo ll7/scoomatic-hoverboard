@@ -17,13 +17,24 @@ Mit ```tmux```.
 
 ## ROS2 starten
 ```sourceros2``` sourced alle ros2 files.
-```startros2``` startet ros2.
+```startros2``` startet ros2 oder per: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```
 Sind in ~/.bashrc hinterlegt.
-Dann kann ROS2 selbst gestartet werden: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```.
 
 # ToDos
+- [x] ROS2 zum laufen bringen
+- [x] Verstehen, was start_ros2.bash macht
 - [ ] Neuen ROS1 Workspace erstellen
-- [ ] Lennarts Repo klonen
+- [ ] Lennarts Git Repo klonen
 - [ ] Catkin Workspace einrichten
   - [ ] Nodes installieren
 - [ ] ROS2 Nodes migrieren
+
+# Working
+- [] ros1 workspace
+- [] ros2 workspace
+- [] 6/8 ultraschallsensoren
+- [] udev regeln
+- [] IMU / MPU9250 working
+
+# Not Working
+- [ ] RPlidar data in rviz
