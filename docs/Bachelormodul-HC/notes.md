@@ -44,7 +44,9 @@ Sind in ~/.bashrc hinterlegt.
 
 ## 1.2. Project Structure
 ### 1.2.1. Future
-
+**ROS Packages**
+* Provide Sensordata
+* Provide Processing
 
 ## 1.3. Project/Time-Management
 ## 1.4. ToDos
@@ -60,9 +62,7 @@ Sind in ~/.bashrc hinterlegt.
   - [ ] motor_driver
   - [ ] motor_diag
   - [ ] gamepad_driver
-  - ?
-  - gps_driver
-  - sonar_driver
+  - [ ] sonar_driver
 
 ## 1.5. Working
 
@@ -73,5 +73,5 @@ Sind in ~/.bashrc hinterlegt.
 - 6/8 ultraschallsensoren
 
 ## 1.6. Not Working
-
-- RPlidar data in rviz
+- Network Configuration Pi
+  - RPlidar data in rviz
