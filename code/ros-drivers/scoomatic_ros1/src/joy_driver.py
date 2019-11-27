@@ -68,6 +68,7 @@ def main(args=None):
     rospy.loginfo("Using Serial Port " + str(port))
 
     baudrate = 115200
+    rate_ros = rospy.Rate(rate)
 
     # open serial port
     with serial.Serial(port, baudrate) as ser:
@@ -88,7 +89,10 @@ def main(args=None):
             # publish messages
             publisher_vel.publish(msg_vel)
             publisher_btn.publish(msg_btn)
-            sleep(1 / rate)  # seconds
+            rate_ros.sleep() 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
