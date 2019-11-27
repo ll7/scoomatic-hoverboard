@@ -53,12 +53,13 @@ def read_serial(ser):
 def main(args=None):
     # Start node
     rospy.init_node('joy_driver', anonymous=True)
+    node_name = rospy.get_namespace()
 
     # Read parameter
-    topic_vel = params.get_param('topic_vel', '/joy')
-    topic_btn = params.get_param('topic_btn', '/btn')
-    rate = params.get_param('rate', 30)
-    port = params.get_param('scoomatic/port', '/dev/joydriver')
+    topic_vel = params.get_param(node_name + '/topic_vel', '/joy')
+    topic_btn = params.get_param(node_name + '/topic_btn', '/btn')
+    rate = params.get_param(node_name + '/rate', 30)
+    port = params.get_param(node_name + '/port', '/dev/joydriver')
 
     # Create publishers for cmd_vel message and button
     publisher_vel = rospy.Publisher(topic_vel, Twist, queue_size=10)

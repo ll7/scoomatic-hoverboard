@@ -53,10 +53,11 @@ def twist2bytes(message):
 def main():
     # start node
     rospy.init_node('motor_driver', anonymous=True)
+    node_name = rospy.get_namespace()
 
     # Get Parameter from launchfile
-    ser_port = params.get_param('scoomatic/port', '/dev/motor_driver')
-    topic = params.get_param('scoomatic/topic', 'cmd_vel')
+    ser_port = params.get_param(node_name + '/port', '/dev/motor_driver')
+    topic = params.get_param(node_name + '/topic', 'cmd_vel')
 
     # Start subscriber
     rospy.Subscriber(topic, Twist, callback , queue_size=10)
