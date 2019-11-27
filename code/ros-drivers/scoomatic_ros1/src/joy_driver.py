@@ -18,12 +18,12 @@
 #   rate: update rate for main loop. Should be same as
 #           in Arduino sketch (20Hz)
 
-from time import sleep
 import serial
+import params
 import rospy
+from time import sleep
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
-import params
 
 def read_serial(ser):
     # read line
@@ -37,7 +37,7 @@ def read_serial(ser):
 
     newdata = []
     if data[0] != "JOY":
-        rospy.logwarn("Corrupt Package or wrong device selected (%s)" % params.get_param('port', '/dev/joy_driver'))
+        rospy.logwarn("Corrupt Package or wrong device selected (%s)" % params.get_param('port', '/dev/joydriver'))
         return [0, 0, 0]
     data.remove("JOY")
     for s in data:  # Convert string values to integer
@@ -61,8 +61,8 @@ def main(args=None):
     port = params.get_param('scoomatic/port', '/dev/joy_driver')
 
     # Create publishers for cmd_vel message and button
-    publisher_vel = rospy.Publisher(topic_vel, Twist)
-    publisher_btn = rospy.Publisher(topic_btn, Bool)
+    publisher_vel = rospy.Publisher(topic_vel, Twist, queue_size=10)
+    publisher_btn = rospy.Publisher(topic_btn, Bool, queue_size=10)
 
     rospy.loginfo("Using Serial Port " + str(port))
 
