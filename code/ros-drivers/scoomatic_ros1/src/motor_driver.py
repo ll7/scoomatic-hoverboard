@@ -55,8 +55,8 @@ def main():
     rospy.init_node('motor_driver', anonymous=True)
 
     # Get Parameter from launchfile
-    ser_port = params.get_param('port', '/dev/motor_driver')
-    topic = params.get_param('topic', 'cmd_vel')
+    ser_port = params.get_param('scoomatic/port', '/dev/motor_driver')
+    topic = params.get_param('scoomatic/topic', 'cmd_vel')
 
     # Start subscriber
     rospy.Subscriber(topic, Twist, callback , queue_size=10)

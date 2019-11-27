@@ -8,12 +8,12 @@
     </node>
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
-	    <param name="port" type="String" value="/dev_/motor_driver"/>
-        <param name="topic" type="String" value="cmd_vel"/>
+	    <param name="scoomatic/port" type="str" value="/dev/motor_driver"/>
+        <param name="scoomatic/topic" type="str" value="cmd_vel"/>
     </node> 
     <!-- Joy Driver -->
     <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
-	    <param name="port" type="String" value="/dev_/joy_driver"/>
+	    <param name="scoomatic/port" type="str" value="/dev/joydriver"/>
     </node> 
 </launch>
 
