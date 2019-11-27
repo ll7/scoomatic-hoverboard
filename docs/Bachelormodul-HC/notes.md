@@ -1,55 +1,67 @@
-# 1. Dokumentation
+# Dokumentation
+- [Dokumentation](#dokumentation)
+  - [Konfiguration](#konfiguration)
+    - [Installation von Ubuntu](#installation-von-ubuntu)
+    - [Verbinden mit Raspi](#verbinden-mit-raspi)
+    - [udev Regeln](#udev-regeln)
+    - [Mehrere Fenster in einer Shell](#mehrere-fenster-in-einer-shell)
+    - [Logs](#logs)
+    - [ROS2 starten](#ros2-starten)
+    - [Vereinfachungen](#vereinfachungen)
+  - [Project Structure](#project-structure)
+    - [Future](#future)
+  - [Project/Time-Management](#projecttime-management)
+    - [ToDos](#todos)
+    - [Working](#working)
+  - [Fixes](#fixes)
+    - [Network configuration](#network-configuration)
 
+## Konfiguration
 
-- [1. Dokumentation](#1-dokumentation)
-  - [1.1. Konfiguration](#11-konfiguration)
-    - [1.1.1. Installation von Ubuntu](#111-installation-von-ubuntu)
-    - [1.1.2. Verbinden mit Raspi](#112-verbinden-mit-raspi)
-    - [1.1.3. udev Regeln](#113-udev-regeln)
-    - [1.1.4. Mehrere Fenster in einer Shell](#114-mehrere-fenster-in-einer-shell)
-    - [1.1.5. ROS2 starten](#115-ros2-starten)
-  - [1.2. Project Structure](#12-project-structure)
-    - [1.2.1. Future](#121-future)
-  - [1.3. Project/Time-Management](#13-projecttime-management)
-  - [1.4. ToDos](#14-todos)
-  - [1.5. Working](#15-working)
-  - [1.6. Not Working](#16-not-working)
-
-## 1.1. Konfiguration
-
-### 1.1.1. Installation von Ubuntu
+### Installation von Ubuntu
 
 Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wiki.ubuntu.com/ARM/RaspberryPi#Download) heruntergeladen werden. Danach kann es auf die microSD geflasht werden, bspw. mit [Etcher](https://www.balena.io/etcher/). Mit ubuntu als username und password kann sich eingeloggt werden. Das Passwort wird beim ersten einloggen auf ```notubuntu``` festgelegt.
 
-### 1.1.2. Verbinden mit Raspi
+### Verbinden mit Raspi
 
 Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu.local``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu.local```.
 
-### 1.1.3. udev Regeln 
+### udev Regeln 
 
 Liegen unter ```/etc/udev/rules.d/10-local.rules```. Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
 
 Sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
 
-### 1.1.4. Mehrere Fenster in einer Shell
-Mit ```tmux```.
+### Mehrere Fenster in einer Shell
+Mit ```tmux```. Neuer Tab: ```Ctrl+A C```. Wechseln der Tabs mit ```Shift+ArrowKey```.
 
+### Logs
+Generelle Log Messages sollte auf ```/rosout``` gepublisht werden. Siehe auch [http://wiki.ros.org/rospy_tutorials/Tutorials/Logging]
 
-### 1.1.5. ROS2 starten
+### ROS2 starten
 ```sourceros2``` sourced alle ros2 files.
 ```startros2``` startet ros2 oder per: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```
 Sind in ~/.bashrc hinterlegt.
 
+### Vereinfachungen
+Mithilfe der ```~/.bashrc``` können viele Einstellungen automatisch vorgenommen werden. Auf Remote Rechner: ```export ROS_MASTER_URI=http://ubuntu:11311/``` für rviz, auf lokalem RPi:
+```
+alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
+alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
+alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
+alias stopmotor="rosservice call /stop_motor"
+```
 
-## 1.2. Project Structure
-### 1.2.1. Future
+
+## Project Structure
+### Future
 **ROS Packages**
 * Provide Sensordata
 * Provide Processing
 
-## 1.3. Project/Time-Management
-## 1.4. ToDos
+## Project/Time-Management
+### ToDos
 
 - [x] ROS2 zum laufen bringen
 - [x] Verstehen, was start_ros2.bash macht
@@ -64,14 +76,19 @@ Sind in ~/.bashrc hinterlegt.
   - [ ] gamepad_driver
   - [ ] sonar_driver
 
-## 1.5. Working
+### Working
 
 - udev regeln
 - ros1 workspace
 - ros2 workspace
 - IMU / MPU9250 working
 - 6/8 ultraschallsensoren
+- rviz
 
-## 1.6. Not Working
-- Network Configuration Pi
-  - RPlidar data in rviz
+## Fixes
+### Network configuration
+If ros is failing finding the correct host through hostname, just add the correct IP (localhost and local IP) in ```/etc/hosts``` like:
+```
+127.0.0.1 localhost
+192.168.140.16  ubuntu
+```
