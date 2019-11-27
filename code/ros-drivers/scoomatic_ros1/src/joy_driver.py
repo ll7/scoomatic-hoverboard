@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Scoomatic Joystick Driver
 # Author: Martin Schoerner (ROS2 Version), migrated&improved from Henri Chilla to ROS1
 
