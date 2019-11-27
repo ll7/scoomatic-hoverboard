@@ -58,7 +58,7 @@ def main(args=None):
     topic_vel = params.get_param('topic_vel', '/joy')
     topic_btn = params.get_param('topic_btn', '/btn')
     rate = params.get_param('rate', 30)
-    port = params.get_param('scoomatic/port', '/dev/joy_driver')
+    port = params.get_param('scoomatic/port', '/dev/joydriver')
 
     # Create publishers for cmd_vel message and button
     publisher_vel = rospy.Publisher(topic_vel, Twist, queue_size=10)
