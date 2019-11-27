@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 # Scoomatic Motor Driver
-# author: Henri Chilla
-# Inspired by Martin Schoerner's ROS 2 implementation
+# author: Martin Schoerner (ROS2 Version) - Migrated from Henri Chilla to ROS1
 # Subscribes to:
 #   /cmd_vel: commanded velocity as geometry_msgs/Twist Message
 # Params: port: Adress of serial Port (e.g. /dev/ttyUSB5)
@@ -11,24 +10,14 @@ import serial
 import rospy
 from time import sleep
 from geometry_msgs.msg import Twist
+import params
 
 last_bytes = bytearray([0, 0, 0, 0])
-
-# Get parameter from launchfile or use default value
-def get_param(param, default_value):
-    if rospy.has_param(param):
-        return rospy.get_param(param)
-    else:
-        rospy.logwarn("No param set for %s , using default value (%s)" % (param, default_value) )
-        return default_value
 
 # Callback for subscriber to /cmd_vel
 # Receives geometry_msgs/Twist message
 def callback(data):
-    global last_bytes, node
-    #    node.get_logger().info(
-    #        'I heard: "%s"' % data.linear.x)
-    #    node.get_logger().info("Callback called back")
+    global last_bytes
     # update stored command value
     last_bytes = twist2bytes(data)
 
@@ -62,15 +51,21 @@ def twist2bytes(message):
                                                                                                     signed=True)
 
 def main():
-    # start subscriber node
+    # start node
     rospy.init_node('motor_driver', anonymous=True)
-    rospy.Subscriber('cmd_vel', Twist, callback , queue_size=10)
-    ser_port=get_param('ser_port', '/dev/motor_driver')
 
+    # Get Parameter from launchfile
+    ser_port = params.get_param('port', '/dev/motor_driver')
+    topic = params.get_param('topic', 'cmd_vel')
+
+    # Start subscriber
+    rospy.Subscriber(topic, Twist, callback , queue_size=10)
     rospy.loginfo("Motor Driver Online on %s" % (ser_port))
 
+    # Set write frequence for motors
     sleeptime = 1 / 50
 
+    # Send motor  commands via serial port 
     with serial.Serial(ser_port, 19200) as ser:
         while not rospy.is_shutdown():
             send_serial(ser)

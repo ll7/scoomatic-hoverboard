@@ -3,12 +3,17 @@
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
-    <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <node name="Rplidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
     	 <param name="serial_port" type="string" value="/dev/rplidar" />
     </node>
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
-	    <param name="serial_port" type="String" value="/dev_/motor_driver"/>
+	    <param name="port" type="String" value="/dev_/motor_driver"/>
+        <param name="topic" type="String" value="cmd_vel"/>
+    </node> 
+    <!-- Joy Driver -->
+    <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
+	    <param name="port" type="String" value="/dev_/joy_driver"/>
     </node> 
 </launch>
 
