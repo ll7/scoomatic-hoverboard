@@ -53,7 +53,7 @@ def twist2bytes(message):
 def main():
     # start node
     rospy.init_node('motor_driver', anonymous=True)
-    node_name = rospy.get_namespace()
+    node_name = rospy.get_name()
 
     # Get Parameter from launchfile
     ser_port = params.get_param(node_name + '/port', '/dev/motor_driver')

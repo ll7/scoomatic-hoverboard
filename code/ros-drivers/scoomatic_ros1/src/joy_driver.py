@@ -53,7 +53,7 @@ def read_serial(ser):
 def main(args=None):
     # Start node
     rospy.init_node('joy_driver', anonymous=True)
-    node_name = rospy.get_namespace()
+    node_name = rospy.get_name()
 
     # Read parameter
     topic_vel = params.get_param(node_name + '/topic_vel', '/joy')
