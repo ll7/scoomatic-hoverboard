@@ -15,6 +15,8 @@
     - [Working](#working)
   - [Fixes](#fixes)
     - [Network configuration](#network-configuration)
+  - [Good to know](#good-to-know)
+    - [Parameter](#parameter)
 
 ## Konfiguration
 
@@ -92,3 +94,9 @@ If ros is failing finding the correct host through hostname, just add the correc
 127.0.0.1 localhost
 192.168.140.16  ubuntu
 ```
+
+## Good to know
+### Parameter
+Parameter, welche über ein launchfile gesetzt werden, sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter port per ```MotorDriver/port```.
+
+Paramter lassen sich auch über das Kommandozeilenprogramm ```rosparam list``` auslesen.
