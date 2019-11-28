@@ -6,8 +6,9 @@
     - [2.1. BA Ablauf](#21-ba-ablauf)
     - [2.2. Erweiterte Ziele](#22-erweiterte-ziele)
   - [3. Zeitplan](#3-zeitplan)
-  - [4. Resourcen](#4-resourcen)
-  - [5. Risiken](#5-risiken)
+  - [4. Bachelorarbeit Kapitel-Entwurf](#4-bachelorarbeit-kapitel-entwurf)
+  - [5. Resourcen](#5-resourcen)
+  - [6. Risiken](#6-risiken)
   - [Projektmanagement](#projektmanagement)
 
 ## 1. Rahmenbedingungen
@@ -77,7 +78,21 @@ Projektplan
 * Anmeldung : Anfang - Mitte Dezember
 * Abgabe: Anfang - Mitte März
 
-## 4. Resourcen
+## 4. Bachelorarbeit Kapitel-Entwurf
+Kapitel Entwurf
+* Einleitung
+  * Big Picture erklären (Mikromobilitätsziel)
+* Stand der Technik
+  * Vorstelltung von SLAM Algorithmen
+  * Vergleich der Algorithmen
+  * Basierend auf verfügbaren Sensordaten
+* Algoritmus Funktionsweise
+  * Wie funktioniert der Algoritmus
+  * Welche Daten verwendet der Algorithmus?
+* ...
+* Ausblick und Zusammenfassung
+
+## 5. Resourcen
 
 * Martins Prototyp.
   * <https://git.rz.uni-augsburg.de/luttkule/scoomatic-hoverboard>
@@ -91,7 +106,7 @@ Projektplan
 * [Probabilistic Robotics](https://github.com/liulinbo/slam/blob/master/Probabilistic%20Robotics%20_Sebastian%20Thrun%20et%20al..pdf)
 * <http://wiki.ros.org/navigation>
 
-## 5. Risiken
+## 6. Risiken
 
 <https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard/wiki/risiken>
 
