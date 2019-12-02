@@ -45,7 +45,6 @@ def read_serial(ser):
     try:
         data = data.decode('ascii').replace("\r\n", "").split(' ')
     except UnicodeDecodeError:
-        # node.get_logger().warn("Corrupt Package from Sonar sensor (could not decode)")
         pass
     newdata = list()
     for s in data:  # Convert string values to integer
@@ -67,8 +66,8 @@ def main(args=None):
     node_name = rospy.get_name()
 
     # Read parameter
-    port = params.get_param('port', '/dev/motor_diag')
-    rate = params.get_param('rate', 5)
+    port = params.get_param(node_name+'/port', '/dev/motor_diag')
+    rate = params.get_param(node_name+'/rate', 5)
 
     # Create publisher
     p1 = rospy.Publisher(node_name+'/adc1', Int32, queue_size=10)
@@ -90,7 +89,7 @@ def main(args=None):
     m7 = Int32()
     m8 = Int32()
 
-    node.get_logger().info("Using Serial Port " + str(port))
+    rospy.loginfo("Using Serial Port " + str(port))
 
     # open serial port  
     with serial.Serial(port, 115200) as ser:
