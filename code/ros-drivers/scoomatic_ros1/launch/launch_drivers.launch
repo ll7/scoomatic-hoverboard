@@ -3,7 +3,7 @@
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
-    <node name="Rplidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
     	 <param name="serial_port" type="string" value="/dev/rplidar" />
     </node>
     <!-- Motor Driver -->
@@ -19,6 +19,11 @@
     <!-- Joy Driver -->
     <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
+    </node>
+    <!-- Gamepad Driver -->
+    <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
+	    <param name="topic" type="str" value="/gamepad"/>
+        <param name="rate" type="int" value="20"/>
     </node> 
 </launch>
 
