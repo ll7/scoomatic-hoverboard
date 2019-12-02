@@ -47,7 +47,8 @@ def handle_game_controller():
         return
 
     for event in events:
-        print(event.ev_type, event.code, event.state)
+        # XBOX Controller Configuration
+        '''
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
@@ -56,7 +57,18 @@ def handle_game_controller():
             speed = -(event.state / 1024.0)
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
+        '''
 
+        # Saitek Gamepad Configuration
+        if event.code == 'BTN_BASE2':  # Arm
+            armed = event.state == 1
+        if event.code == 'ABS':  # Forward
+            speed = event.state / 1024.0
+        if event.code == 'ABS_Y':  # Reverse
+            speed = -(event.state / 1024.0)
+        if event.code == 'ABS_X':  # Left / Right
+            direction = event.state / 32768  # Normieren auf -+ 1.0
+            
 def gamepad_thread():
     for device in devices:
             rospy.loginfo("Found Device %s"%device)
@@ -68,12 +80,13 @@ def main(args=None):
 
     # Start node
     rospy.init_node('gamepad_driver', anonymous=True)
+    node_name = rospy.get_name()
 
     # Read parameters
-    gain_lin = float(params.get_param('gain_lin',1.0))
-    gain_ang = float(params.get_param('gain_ang',1.0))
-    topic = params.get_param('topic', '/gamepad')
-    rate = params.get_param('rate', 20)
+    gain_lin = float(params.get_param(node_name+'gain_lin',1.0))
+    gain_ang = float(params.get_param(node_name+'gain_ang',1.0))
+    topic = params.get_param(node_name+'topic', '/gamepad')
+    rate = params.get_param(node_name+'rate', 20)
 
     # Cerate publisher
     publisher = rospy.Publisher(topic, Twist, queue_size=10)

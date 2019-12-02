@@ -76,7 +76,7 @@ def main(args=None):
     p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=10)
     p5 = rospy.Publisher(node_name+'/battery_voltage_calibration_value', Int32, queue_size=10)
     p6 = rospy.Publisher(node_name+'/battery_voltage',Float32, queue_size=10)
-    p7 = rospy.Publisher(node_name+'/termperature_calibration_value',Int32, queue_size=10)
+    p7 = rospy.Publisher(node_name+'/temperature_calibration_value',Int32, queue_size=10)
     p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=10)
 
     # Create messages for the sensor values
