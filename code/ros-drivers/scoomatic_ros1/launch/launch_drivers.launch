@@ -10,7 +10,12 @@
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
         <param name="topic" type="str" value="cmd_vel"/>
-    </node> 
+    </node>
+    <!-- Motor Diagnostics -->
+    <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
+	    <param name="port" type="str" value="/dev/motor_diag"/>
+        <param name="rate" type="int" value="5"/>
+    </node>
     <!-- Joy Driver -->
     <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
