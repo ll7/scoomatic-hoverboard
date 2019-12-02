@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Scoomatic Sonar Driver
 # Author: Martin Schoerner
 # Reads motordriver debug data via uart
