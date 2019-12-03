@@ -12,7 +12,8 @@ def main():
 
         events = get_gamepad()
         for event in events:
-            print(event.ev_type, event.code, event.state)
+            if event.ev_type != "Sync" or ((event.code == "ABS_X" or event.code == "ABS_Y") and event.state < 130 and event.code > 110):
+                print(event.ev_type, event.code, event.state)
 
 
 if __name__ == "__main__":

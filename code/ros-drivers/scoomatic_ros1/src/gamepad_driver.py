@@ -62,9 +62,9 @@ def handle_game_controller():
         # Saitek Gamepad Configuration
         if event.code == 'BTN_BASE2':  # Arm
             armed = event.state == 1
-        if event.code == 'ABS':  # Forward
+        if event.code == 'ABS_THROTTLE':  # Forward
             speed = event.state / 1024.0
-        if event.code == 'ABS_Y':  # Reverse
+        if event.code == 'ABS_THROTTLE':  # Reverse
             speed = -(event.state / 1024.0)
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
