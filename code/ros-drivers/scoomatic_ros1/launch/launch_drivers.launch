@@ -9,7 +9,7 @@
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
-        <param name="topic" type="str" value="cmd_vel"/>
+        <param name="topic" type="str" value="/cmd_vel"/>
     </node>
     <!-- Motor Diagnostics -->
     <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
@@ -20,7 +20,7 @@
     <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
         <param name="rate" type="int" value="30"/>
-        <param name="topic_vel" type="str" value="/joy"/>
+        <param name="topic_vel" type="str" value="/cmd_vel"/>
         <param name="topic_btn" type="str" value="/btn"/>
     </node>
     <!-- Gamepad Driver -->
