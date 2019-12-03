@@ -8,9 +8,10 @@
 
 import serial
 import rospy
+import params
+import struct
 from time import sleep
 from geometry_msgs.msg import Twist
-import params
 
 last_bytes = bytearray([0, 0, 0, 0])
 
@@ -45,10 +46,10 @@ def twist2bytes(message):
 
     # Create data packet for the serial port
 
-    var = 0
-    return angular_velocity.to_bytes(2, byteorder='little', signed=True) + linear_velocity.to_bytes(2,
-                                                                                                    byteorder='little',
-                                                                                                    signed=True)
+    #return angular_velocity.to_bytes(2, byteorder='little', signed=True) + linear_velocity.to_bytes(2,byteorder='little',signed=True)
+
+    return struct.pack("<h", angular_velocity) + struct.pack("<h", linear_velocity)
+
 
 def main():
     # start node
