@@ -79,6 +79,7 @@ alias stopmotor="rosservice call /stop_motor"
   - [x] joy_driver
 - [x] checken welche tasten gamepad benutzt
 - [ ] Mit Gamepad fahren lassen
+  - [ ] Vielleicht Bytes für Motor kaputt(?)
 - [ ] Korrektes terminieren der Nodes & rospy.spin()
 
 ### Working
