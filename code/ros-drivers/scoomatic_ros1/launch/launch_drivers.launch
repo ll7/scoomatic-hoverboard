@@ -19,14 +19,23 @@
     <!-- Joy Driver -->
     <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
+        <param name="rate" type="int" value="30"/>
+        <param name="topic_vel" type="str" value="/joy"/>
+        <param name="topic_btn" type="str" value="/btn"/>
     </node>
     <!-- Gamepad Driver -->
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/gamepad"/>
         <param name="rate" type="int" value="20"/>
+        <param name="gain_lin" type="double" value="1.0"/>
+        <param name="gain_ang" type="double" value="1.0"/>
     </node>
     <!-- Sonar Driver -->
     <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
+        <param name="rate" type="int" value="3"/>
+        <param name="topic" type="str" value="/sonar"/>
+        <param name="port" type="str" value="/dev/sonar_driver"/>
+        <param name="baudrate" type="str" value="115200"/>
     </node>
 </launch>
 

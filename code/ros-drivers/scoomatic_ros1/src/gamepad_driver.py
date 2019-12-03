@@ -83,10 +83,10 @@ def main(args=None):
     node_name = rospy.get_name()
 
     # Read parameters
-    gain_lin = float(params.get_param(node_name+'gain_lin',1.0))
-    gain_ang = float(params.get_param(node_name+'gain_ang',1.0))
-    topic = params.get_param(node_name+'topic', '/gamepad')
-    rate = params.get_param(node_name+'rate', 20)
+    gain_lin = float(params.get_param(node_name+'/gain_lin',1.0))
+    gain_ang = float(params.get_param(node_name+'/gain_ang',1.0))
+    topic = params.get_param(node_name+'/topic', '/gamepad')
+    rate = params.get_param(node_name+'/rate', 20)
 
     # Cerate publisher
     publisher = rospy.Publisher(topic, Twist, queue_size=10)
