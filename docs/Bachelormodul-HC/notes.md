@@ -72,11 +72,13 @@ alias stopmotor="rosservice call /stop_motor"
 - [x] Catkin Workspace einrichten
   - [x] Nodes installieren
 - [ ] ROS2 Nodes migrieren
-  - [ ] joy_driver
-  - [ ] motor_driver
-  - [ ] motor_diag
-  - [ ] gamepad_driver
+  - [x] motor_driver
+  - [x] motor_diag
+  - [x] gamepad_driver
   - [ ] sonar_driver
+  - [ ] joy_driver
+- [ ] checken welche tasten gamepad benutzt
+- [ ] Mit Gamepad fahren lassen
 
 ### Working
 
