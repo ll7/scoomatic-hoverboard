@@ -24,6 +24,9 @@
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/gamepad"/>
         <param name="rate" type="int" value="20"/>
-    </node> 
+    </node>
+    <!-- Sonar Driver -->
+    <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
+    </node>
 </launch>
 
