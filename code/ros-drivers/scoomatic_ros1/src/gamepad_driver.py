@@ -47,7 +47,7 @@ def handle_game_controller():
         return
 
     for event in events:
-        # XBOX Controller Configuration
+        # Some 2.4Ghz Controller Configuration
         '''
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1

@@ -48,7 +48,7 @@ def twist2bytes(message):
 
     #return angular_velocity.to_bytes(2, byteorder='little', signed=True) + linear_velocity.to_bytes(2,byteorder='little',signed=True)
 
-    return struct.pack("<h", angular_velocity) + struct.pack("<h", linear_velocity)
+    return struct.pack("<hh", angular_velocity, linear_velocity)
 
 
 def main():

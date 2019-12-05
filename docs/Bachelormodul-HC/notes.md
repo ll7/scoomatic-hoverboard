@@ -7,6 +7,7 @@
     - [Mehrere Fenster in einer Shell](#mehrere-fenster-in-einer-shell)
     - [Logs](#logs)
     - [ROS2 starten](#ros2-starten)
+    - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
     - [Vereinfachungen](#vereinfachungen)
   - [Project Structure](#project-structure)
     - [Future](#future)
@@ -17,6 +18,8 @@
     - [Network configuration](#network-configuration)
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
+    - [Motoransteuerung](#motoransteuerung)
+      - [Bereits Ausprobiert](#bereits-ausprobiert)
 
 ## Konfiguration
 
@@ -45,6 +48,16 @@ Generelle Log Messages sollte auf ```/rosout``` gepublisht werden. Siehe auch [h
 ```sourceros2``` sourced alle ros2 files.
 ```startros2``` startet ros2 oder per: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```
 Sind in ~/.bashrc hinterlegt.
+
+### ROS2 Nodes stoppen
+Es gibt keine eifnache Möglichkeit die Gesamtheit der ROS2 Nodes zu stoppen. Es kann höchstens Node-weise passieren.
+
+Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how-to-kill-nodes-in-ros2/), gelingt das stoppen von einer ROS2 Node folgendermaßen:
+```
+ros2 lifecycle set <nodename> shutdown
+```
+Allerdings hat in diesem Projekt nicht funktioniert.
+Schlussendlich bleibt nur die Möglichkeit, den Prozess zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
 
 ### Vereinfachungen
 Mithilfe der ```~/.bashrc``` können viele Einstellungen automatisch vorgenommen werden. Auf Remote Rechner: ```export ROS_MASTER_URI=http://ubuntu:11311/``` für rviz, auf lokalem RPi:
@@ -104,3 +117,13 @@ If ros is failing finding the correct host through hostname, just add the correc
 Parameter, welche über ein launchfile gesetzt werden, sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter port per ```MotorDriver/port```.
 
 Paramter lassen sich auch über das Kommandozeilenprogramm ```rosparam list``` auslesen.
+
+### Motoransteuerung
+Die Serielle Schnittstelle zur Ansteuerung der Motoren verwendet ein eigenes Protokoll, welches sich aus vier Bytes zusammsetzt. Das Format ist wie folgt: ```b'\xUU\xUU\xUU\xUU'```, wobei U für ein Hexadezimale Zahl steht. 
+
+Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'```
+
+#### Bereits Ausprobiert
+Die korrekte darstellung einer Motoransteuerung kann mit ```(900).to_bytes(2, byteorder='little', signed=True)``` erstellt werden. 900 ist dabei beliebieg zwischen -1000 und 1000. struct.pack() funktioniert scheinbar nicht richtig. Es erzeugt einen String. Wobei das int.to_bytes(...) auch macht.
+
+Werte mit 900, also 0x84,0x03 funktionieren nicht.
