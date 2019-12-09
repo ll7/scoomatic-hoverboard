@@ -18,7 +18,8 @@ last_bytes = bytearray([0, 0, 0, 0])
 # return hex in little endian
 def to_bytes(n, length):
     h = '%x' % n
-    s = h.decode('hex') #('0'*(len(h) % 2) + h).zfill(length*2).decode('hex')
+    rospy.logwarn("test of h: "+h)
+    s = ('0'*(len(h) % 2) + h).zfill(length*2).decode('hex')
     return  s[::-1]
 
 # Callback for subscriber to /cmd_vel
