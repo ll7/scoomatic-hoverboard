@@ -129,3 +129,5 @@ Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'
 Die korrekte darstellung einer Motoransteuerung kann mit ```(900).to_bytes(2, byteorder='little', signed=True)``` erstellt werden. 900 ist dabei beliebieg zwischen -1000 und 1000. struct.pack() funktioniert scheinbar nicht richtig. Es erzeugt einen String. Wobei das int.to_bytes(...) auch macht.
 
 Werte mit 900, also 0x84,0x03 funktionieren nicht.
+
+struct.pack('<h', angular_velocity>) gibt \xf9\xff\' raus bei vollem Ausschlage des Joysticks. Herausfinden kann man das mit ```rospy.logwarn(str(int(struct.pack("<h", angular_velocity))))```
