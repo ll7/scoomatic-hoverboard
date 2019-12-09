@@ -123,6 +123,8 @@ Die Serielle Schnittstelle zur Ansteuerung der Motoren verwendet ein eigenes Pro
 
 Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'```
 
+```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
+
 #### Bereits Ausprobiert
 Die korrekte darstellung einer Motoransteuerung kann mit ```(900).to_bytes(2, byteorder='little', signed=True)``` erstellt werden. 900 ist dabei beliebieg zwischen -1000 und 1000. struct.pack() funktioniert scheinbar nicht richtig. Es erzeugt einen String. Wobei das int.to_bytes(...) auch macht.
 

@@ -15,6 +15,11 @@ from geometry_msgs.msg import Twist
 
 last_bytes = bytearray([0, 0, 0, 0])
 
+def to_bytes(n, length, endianess='little'):
+    h = '%x' % n
+    s = ('0'*(len(h) % 2) + h).zfill(length*2).decode('hex')
+    return s if endianess == 'big' else s[::-1]
+
 # Callback for subscriber to /cmd_vel
 # Receives geometry_msgs/Twist message
 def callback(data):
@@ -46,9 +51,9 @@ def twist2bytes(message):
 
     # Create data packet for the serial port
 
-    #return angular_velocity.to_bytes(2, byteorder='little', signed=True) + linear_velocity.to_bytes(2,byteorder='little',signed=True)
+    return to_bytes(angular_velocity, 2, endianess='little') + to_bytes(linear_velocity, 2, endianess='little')
 
-    return struct.pack("<hh", angular_velocity, linear_velocity)
+    #return struct.pack("<hh", angular_velocity, linear_velocity)
 
 
 def main():
