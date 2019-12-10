@@ -48,13 +48,15 @@ def handle_game_controller():
 
     for event in events:
         # Some 2.4Ghz Controller Configuration
-        
+        ## Maximum ABS_RZ / ABS_Z : 255
+        ## Maximum ABS_X: 32767
+        ## Minimum ABS_X: 32767
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
-            speed = event.state / 1024.0
+            speed = event.state / 256.0 # Normieren auf -+ 1.0
         if event.code == 'ABS_Z':  # Reverse
-            speed = -(event.state / 1024.0)
+            speed = -(event.state / 256.0) # Normieren auf -+ 1.0
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
         
@@ -110,6 +112,7 @@ def main(args=None):
         if not armed:
             msg.linear.x = 0.0
             msg.angular.z = 0.0
+            rospy.loginfo("NOT ARMED")
         else:
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
