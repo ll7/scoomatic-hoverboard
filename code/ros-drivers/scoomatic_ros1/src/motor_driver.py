@@ -4,6 +4,7 @@ import rospy
 import time
 import serial
 import struct
+import params
 from geometry_msgs.msg import Twist
 
 send_bytes = struct.pack('<hh', 0, 0)
@@ -29,12 +30,14 @@ def main():
     rospy.Subscriber('/cmd_vel', Twist, callback , queue_size=20)
     rospy.loginfo("Motor Driver Online on %s" % (serial_port))
 
+    node_name = rospy.get_name()
+
     with serial.Serial(serial_port, 19200) as ser:
         while not rospy.is_shutdown():
             send_serial(ser)
             global send_bytes
             rospy.loginfo("sent serial data: " + str(send_bytes))
-            sleep(params.get_param(node_name + '/rate', '50')))
+            time.sleep(params.get_param(node_name + '/rate', '50'))
 
 
         generated_bytes = struct.pack('<hh', 0, 0)
