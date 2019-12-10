@@ -18,9 +18,10 @@ last_bytes = bytearray([0, 0, 0, 0])
 # return hex in little endian
 def to_bytes(n, length):
     h = '%x' % n
-    rospy.logwarn("test of h: "+h)
-    s = ('0'*(len(h) % 2) + h).zfill(length*2).decode('hex')
-    return  s[::-1]
+    s = ('0'*(len(h) % 2) + h).zfill(length*2)
+    rospy.logwarn("test of s: "+s)
+    tohexify = s.decode('hex')
+    return  tohexify[::-1]
 
 # Callback for subscriber to /cmd_vel
 # Receives geometry_msgs/Twist message

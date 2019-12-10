@@ -48,7 +48,7 @@ def handle_game_controller():
 
     for event in events:
         # Some 2.4Ghz Controller Configuration
-        '''
+        
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
@@ -57,9 +57,10 @@ def handle_game_controller():
             speed = -(event.state / 1024.0)
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
-        '''
+        
 
-        # Saitek Gamepad Configuration
+        # NOT WORKING YET - Saitek Gamepad Configuration
+        '''
         if event.code == 'BTN_BASE2':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_THROTTLE':  # Forward
@@ -71,6 +72,7 @@ def handle_game_controller():
             speed = -(event.state / 255.0)
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
+            '''
             
 def gamepad_thread():
     for device in devices:
