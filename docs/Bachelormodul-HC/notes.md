@@ -94,6 +94,8 @@ alias stopmotor="rosservice call /stop_motor"
 - [ ] Mit Gamepad fahren lassen
   - [ ] Vielleicht Bytes für Motor kaputt(?)
 - [ ] Korrektes terminieren der Nodes & rospy.spin()
+- [ ] gamepad driver korrigieren
+- [ ] motor driver neu schreiben
 
 ### Working
 
