@@ -85,7 +85,8 @@ def main():
         while not rospy.is_shutdown():
             send_serial(ser)
             sleep(sleeptime)
-            rospy.spin()
-        
+            
+    rospy.spin()
+
 if __name__ == '__main__':
     main()
