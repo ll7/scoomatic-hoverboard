@@ -27,8 +27,8 @@
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/cmd_vel"/>
         <param name="rate" type="int" value="10"/>
-        <param name="gain_lin" type="double" value="0.8"/>
-        <param name="gain_ang" type="double" value="1.0"/>
+        <param name="gain_lin" type="double" value="0.3"/>
+        <param name="gain_ang" type="double" value="0.2"/>
     </node>
     <!-- Sonar Driver -->
     <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">

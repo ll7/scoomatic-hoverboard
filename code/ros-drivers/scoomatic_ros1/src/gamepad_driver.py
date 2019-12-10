@@ -57,7 +57,7 @@ def handle_game_controller():
             speed = event.state / 256.0 # Normieren auf -+ 1.0
         if event.code == 'ABS_Z':  # Reverse
             speed = -(event.state / 256.0) # Normieren auf -+ 1.0
-        if event.code == 'ABS_RX':  # Left / Right
+        if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768  # Normieren auf -+ 1.0
         
 
