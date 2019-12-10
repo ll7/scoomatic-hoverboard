@@ -13,15 +13,17 @@ import struct
 from time import sleep
 from geometry_msgs.msg import Twist
 
-last_bytes = bytearray([0, 0, 0, 0])
+last_bytes # = bytearray([0, 0, 0, 0])
 
 # return hex in little endian
+'''
 def to_bytes(n, length):
     h = '%x' % n
     s = ('0'*(len(h) % 2) + h).zfill(length*2)
     rospy.logwarn("test of s: "+s)
     tohexify = s.decode('hex')
     return  tohexify[::-1]
+'''
 
 # Callback for subscriber to /cmd_vel
 # Receives geometry_msgs/Twist message
@@ -29,12 +31,13 @@ def callback(data):
     global last_bytes
     # update stored command value
     #rospy.logwarn("data from callback:" + str(data) + "and type of:" + str(type(data)))
-    rospy.logwarn("CALLBACK executed")
+    #rospy.logwarn("CALLBACK executed")
     last_bytes = twist2bytes(data)
 
 # Sends the actual data to the serial port
 def send_serial(ser):
     ser.write(last_bytes)
+    rospy.logwarn("Sent do SERIAL: " + last_bytes)
 
 # Limits value to +- max
 def limit(value, limit):
@@ -57,10 +60,8 @@ def twist2bytes(message):
     angular_velocity = int(angular_velocity)
 
     # Create data packet for the serial port
-
-    return to_bytes(angular_velocity, 2) + to_bytes(linear_velocity, 2)
-
-    #return struct.pack("<hh", angular_velocity, linear_velocity)
+    #return to_bytes(angular_velocity, 2) + to_bytes(linear_velocity, 2)
+    return struct.pack("<hh", angular_velocity, linear_velocity)
 
 
 def main():

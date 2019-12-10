@@ -25,7 +25,7 @@
     </node>
     <!-- Gamepad Driver -->
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
-	    <param name="topic" type="str" value="/gamepad"/>
+	    <param name="topic" type="str" value="/cmd_vel"/>
         <param name="rate" type="int" value="20"/>
         <param name="gain_lin" type="double" value="1.0"/>
         <param name="gain_ang" type="double" value="1.0"/>
