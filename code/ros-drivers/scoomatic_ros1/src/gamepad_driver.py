@@ -115,7 +115,7 @@ def main(args=None):
         else:
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
-            rospy.loginfo(msg.linear.x)
+            rospy.loginfo(msg.angular.z)
         # publish message
         publisher.publish(msg)
 
