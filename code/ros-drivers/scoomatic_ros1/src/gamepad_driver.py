@@ -112,10 +112,10 @@ def main(args=None):
         if not armed:
             msg.linear.x = 0.0
             msg.angular.z = 0.0
-            rospy.loginfo("NOT ARMED")
         else:
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
+            rospy.loginfo(msg.linear.x)
         # publish message
         publisher.publish(msg)
 

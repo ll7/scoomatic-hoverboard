@@ -16,7 +16,7 @@ def main():
 
     with serial.Serial(serial_port, 19200) as ser:
 
-        rospy.spin()
+        #rospy.spin()
 
 
 
