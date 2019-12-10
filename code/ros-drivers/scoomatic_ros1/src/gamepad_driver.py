@@ -30,7 +30,7 @@ from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
 
 armed = False
-direction = 0.0  # +- dd1
+direction = 0.0  # +- 1
 speed = 0.0  # +- 1
 thread_active = True
 
@@ -50,7 +50,7 @@ def handle_game_controller():
         # Some 2.4Ghz Controller Configuration
         ## Maximum ABS_RZ / ABS_Z : 255
         ## Maximum ABS_X: 32767
-        ## Minimum ABS_X: 32767
+        ## Minimum ABS_X: -32767
         if event.code == 'BTN_SOUTH':  # Arm
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
@@ -58,23 +58,7 @@ def handle_game_controller():
         if event.code == 'ABS_Z':  # Reverse
             speed = -(event.state / 256.0) # Normieren auf -+ 1.0
         if event.code == 'ABS_X':  # Left / Right
-            direction = event.state / 32768  # Normieren auf -+ 1.0
-        
-
-        # NOT WORKING YET - Saitek Gamepad Configuration
-        '''
-        if event.code == 'BTN_BASE2':  # Arm
-            armed = event.state == 1
-        if event.code == 'ABS_THROTTLE':  # Forward
-            if event.state == 0:
-                speed = 1.0
-            else:
-                speed = 1.0 / event.state
-        if event.code == 'ABS_BACK':  # Reverse
-            speed = -(event.state / 255.0)
-        if event.code == 'ABS_X':  # Left / Right
-            direction = event.state / 32768  # Normieren auf -+ 1.0
-            '''
+            direction = event.state / 32768.0  # Normieren auf -+ 1.0
             
 def gamepad_thread():
     for device in devices:
@@ -115,7 +99,7 @@ def main(args=None):
         else:
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
-            rospy.loginfo(msg.angular.z)
+            
         # publish message
         publisher.publish(msg)
 

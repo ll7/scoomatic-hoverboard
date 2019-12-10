@@ -23,25 +23,23 @@ def send_serial(ser):
 
 def main():
     rospy.init_node('motor_driver', anonymous=True)
-
+    node_name = rospy.get_name()
 
     serial_port = '/dev/motor_driver'
 
     rospy.Subscriber('/cmd_vel', Twist, callback , queue_size=20)
     rospy.loginfo("Motor Driver Online on %s" % (serial_port))
 
-    node_name = rospy.get_name()
-
     with serial.Serial(serial_port, 19200) as ser:
         while not rospy.is_shutdown():
             send_serial(ser)
             global send_bytes
-            rospy.loginfo("sent serial data: " + str(send_bytes))
+            #rospy.loginfo("sent serial data: " + str(send_bytes))
             time.sleep(0.02)
 
 
         generated_bytes = struct.pack('<hh', 0, 0)
         ser.write(generated_bytes)
-        rospy.spin()
+    rospy.spin()
 
 main()
