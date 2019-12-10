@@ -37,7 +37,7 @@ def main():
             send_serial(ser)
             global send_bytes
             rospy.loginfo("sent serial data: " + str(send_bytes))
-            time.sleep(params.get_param(node_name + '/rate', '50'))
+            time.sleep(0.1)
 
 
         generated_bytes = struct.pack('<hh', 0, 0)

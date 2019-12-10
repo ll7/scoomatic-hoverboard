@@ -7,10 +7,10 @@
     	 <param name="serial_port" type="string" value="/dev/rplidar" />
     </node>
     <!-- Motor Driver -->
-    <!--<node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
+    <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
         <param name="topic" type="str" value="/cmd_vel"/>
-    </node> -->
+    </node>
     <!-- Motor Diagnostics -->
     <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
 	    <param name="port" type="str" value="/dev/motor_diag"/>
