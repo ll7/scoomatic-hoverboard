@@ -1,7 +1,5 @@
 # Bachelorarbeit Henri Chilla
 
-<!-- TOC -->autoauto- [1. Rahmenbedingungen](#1-rahmenbedingungen)auto- [2. Ziel](#2-ziel)auto    - [2.1. Titel und offizielle Themenbeschreibung](#21-titel-und-offizielle-themenbeschreibung)auto    - [2.2. BA Ablauf](#22-ba-ablauf)auto    - [2.3. Erweiterte Ziele](#23-erweiterte-ziele)auto    - [2.4. Intel RealSense](#24-intel-realsense)auto- [3. Zeitplan](#3-zeitplan)auto- [4. Bachelorarbeit Kapitel-Entwurf](#4-bachelorarbeit-kapitel-entwurf)auto- [5. Resourcen](#5-resourcen)auto- [6. Risiken](#6-risiken)auto- [7. Projektmanagement](#7-projektmanagement)autoauto<!-- /TOC -->
-
 ## 1. Rahmenbedingungen
 
 * 3 Monate
