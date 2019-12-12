@@ -77,7 +77,7 @@ Validierung:
 
 Bonusziele:
 
-* Gazebo
+* Gazebo (erstmal nicht beachtent, macht vorläufig keinen Sinn)
 
 ### 2.3. Erweiterte Ziele
 
@@ -104,6 +104,15 @@ Git-Doku:
 Projektplan
 
 * OpenProject
+
+### 2.4. Intel RealSense
+
+Kamera ist Anfang Dezember gekommen und steht Henri nach Bedarf zur Verfügung. VSLAM; freiwillig nach bedarf.
+
+* <https://www.youtube.com/watch?v=khSrWtB0Xik>
+* <https://www.youtube.com/watch?v=j8OYlSZcqMc>
+* <https://www.youtube.com/watch?v=Qrtz0a7HaQ4>
+* VSLAM <https://www.youtube.com/watch?v=tcJHnHpwCXk>
 
 ## 3. Zeitplan
 
