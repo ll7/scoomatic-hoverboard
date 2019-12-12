@@ -1,29 +1,6 @@
 # Bachelorarbeit Henri Chilla
 
-* [<ol>
-<li>Rahmenbedingungen</li>
-</ol>](#ollirahmenbedingungenliol)
-* [<ol start="2">
-<li>Ziel</li>
-</ol>](#ol-start2lizielliol)
-  * [2.1. Titel und offizielle Themenbeschreibung](#21-titel-und-offizielle-themenbeschreibung)
-  * [2.2. BA Ablauf](#22-ba-ablauf)
-  * [2.3. Erweiterte Ziele](#23-erweiterte-ziele)
-* [<ol start="3">
-<li>Zeitplan</li>
-</ol>](#ol-start3lizeitplanliol)
-* [<ol start="4">
-<li>Bachelorarbeit Kapitel-Entwurf</li>
-</ol>](#ol-start4libachelorarbeit-kapitel-entwurfliol)
-* [<ol start="5">
-<li>Resourcen</li>
-</ol>](#ol-start5liresourcenliol)
-* [<ol start="6">
-<li>Risiken</li>
-</ol>](#ol-start6lirisikenliol)
-* [<ol start="7">
-<li>Projektmanagement</li>
-</ol>](#ol-start7liprojektmanagementliol)
+<!-- TOC -->autoauto- [1. Rahmenbedingungen](#1-rahmenbedingungen)auto- [2. Ziel](#2-ziel)auto    - [2.1. Titel und offizielle Themenbeschreibung](#21-titel-und-offizielle-themenbeschreibung)auto    - [2.2. BA Ablauf](#22-ba-ablauf)auto    - [2.3. Erweiterte Ziele](#23-erweiterte-ziele)auto    - [2.4. Intel RealSense](#24-intel-realsense)auto- [3. Zeitplan](#3-zeitplan)auto- [4. Bachelorarbeit Kapitel-Entwurf](#4-bachelorarbeit-kapitel-entwurf)auto- [5. Resourcen](#5-resourcen)auto- [6. Risiken](#6-risiken)auto- [7. Projektmanagement](#7-projektmanagement)autoauto<!-- /TOC -->
 
 ## 1. Rahmenbedingungen
 
