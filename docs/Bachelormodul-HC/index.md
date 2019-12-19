@@ -12,9 +12,9 @@
 
 Vorschlag (gerne in Frage stellen):
 
-**Titel**: Entwurf eines Navigationskonzepts für die Mikromobilitätsplattform Scoomatic
+**Titel**: Entwurf einer Hindernisserkennung und -vermeidung für die Mikromobilitätsplattform Scoomatic
 
-**Titel-EN**: Design of a Navigation Concept for the Scoomatic Micromobility Platform
+**Titel-EN**: Design of an obstacle detection and avoidance system for the micromobility platform Scoomatic
 
 **Aufgabenbeschreibung**: 
 Last-mile Mobilitätskonzepte sind in den letzten Jahren auf vielfältige Arten im realen Straßenverkehr zum Einsatz gekommen. 
