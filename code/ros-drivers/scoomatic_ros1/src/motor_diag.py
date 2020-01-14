@@ -113,7 +113,7 @@ def main(args=None):
             m7.data = data[6]
             m8.data = data[7]
 
-            # publish message
+            # publi sh message
             p1.publish(m1)
             p2.publish(m2)
             p3.publish(m3)
@@ -124,6 +124,9 @@ def main(args=None):
             p8.publish(m8)
 
             sleep(1 / rate)  # seconds
-
-if __name__ == '__main__':
-    main()
+  16 
+  if __name__ == '__main__':
+  17     try:
+  18         main()
+  19     except rospy.ROSInterruptException:
+  20         pass

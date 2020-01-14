@@ -42,4 +42,5 @@ def main():
         ser.write(generated_bytes)
     rospy.spin()
 
-main()
+if __name__ == '__main__':
+    main()

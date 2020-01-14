@@ -87,5 +87,8 @@ def main(args=None):
             publisher.publish(msg)
             sleep(1 / rate)  # seconds
 
-if __name__ == '__main__':
-    main()
+  16 if __name__ == '__main__':
+  17     try:
+  18         main()
+  19     except rospy.ROSInterruptException:
+  20         pass
