@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- External NODES -->
+    <!-- Hector SLAM -->
+     <include file="$(find hector_slam_launch)/launch/tutorial.launch"/>
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
     <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
     	 <param name="serial_port" type="string" value="/dev/rplidar" />
     </node>
+    <!-- Internal NODES -->
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
