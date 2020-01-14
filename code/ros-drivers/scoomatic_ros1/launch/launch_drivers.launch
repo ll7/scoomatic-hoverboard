@@ -2,12 +2,15 @@
 <launch>
     <!-- External NODES -->
     <!-- Hector SLAM -->
-     <include file="$(find hector_slam_launch)/launch/tutorial.launch"/>
+    <!--<include file="$(find scoomatic_ros1)/launch/hector_slam.launch"/>-->
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
     <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
-    	 <param name="serial_port" type="string" value="/dev/rplidar" />
+    	<param name="serial_port" type="string" value="/dev/rplidar" />
+        <param name="frame_id" type="string" value="laser"/>
+        <!-- for scan mode possibilities look at rplidar docs-->
+        <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples-->
     </node>
     <!-- Internal NODES -->
     <!-- Motor Driver -->
@@ -31,8 +34,8 @@
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/cmd_vel"/>
         <param name="rate" type="int" value="10"/>
-        <param name="gain_lin" type="double" value="0.3"/>
-        <param name="gain_ang" type="double" value="0.2"/>
+        <param name="gain_lin" type="double" value="0.1"/>
+        <param name="gain_ang" type="double" value="0.1"/>
     </node>
     <!-- Sonar Driver -->
     <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
