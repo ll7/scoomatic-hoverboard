@@ -124,9 +124,9 @@ def main(args=None):
             p8.publish(m8)
 
             sleep(1 / rate)  # seconds
-  16 
-  if __name__ == '__main__':
-  17     try:
-  18         main()
-  19     except rospy.ROSInterruptException:
-  20         pass
+
+if __name__ == '__main__':
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass

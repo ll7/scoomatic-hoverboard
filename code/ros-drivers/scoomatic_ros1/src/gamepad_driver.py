@@ -107,9 +107,9 @@ def main(args=None):
 
     thread_active = False
 
-  16 if __name__ == '__main__':
-  17     try:
-  18         main()
-  19     except rospy.ROSInterruptException:
-  20         pass
+if __name__ == '__main__':
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
 
