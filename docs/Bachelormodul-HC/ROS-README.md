@@ -19,7 +19,7 @@
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
-      - [Bereits Ausprobiert](#bereits-ausprobiert)
+      - [ToDos](#todos-1)
 
 ## Konfiguration
 
@@ -29,7 +29,7 @@ Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wik
 
 ### Verbinden mit Raspi
 
-Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu.local``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu.local```.
+Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu```. In der Regel wird von DHCP. IP 192.168.140.16 vergeben.
 
 ### udev Regeln 
 
@@ -68,12 +68,17 @@ alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
 alias stopmotor="rosservice call /stop_motor"
 ```
 
-
 ## Project Structure
 ### Future
 **ROS Packages**
 * Provide Sensordata
+  * Motor
+  * LIDAR
+  * Ultrasonic
+  * 
 * Provide Processing
+  * SLAM
+  * BAG Processing (?)
 
 ## Project/Time-Management
 ### ToDos
@@ -84,18 +89,15 @@ alias stopmotor="rosservice call /stop_motor"
 - [x] Lennarts Git Repo klonen
 - [x] Catkin Workspace einrichten
   - [x] Nodes installieren
-- [ ] ROS2 Nodes migrieren
+- [x] ROS2 Nodes migrieren
   - [x] motor_driver
   - [x] motor_diag
   - [x] gamepad_driver
   - [x] sonar_driver
   - [x] joy_driver
 - [x] checken welche tasten gamepad benutzt
-- [ ] Mit Gamepad fahren lassen
-  - [ ] Vielleicht Bytes für Motor kaputt(?)
-- [ ] Korrektes terminieren der Nodes & rospy.spin()
-- [ ] gamepad driver korrigieren
-- [ ] motor driver neu schreiben
+- [x] Mit Gamepad fahren lassen
+- [-] Korrektes terminieren der Nodes & rospy.spin()
 
 ### Working
 
@@ -104,7 +106,8 @@ alias stopmotor="rosservice call /stop_motor"
 - ros2 workspace
 - IMU / MPU9250 working
 - 6/8 ultraschallsensoren
-- rviz
+- rviz mit laser daten
+- hector-slam 
 
 ## Fixes
 ### Network configuration
@@ -133,3 +136,31 @@ Die korrekte darstellung einer Motoransteuerung kann mit ```(900).to_bytes(2, by
 Werte mit 900, also 0x84,0x03 funktionieren nicht.
 
 struct.pack('<h', angular_velocity>) gibt \xf9\xff\' raus bei vollem Ausschlage des Joysticks. Herausfinden kann man das mit ```rospy.logwarn(str(int(struct.pack("<h", angular_velocity))))```
+
+### Hector SLAM
+Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-slam ```.  Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
+
+#### Hector SLAM ausführen
+Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
+
+#### Performance Issues
+Der RPi ist scheinbar zu langsam um SLAM und gleichzeitig die Ansteuerung gleichzeitig zu machen. Es ist möglich:
+1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
+2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
+
+#### "Fixed Frame [map] does not exist" in rviz
+map einfach entfernen und wieder hinzufügen.
+
+#### Karte wird nicht gespeichert
+```rostopic pub syscommand std_msgs/String "savegeotiff"```
+
+Es sei auf https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/ verwiesen.
+
+Es besteht keine ausreichende erlaubnis, weil HectorSLAM per apt-get installiert wurde: ```sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff```
+
+Es kann regulär eine Karte gespeichert werden  mit dem Parameter ```geotiff_save_period``` in geotiff_mapper.launch file in hector_geotiff
+
+#### ToDos
+Sicherheit einrichten, dass Motor nicht fullspeed  erreichen kann (vllt wenn connection to gamepad verloren geht)
+gamepad aufladen 
+scoomatic aufladen
