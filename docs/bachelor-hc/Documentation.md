@@ -13,12 +13,13 @@
     - [Future](#future)
   - [Project/Time-Management](#projecttime-management)
     - [ToDos](#todos)
-    - [Working](#working)
+    - [Backlog](#backlog)
   - [Fixes](#fixes)
     - [Network configuration](#network-configuration)
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
+    - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
 
 ## Konfiguration
 
@@ -74,7 +75,7 @@ alias stopmotor="rosservice call /stop_motor"
   * Motor
   * LIDAR
   * Ultrasonic
-  * 
+  * ...?
 * Provide Processing
   * SLAM
   * BAG Processing (?)
@@ -98,8 +99,7 @@ alias stopmotor="rosservice call /stop_motor"
 - [x] Mit Gamepad fahren lassen
 - [-] Korrektes terminieren der Nodes & rospy.spin()
 
-### Working
-
+### Backlog
 - udev regeln
 - ros1 workspace
 - ros2 workspace
@@ -129,13 +129,6 @@ Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'
 
 ```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
 
-#### Bereits Ausprobiert
-Die korrekte darstellung einer Motoransteuerung kann mit ```(900).to_bytes(2, byteorder='little', signed=True)``` erstellt werden. 900 ist dabei beliebieg zwischen -1000 und 1000. struct.pack() funktioniert scheinbar nicht richtig. Es erzeugt einen String. Wobei das int.to_bytes(...) auch macht.
-
-Werte mit 900, also 0x84,0x03 funktionieren nicht.
-
-struct.pack('<h', angular_velocity>) gibt \xf9\xff\' raus bei vollem Ausschlage des Joysticks. Herausfinden kann man das mit ```rospy.logwarn(str(int(struct.pack("<h", angular_velocity))))```
-
 ### Hector SLAM
 Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-slam ```.  Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
@@ -147,7 +140,7 @@ Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene M
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
-##### BAG Files
+### BAG Files
 BAG Files nehmen alle Messages auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
 
 Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
@@ -169,10 +162,17 @@ Mit -r kann die Abspielrate verändert werden.
 
 Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
-#### "Fixed Frame [map] does not exist" in rviz
+### "Fixed Frame [map] does not exist" in rviz
 map einfach entfernen und wieder hinzufügen.
 
-#### Karte wird nicht gespeichert
+### tf Tree / frames anschauen mit rqt
+Mit 
+```rosrun rqt_tf_tree rqt_tf_tree``` kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
+
+Beispiel mit Hector SLAM:
+![rqt_tf_tree-hector-slam](./images/rqt_tf_tree-hector-slam.png)
+
+### Karte wird nicht gespeichert
 Eigentlich sollte per mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
 
 Es besteht keine ausreichende erlaubnis, weil HectorSLAM per apt-get installiert wurde: 
@@ -186,3 +186,6 @@ User und Group sind in der Regel identisch.
 Es kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package  mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
 
 Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
+
+Beispiel Karte kann so aussehen:
+![hector-slam-map-example](./images/hector-slam-map-example.png)
