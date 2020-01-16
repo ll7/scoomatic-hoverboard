@@ -19,7 +19,6 @@
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
-      - [ToDos](#todos-1)
 
 ## Konfiguration
 
@@ -144,23 +143,46 @@ Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-sl
 Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
 
 #### Performance Issues
-Der RPi ist scheinbar zu langsam um SLAM und gleichzeitig die Ansteuerung gleichzeitig zu machen. Es ist möglich:
+Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern: Es ist möglich:
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
+
+##### BAG Files
+BAG Files nehmen alle Messages auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
+
+Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
+```
+rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
+```
+
+Also im Fall von SLAM: 
+
+```
+rosbag record -O laserdata /scan 
+```
+
+Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt werden mit 
+```
+rosbag play -r 2 laserdata.bag
+```
+Mit -r kann die Abspielrate verändert werden.
+
+Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
 #### "Fixed Frame [map] does not exist" in rviz
 map einfach entfernen und wieder hinzufügen.
 
 #### Karte wird nicht gespeichert
-```rostopic pub syscommand std_msgs/String "savegeotiff"```
+Eigentlich sollte per mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
 
-Es sei auf https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/ verwiesen.
+Es besteht keine ausreichende erlaubnis, weil HectorSLAM per apt-get installiert wurde: 
 
-Es besteht keine ausreichende erlaubnis, weil HectorSLAM per apt-get installiert wurde: ```sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff```
+```
+sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff
+```
 
-Es kann regulär eine Karte gespeichert werden  mit dem Parameter ```geotiff_save_period``` in geotiff_mapper.launch file in hector_geotiff
+User und Group sind in der Regel identisch.
 
-#### ToDos
-Sicherheit einrichten, dass Motor nicht fullspeed  erreichen kann (vllt wenn connection to gamepad verloren geht)
-gamepad aufladen 
-scoomatic aufladen
+Es kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package  mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
+
+Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
