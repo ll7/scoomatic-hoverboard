@@ -4,6 +4,8 @@
     - [Future](#future)
   - [Project/Time-Management](#projecttime-management)
     - [ToDos](#todos)
+  - [Configuration](#configuration)
+    - [tf](#tf)
     - [Backlog](#backlog)
   - [Fixes](#fixes)
     - [Network configuration](#network-configuration)
@@ -20,6 +22,7 @@
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
     - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
+    - [Motor LIDAR stoppen](#motor-lidar-stoppen)
     - [Rviz einrichten](#rviz-einrichten)
 
 ## Project Structure
@@ -52,6 +55,10 @@
 - [x] checken welche tasten gamepad benutzt
 - [x] Mit Gamepad fahren lassen
 - [-] Korrektes terminieren der Nodes & rospy.spin()
+
+## Configuration
+### tf
+Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame festgelegt.
 
 ### Backlog
 - udev regeln
@@ -114,7 +121,6 @@ Mithilfe der ```~/.bashrc``` können viele Einstellungen automatisch vorgenommen
 alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
 alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
-alias stopmotor="rosservice call /stop_motor"
 ```
 
 ## Good to know
@@ -142,7 +148,7 @@ Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene M
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
 ### BAG Files
-BAG Files nehmen alle Messages auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
+BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
 
 Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
 ```
@@ -190,6 +196,12 @@ Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector
 
 Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
+
+### Motor LIDAR stoppen
+Es ist möglich den LIDAR manuell zu stoppen, so dass er sich nicht mehr dreht:
+```
+rosservice call /stop_motor
+```
 
 ### Rviz einrichten
 Fehler ```No transform from [map] to [base_link]```

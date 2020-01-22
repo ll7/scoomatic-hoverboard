@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     <!-- External NODES -->
-    <!-- Hector SLAM -->
-    <!--<include file="$(find scoomatic_ros1)/launch/hector_slam.launch"/>-->
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
