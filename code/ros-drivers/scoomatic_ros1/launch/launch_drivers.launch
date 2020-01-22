@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- External NODES -->
     <!-- IMU -->
     <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
     <!-- LIDAR -->
     <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
-    	 <param name="serial_port" type="string" value="/dev/rplidar" />
+    	<param name="serial_port" type="string" value="/dev/rplidar" />
+        <param name="frame_id" type="string" value="laser"/>
+        <!-- for scan mode possibilities look at rplidar docs-->
+        <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples-->
     </node>
+    <!-- Internal NODES -->
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
         <param name="topic" type="str" value="/cmd_vel"/>
+        <param name="maxspeed_factor" type="int" value="1"/> <!-- From 1 to 10 -> 10: Max, 1:Min-->
     </node>
     <!-- Motor Diagnostics -->
     <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
@@ -27,8 +33,9 @@
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/cmd_vel"/>
         <param name="rate" type="int" value="10"/>
-        <param name="gain_lin" type="double" value="0.3"/>
-        <param name="gain_ang" type="double" value="0.2"/>
+        <!-- Gain for Gamepad different from maxspeed_factor on MotorDriver -->
+        <param name="gain_lin" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
+        <param name="gain_ang" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->
     <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">

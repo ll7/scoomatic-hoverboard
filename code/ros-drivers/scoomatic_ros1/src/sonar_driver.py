@@ -88,4 +88,7 @@ def main(args=None):
             sleep(1 / rate)  # seconds
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass

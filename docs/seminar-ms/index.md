@@ -3,6 +3,7 @@ Scoomatic
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Scoomatic](#scoomatic)
 - [Einleitung](#einleitung)
 - [Aufgabenstellung](#aufgabenstellung)
 	- [Vorstellung des Projekts](#vorstellung-des-projekts)
@@ -15,7 +16,7 @@ Scoomatic
 	- [Autonom navigierende Forschungsplattformen](#autonom-navigierende-forschungsplattformen)
 		- [Ubiquity Robotics](#ubiquity-robotics)
 		- [Innok Heros](#innok-heros)
-	- [Autonome Navigation im Fußgängerbereich](#autonome-navigation-im-fugängerbereich)
+	- [Autonome Navigation im Fußgängerbereich](#autonome-navigation-im-fu%c3%9fg%c3%a4ngerbereich)
 		- [Autonomous Campus Mobility Platform (2018)](#autonomous-campus-mobility-platform-2018)
 		- [Autonomous navigation for mobile service robots in urban pedestrian environments (2011)](#autonomous-navigation-for-mobile-service-robots-in-urban-pedestrian-environments-2011)
 		- [Smart Wheelchair System (2017)](#smart-wheelchair-system-2017)
@@ -33,13 +34,13 @@ Scoomatic
 		- [Roborock S5](#roborock-s5)
 - [Sinnvolle Hardwareelemente](#sinnvolle-hardwareelemente)
 	- [Aktuatorik](#aktuatorik)
-		- [Roboterplattformen für den wissenschaftlichen Einsatz](#roboterplattformen-für-den-wissenschaftlichen-einsatz)
+		- [Roboterplattformen für den wissenschaftlichen Einsatz](#roboterplattformen-f%c3%bcr-den-wissenschaftlichen-einsatz)
 		- [Segway Loomo](#segway-loomo)
 		- [Hoverboard](#hoverboard)
 	- [Sensorik](#sensorik)
 		- [(RP)LIDAR](#rplidar)
 		- [Ultraschallsensoren](#ultraschallsensoren)
-		- [GPS-Empfänger](#gps-empfänger)
+		- [GPS-Empfänger](#gps-empf%c3%a4nger)
 		- [Stereoskopische Kameras](#stereoskopische-kameras)
 		- [Inertial Measurement Unit (IMU)](#inertial-measurement-unit-imu)
 	- [Bordcomputer](#bordcomputer)
@@ -50,7 +51,7 @@ Scoomatic
 		- [Einplatinencomputer und Kleinstrechner (x86)](#einplatinencomputer-und-kleinstrechner-x86)
 			- [Intel NUC](#intel-nuc)
 			- [UDOO x86](#udoo-x86)
-- [Bauvorschläge](#bauvorschläge)
+- [Bauvorschläge](#bauvorschl%c3%a4ge)
 	- [Bauvorschlag: Loomo](#bauvorschlag-loomo)
 	- [Bauvorschlag: Hoverboard](#bauvorschlag-hoverboard)
 - [Fazit](#fazit)
@@ -109,12 +110,12 @@ Das Open-Source Projekt [Autoware](https://github.com/CPFL/Autoware/wiki) ist ei
 * Evtl Probleme mit späterer Zulassung (ROS + KNN)
 * Modulare EVA Architektur
 -->
-![Autoware Architektur](../images/autoware_overview.png)
+![Autoware Architektur](./images/autoware_overview.png)
 *Architektur von Autoware.AI: Modulares EVA- (Eingabe, Verarbeitung, Ausgabe) Muster. Die Sensordaten werden erfasst, fusioniert und eine Lokalisierung und Objekterkennung durchgeführt. Aufgrund dieser Daten werden Entscheidungen über das Fahrzeugverhalten getroffen, welche an die Missionsplanung weitergegeben werden. Diese steuert basierend darauf die Aktuatoren des Fahrzeugs an.*
 ### Apollo
 [Apollo](https://apollo.auto) ist ein ebenfalls quelloffenes Framework für die autonome Navigation von Fahrzeugen. Gestartet vom chinesischen Konzern Baidu und unterstützt von vielen Industriepartnern wurde seit 2017 eine Soft- und Hardwareplattform entwickelt, die im aktuellen Stand ein autonomes Fahren im urbanen Umfeld erlauben soll. Im Laufe des Jahres 2019 sind erste Versuche mit massenproduktionsreifen Fahrzeugen in abgesteckten Testgebieten geplant, welche bis 2021 zu marktreifen vollständig autonom navigierenden Fahrzeugen für Autobahn- und Stadtverkehr führen sollen.
 Als Software wird hier ebenfalls ROS verwendet, welches auf einem Ubuntu Linux mit selbstentwickeltem Echtzeitkernel läuft. Die [Architektur](https://github.com/ApolloAuto/apollo) scheint deutlich umfangreicher und komplexer zu sein, als die von Autoware, was sie für den Einsatz im Scoomatic Projekt ungeeignet, weil zu umfangreich und komplex, macht.
-![Apollo Architektur](../images/apollo.png)
+![Apollo Architektur](./images/apollo.png)
 *Architektur von Apollo. Im Vergleich zu Autoware gibt es hier einen "Guardian", der Programmfehler detektiert und abfängt. ([Quelle](https://cdn-images-1.medium.com/max/800/1*EePl_JroHY8YnRIVTWMjJA.png))*
 ### apex.ai
 Das [apex.ai](apex.ai) Projekt gliedert sich in zwei Teilbereiche: Apex.OS und Apex.Autonomy. Juan Pablo, Senior Software Engineer bei Apex, beschreibt Apex.OS wie folgt:
@@ -129,7 +130,7 @@ Apex.Autonomy bündelt die eigentlichen Applikationen, die für selbstständiges
 
 ## Autonom navigierende Forschungsplattformen
 ### Ubiquity Robotics
-![Ubiquity Magni](../images/magni.png)
+![Ubiquity Magni](./images/magni.png)
 
 *Bild der Magni Plattform von Ubiquity Robotics ([Quelle](https://store.ubiquityrobotics.com/))*
 
@@ -139,7 +140,7 @@ Da der Roboter als Forschungsplattform vertrieben wird, ist dieser gut [dokument
 Der Kaufpreis für den Roboter liegt bei [1900USD](https://store.ubiquityrobotics.com/).
 
 ### Innok Heros
-![Konfigurationen Innok](../images/innok.jpg)
+![Konfigurationen Innok](./images/innok.jpg)
 
 *Beispielkonfigurationen Innok Heros ([Quelle](https://www.innok-robotics.de/produkte/heros))*
 
@@ -150,22 +151,22 @@ Innok Robotics bietet mit der [Heros](https://www.innok-robotics.de/produkte/her
 Die autonome Navigation von Fahrzeugen im Fußgängerbereich ist Thema einiger wissenschaftlicher Arbeiten, sowie von kommerziellen Produkten. Hier werden nicht nur Lösungen für den Transport von Menschen, wie z.B. mit selbstfahrenden Rollstühlen, sondern auch autonome Transportfahrzeuge und Serviceroboter betrachtet. Auch die nur im weiteren Sinne im "Fußgängerbereich" navigierenden Staubsaugerroboter werden aufgrund der Parallelen in Navigation und Pfadplanung kurz betrachtet.
 
 ### Autonomous Campus Mobility Platform (2018)
-![Autonomous Campus Mobility Platform CAD Zeichnung](../images/Hefter.png)
+![Autonomous Campus Mobility Platform CAD Zeichnung](./images/Hefter.png)
 
 Die [Autonomous Campus Mobility Platform](https://digitalcommons.wpi.edu/mqp-all/3121/) von Hefter et al. wurde im Rahmen eines Major Qualifying Projects durchgeführt. Dabei wurde ein elektrisches Longboard mit elektronisch schwenkbarer Vorderachse entwickelt. An der Front ist ein Lidar XV-11 verbaut, zusätzlich befindet sich ein BerryGPS-IMU Modul auf dem Board, das für die Positions- und Lagebstimmung zuständig ist. Als Bordcomputer wird ein Raspberry Pi 3 eingesetzt. Die konkrete Implementierung der Software ist nicht detailliert beschrieben, allerdings scheint diese komplett selbst geschrieben zu sein und nicht auf ein Framework wie ROS aufzubauen.
 
 ### Autonomous navigation for mobile service robots in urban pedestrian environments (2011)
-![Bild Roboter Tibi und Dabo](../images/Trulls.png)
+![Bild Roboter Tibi und Dabo](./images/Trulls.png)
 
 Trulls et al. stellen mit [Autonomous navigation for mobile service robots in urban pedestrian environments](https://onlinelibrary.wiley.com/doi/abs/10.1002/rob.20386) einen Serviceroboter vor, der autonom und auch bei schlechtem GPS-Empfang in Fußgängerbereichen navigieren kann.
 Die Antriebsplattform ist auf dem Segway RMP200-Modul basiert. Als Sensorik kommen zwei Leuze RS4 2D Laser Range Finder sowie ein  Hokuyo UTM-30LX 2D-Laser Scanner zum Einsatz. Die aktuelle Steugung des Terrains kann aus der Segwayplattform ausgelesen und mit in die Routenplanung einbezogen werden. Zusätzlich sind Odometriewerte von den verbauten Radencodern verfügbar. Die Softwarearchitektur besteht aus zwei Regelschleifen. Die Schleife für die Hindernisvermeidung wird mit einer Frequenz von 10Hz ausgeführt, um schnellstmögliche Reaktion auf Fußgänger und andere Hindernisse zu ermöglichen. Die Navigation und Lokalisierung erfolgt in einem Takt von 5Hz, um Ressourcen zu sparen. Als Middleware wird nicht wie üblich auf ROS, sondern auf die sehr ähnliche, aber unbekanntere Plattform [YARP](https://www.yarp.it/) gesetzt. Auch diese basiert auf der Kapselung von einzelnen Funktionalitäten in Module und einer Interprozesskommunikation über eine Publish/Subscribe Architektur.
 Die Plattform hat bereits eine Strecke von mehr als 6 Kilometern autonom zurückgelegt und dabei ihre Ziel in über 99% der Anfragen erreicht.
 
-![Bild Architektur des Navigationsstacks](../images/Trulls2.png)
+![Bild Architektur des Navigationsstacks](./images/Trulls2.png)
 *Architektur des Navigationsstacks*
 
 ### Smart Wheelchair System (2017)
-![Abbildung SWS](../images/schwesinger.png)
+![Abbildung SWS](./images/schwesinger.png)
 
 Das [Smart wheelchair ecosystem for autonomous navigation in urban environments](https://link.springer.com/article/10.1007/s10514-016-9549-1) (SWS) ist ein autonom navigierender Elektrorollstuhl, welcher nur durch einige LIDARs und Odometrie und ohne die Hilfe von GPS mittels einer vorher erzeugten Karte von *Landmarks* selbstständig Routen abfahren kann. Auf dem Fahrzeug sind folgende Sensoren verbaut:
 * 2x IFM O3D200 3D Kamera
@@ -182,7 +183,7 @@ Die Software für das SWS basiert auf ROS und nutzt die Point Cloud Library (PCL
 
 In [Autonomous Wheelchair Navigation in Unmapped Indoor Environments](https://ieeexplore.ieee.org/document/8409854/) stellen Grewal et al. ebenfalls einen autonomen Rollstuhl vor, welcher allerdings in einer vorher nicht kartografierten Indoorumgebung navigieren soll. Als Sensoren werden eine Kamera (Logitech c310) und ein LIDAR (LIDAR-Lite v3 (ca. 30€, Reichweite 5cm bis 40m)) benutzt. Zusätzlich kommt ein 2D-LIDAR (RPLIDAR A2 (ca. 350€)) zum Einsatz.
 Eine der beiden Kameras und der LIDAR-Lite sind auf einem 2-Achs-Gimbal montiert.
-![Hardware Grewal](../images/grewal.png)
+![Hardware Grewal](./images/grewal.png)
 *Hardwareaufbau des Autonomous Wheelchairs*
 
 Als Software kommt auch hier ROS zum Einsatz. Sie wird auf einem Dell Inpsiron TM15R 5537 mit einem Core i5 4200U mit 8GB DDR3 RAM ausgeführt. Die Kamera wird wiederholt geschwenkt und mehrere Bilder der Umgebung aufgenommen. Diese werden mittels *computer vision software* verarbeitet, um mögliche Ziele (im vorgestellten Anwendungsfall ein Geschäft) zu lokalisieren. Wurde ein Ziel erkannt, wird über den LIDAR Lite die Distanz zu diesem ermittelt. Potenzielle Ziele werden an das Navigationsmodul gesendet. Der Nutzer kann diese anschließend auswählen und anfahren. Der 2D-Lidar Dient zur Erstellung einer Karte für die Navigation.
@@ -193,7 +194,7 @@ Die Gesamtkosten für das System betragen ca. 1000€ und der Stromverbrauch lie
 -->
 
 ### Template-based autonomous navigation in urban environments (2011)
-![Abbildung Sozua](../images/sozua.png)
+![Abbildung Sozua](./images/sozua.png)
 
 Sozua et al. beschreiben in [Template-based autonomous navigation in urban environments](http://portal.acm.org/citation.cfm?doid=1982185.1982485) eine Methode zur Navigation auf Fahrbahnen. Der kamerabasierte Ansatz nutzt eine einzige, nach vorne gerichtete Graustufenkamera mit einer Auflösung von 320x240 Pixeln, um ein Neuronales Netz zu speisen. Dieses Generiert daraus eine Matrix, welche das Bild in *Straße* und *Keine  Straße* unterteilt. Anschließend wird ein *Template Matching Verfahren* genutzt, um Position und Orientierung der Fahrbahn zu bestimmen.
 Ein klarer Vorteil dieser Methodik ist, dass nur verhältnismäßig günstige Kameras benötigt werden. Allerdings ist über dieses Verfahren nur das halten der Spur und keine Lokalisierung oder Hindernisvermeidung möglich.
@@ -206,7 +207,7 @@ Als nächstes Ziel ist die Integration von LIDAR-Daten in dieses Verfahren gepla
 
 
 ### A Navigation System for Robots Operating in Crowded Urban Environments (2013)
-![Abbildung Kümmerle](../images/kuemmerle.png)
+![Abbildung Kümmerle](./images/kuemmerle.png)
 
 Die [Arbeit von Kümmerle et al.](http://ieeexplore.ieee.org/document/6631026/) beschreibt einen Assistenzroboter, der sich in einer urbanen Umgebung zurechtfindet und darin autonom navigiert.
 Für den Antrieb werden zwei einzeln angetriebene Räder und ein schwenkbares Stützrad genutzt, was das Wenden auf der Stelle ermöglicht.
@@ -221,7 +222,7 @@ Um in einem Gebiet autonom navigieren zu können, muss von diesem vorher eine Ka
 Ampeln an Fußgängerübergängen und andere sicherheitsrelevante Stellen werden manuell in der Karte eingetragen. Der Roboter pausiert an den jeweiligen Stellen und wartet auf eine Freigabe durch den Nutzer, weil diese Problemstellen von der Sensorik nicht ausreichend erkannt werden.
 
 ### The Autonomous City Explorer (2009)
-![Abbildung Bauer](../images/bauer2.png)
+![Abbildung Bauer](./images/bauer2.png)
 
 Bauer et al. zeigt in [The Autonomous City Explorer: Towards Natural Human-Robot Interaction in Urban Environments](http://link.springer.com/10.1007/s12369-009-0011-9) einen Roboter, der ohne die Hilfe von GPS oder einer vorher erstellten Karte in urbanen Umgebungen navigieren kann. Dabei achtet er auf Passanten und seine unmittelbare Umgebung.
 Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folgende Hardware:
@@ -233,11 +234,11 @@ Um diese Aufgabe zu bewältigen, besitzt der Autonomous City Explorer (ACE) folg
 
 Die Softwarearchitektur wird im folgenden Bild veranschaulicht.
 
-![Architektur Bauer](../images/bauer.png)
+![Architektur Bauer](./images/bauer.png)
 *Architektur des Autonomous City Explorer. Diese scheint selbst implementiert zu sein, ROS wird im Paper nicht erwähnt*
 
 ### TOOMAS (2009)
-![Toomas](../images/toomas.png)
+![Toomas](./images/toomas.png)
 
 In [TOOMAS: Interactive Shopping Guide Robots in Everyday Use - Final Implementation and Experiences from Long-term Field Trials](http://ieeexplore.ieee.org/document/5354497/) präsentieren Gross et al. einen Einkaufsassistenzroboter, der Kunden in einem Baumarkt zu den gesuchten Artikeln führt. Die Eingabe des Suchbegriffs erfolgt über einen Touchscreen. Anschließend begleitet der Roboter den Kunden zu dem Regal, in dem der Artikel lagert. Der Antrieb ist auch hier über zwei einzeln ansteuerbare Räder und ein Stützrad.
 Zur Positionsbestimmung, Kartografierung und Hindernisvermeidung sind die folgenden Sensoren verbaut:
@@ -251,14 +252,14 @@ Ein Video vom Roboter im Einsatz kann [hier](https://www.youtube.com/watch?v=lwB
 
 
 ### Starship Technologies
-![Produktbild Starship](../images/Starship.png)
+![Produktbild Starship](./images/Starship.png)
 *Bild des Roboters von Starship Technologies ([Quelle](https://www.starship.xyz/kit/))*
 
 [Starship Technologies](Starship.xyz) bietet eine kommerzielle Lösung zur Auslieferung von Waren an den Endkunden auf der letzten Meile an. Die sechsrädrigen Transportroboter können eine Nutzlast von ca. 10kg transportieren und werden z.B. von Essenslieferdiensten wie Doordash eingesetzt. Der Hersteller macht keine Angaben zur Sensorik, allerdings lassen die Bilder auf rundum verbaute Kameras (Weitwinkel, stereoskopisch) und Sonarsensoren schließen. Die Räder sind durch eine spezielle Aufhängung in der Höhe verstellbar, was [das erklimmen nicht abgesenkter Bordsteine](https://youtu.be/UPZwnc_Lk2M?t=49) möglich macht.
 
 
 ### Marble
-![Marble Roboter](../images/marble.jpg)
+![Marble Roboter](./images/marble.jpg)
 *Produktbild Marble Lieferroboter([Quelle](http://www.govtech.com/fs/automation/Delivery-Bot-Company-Begins-Mapping-Texas-Sidewalks.html))*
 
 [Marble](https://www.marble.io/) versucht ebenfalls, eine Lösung für Produktlieferungen auf der letzten Meile zu bieten. Die entwickelten Roboter sind bereits in Dallas, Texas, im Testbetrieb im Einsatz. Das kommerzielle Projekt macht keine Angaben zur verwendeten Hardware, allerdings lassen die veröffentlichen Bilder und Videos auf folgende Sensoren schließen:
@@ -271,7 +272,7 @@ Die Fortbewegung erfolgt über 4 Gummiräder und eine Ackermannsteuerung
 
 
 ### Kiwi
-![Kiwi Roboter](../images/kiwi.png)
+![Kiwi Roboter](./images/kiwi.png)
 *Produktbild Kiwi Lieferroboter([Quelle](https://www.notion.so/Assets-21b3fe2dff954bd8945f65bd76bb3ff5))*
 
 Ebenso wie die Roboter von [Starship Technologies](#starship-technologies) und [Marble](#marble) bietet [Kiwi](https://www.kiwicampus.com/) Roboter für die Lieferung von Waren. Über die verwendete Sensorik macht der Hersteller keine Angaben. Die Fortbewegung erfolgt hier wie beim Konkurrenten Marble über 4 Gummiräder und Ackermannsteuerung.
@@ -283,7 +284,7 @@ Zusätzlich zu den kleinen Lieferrobotern bietet das Unternehmen ein autonomes T
 Der [Nuro](https://nuro.ai/) Lieferroboter bewegt sich nicht wie die bisher vorgestellten Lieferplattformen im Fußgängerbereich, sondern fährt auf der Straße. Daher ist er eher als ein selbstfahrendes Auto ohne Sitzplätze anzusehen. Er erkennt  Straßenschilder sowie umliegenden Verkehr wie Fußgänger und andere Autos. Die Firma hat einige der Lieferroboter bereits in Scottsdale, Arizona im Einsatz. Wie die anderen kommerziellen Hersteller gibt auch Nuro keine Details zur verwendeten Hardware preis. Auf den Fotos und Videos lassen sich allerdings LIDAR- und Ultraschallsensoren erkennen.
 
 ### Amazon Scout
-![Amazon Scout Roboter](../images/scout.jpg)
+![Amazon Scout Roboter](./images/scout.jpg)
 *Produktbild Amazon Scout Lieferroboter([Quelle](https://blog.aboutamazon.com/transportation/meet-scout))*
 
 Über den Amazon [Scout](https://blog.aboutamazon.com/transportation/meet-scout) sind noch nicht sehr viele Informationen verfügbar, der allgemeine Aufbau ähnelt jedoch sehr Stark dem Roboter von [Starship Technologies](#starship-technologies).
@@ -294,7 +295,7 @@ Höherpreisige Staubsaugerroboter bieten die Möglichkeit, eine Karte von ihrer 
 ### Roborock S5
 Der [Roborock S5](https://en.roborock.com/pages/robot-vacuum-cleaner) ist mit einem oben am Gehäuse angebrachten LIDAR / LDS (Laser Distance Sensor) ausgestattet, was eine Kartografierung des zu reinigenden Gebiets ermöglicht. Die so erstellte Karte kann per App angesehen werden, darin der Fortschritt der Reinigung angezeigt und Befehle zum Reinigen von Teilflächen gegeben werden. Für die Hindernisvermeidung sind um den Roboter mehrere Ultraschallsensoren angebracht. Außerdem erkennt ein *Bumper* frontale Kollisionen mit Hindernissen.
 
-![Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)](../images/roborock-app.png)
+![Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)](./images/roborock-app.png)
 *Roborock S50 App (Quelle: https://www.trustedreviews.com/reviews/roborock-s5)*
 # Sinnvolle Hardwareelemente
 Im folgenden Kapitel wird eine Auswahl an Hardware vorgestellt und deren Eignung für das Projekt analysiert.
@@ -306,7 +307,7 @@ Der große Nachteil dieser Plattformen ist der hohe Preis. Soll nicht nur Sensor
 > Hinweis: Die Angaben für diesen Abschnitt wurden hauptsächlich aus dem [robotshop](https://www.robotshop.com/de/de/rad-ketten-roboter.html) entnommen
 
 ### Segway Loomo
-![Loomo](../images/loomo.png)
+![Loomo](./images/loomo.png)
 Der [Segway Loomo](http://www.loomo.com/en/) ist ein selbst-balancierendes Elektrofahrzeug. Optisch ähnelt es den ursprünglichen Segway Modellen, allerdings wurde der Lenker verkürzt und die Lenkung erfolgt jetzt über seitliches Bewegen der Lenkstange zwischen den Knien.
 Der Loomo unterscheidet sich von einem normalen Segway durch die Möglichkeit, ihn bei Bedarf in einen Begleitroboter umzufunktionieren. Um diese Funktion erfüllen zu können, ist eine Intel RealSense ZR300 Kamera, eine HD-Kamera, verschiedene Ultraschallsensoren, Encoder, eine IMU, Infrarot Abstandssensoren und Touchsensoren verbaut (vgl. [Loomo Specs](http://www.loomo.com/en/spec.html)). Die Verarbeitung der Signale übernimmt ein Intel Atom Z8750 Prozessor, der Android in der Version 5.1 ausführt. Der Hersteller stellt Entwicklern eine [API](https://developer.segwayrobotics.com/developer/overview.html) zur Verfügung, mit der eigene Android-Apps mit der Hard- und Software des Loomo kommunizieren können. Als Schnittstellen zur Erweiterung bietet der Loomo USB, Bluetooth und WLAN. Der Kaufpreis im [Segway-Webshop](https://shop.segway.com/de-de/92/-segway-loomo) beträgt aktuell (29.1.2019) 1699€
 Für den Einsatz im Scoomatic-Projekt sprechen die relativ offenen Schnittstellen über das SDK sowie eine Erweiterbarkeit der Hardware über USB, Bluetooth und WiFi. Außerdem sehr nützlich ist die bereits verbaute Sensorik und ein fertig implementiertes Antriebskonzept.

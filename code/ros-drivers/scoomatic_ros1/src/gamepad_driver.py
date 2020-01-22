@@ -41,17 +41,23 @@ def handle_game_controller():
     try:
         events = get_gamepad()
     except Exception as e:
+        # Bei Abbrechen der Verbindung Abbremsen
+        armed = False
+        speed = 0
+        direction = 0
+        # Fehler ausgeben
         print(e)
         rospy.logwarn("Gamepad disconnected!")
-        sleep(1)
+        sleep(5)
         return
 
     for event in events:
-        # Some 2.4Ghz Controller Configuration
+        # Configuration for EasySMX 2.4Ghz Controller
+        ## Limitation of Buttons:
         ## Maximum ABS_RZ / ABS_Z : 255
         ## Maximum ABS_X: 32767
         ## Minimum ABS_X: -32767
-        if event.code == 'BTN_SOUTH':  # Arm
+        if event.code == 'BTN_SOUTH':  # Arm: Muss gedrückt werden, damit fährt.
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
             speed = event.state / 256.0 # Normieren auf -+ 1.0
@@ -61,6 +67,7 @@ def handle_game_controller():
             direction = event.state / 32768.0  # Normieren auf -+ 1.0
             
 def gamepad_thread():
+    # Gamepad suchen und ausgeben
     for device in devices:
             rospy.loginfo("Found Device %s"%device)
     while thread_active:
@@ -79,7 +86,7 @@ def main(args=None):
     topic = params.get_param(node_name+'/topic', '/gamepad')
     rate = params.get_param(node_name+'/rate', 20)
 
-    # Cerate publisher
+    # Create publisher
     publisher = rospy.Publisher(topic, Twist, queue_size=10)
 
     # Create  message for the sensor values
@@ -108,4 +115,8 @@ def main(args=None):
     thread_active = False
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
+
