@@ -21,13 +21,19 @@
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
-    - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
-    - [Motor LIDAR stoppen](#motor-lidar-stoppen)
-    - [Rviz einrichten](#rviz-einrichten)
+    - [Hector SLAM](#hector-slam)
+      - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
+      - [Performance Issues](#performance-issues)
+    - [BAG Files](#bag-files)
+    - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
+    - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
+    - [Scan Modes RPLidar](#scan-modes-rplidar)
 
 ## Project Structure
 ### Future
+
 **ROS Packages**
+
 * Provide Sensordata
   * Motor
   * LIDAR
@@ -61,6 +67,7 @@
 Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame festgelegt.
 
 ### Backlog
+
 - udev regeln
 - ros1 workspace
 - ros2 workspace
@@ -72,6 +79,7 @@ Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Robot
 ## Fixes
 ### Network configuration
 If ros is failing finding the correct host through hostname, just add the correct IP (localhost and local IP) in ```/etc/hosts``` like:
+
 ```
 127.0.0.1 localhost
 192.168.140.16  ubuntu
@@ -87,9 +95,9 @@ Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wik
 
 Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu```. In der Regel wird von DHCP. IP 192.168.140.16 vergeben.
 
-### udev Regeln 
+### udev Regeln
 
-Liegen unter ```/etc/udev/rules.d/10-local.rules```. Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
+Liegen unter ```/etc/udev/rules.d/10-local.rules```. Und im repository unter ```code/configuration/10-local.rules```. Die Datei ist per Symlink verknüpft.  Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
 
 Sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
@@ -112,6 +120,7 @@ Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how
 ```
 ros2 lifecycle set <nodename> shutdown
 ```
+
 Allerdings hat in diesem Projekt nicht funktioniert.
 Schlussendlich bleibt nur die Möglichkeit, den Prozess zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
 
@@ -132,9 +141,9 @@ Paramter lassen sich auch über das Kommandozeilenprogramm ```rosparam list``` a
 ### Motoransteuerung
 Die Serielle Schnittstelle zur Ansteuerung der Motoren verwendet ein eigenes Protokoll, welches sich aus vier Bytes zusammsetzt. Das Format ist wie folgt: ```b'\xUU\xUU\xUU\xUU'```, wobei U für ein Hexadezimale Zahl steht. 
 
-Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'```
+Für Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` kann aber auch ```b'\xfb\xff\xf8\xff'``` entsprechen.
 
-```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
+Es können manuell steuersignale gesendet werden:```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
 
 ### Hector SLAM
 Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-slam ```.  Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
@@ -144,6 +153,7 @@ Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenstä
 
 #### Performance Issues
 Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern: Es ist möglich:
+
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
@@ -156,7 +166,6 @@ rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
 ```
 
 Also im Fall von SLAM: 
-
 ```
 rosbag record -O laserdata /scan 
 ```
@@ -165,8 +174,8 @@ Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt w
 ```
 rosbag play -r 2 laserdata.bag
 ```
-Mit -r kann die Abspielrate verändert werden.
 
+Mit -r kann die Abspielrate verändert werden.
 Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
 ### "Fixed Frame [map] does not exist" in rviz
@@ -202,12 +211,12 @@ Es ist möglich den LIDAR manuell zu stoppen, so dass er sich nicht mehr dreht:
 ```
 rosservice call /stop_motor
 ```
+Genauso kann dieser auch wieder gestartet:
+```
+rosservice call /start_motor
+```
 
-### Rviz einrichten
-Fehler ```No transform from [map] to [base_link]```
+### Scan Modes RPLidar
 
-Fehler ```Fixed Frame [map] does not exist```
-
-Grund: Upgrade der hector slam  ros packages
-
-ToDos: Eigenes ROS Package slam erstellen
+![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
+Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht ist das Protokoll des RPLidar zu empfehlen: https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en Auf Seite 12 werden die verschiedenen Scan modes erklärt. Für diesen Fall wird **Boost** verwendet.
