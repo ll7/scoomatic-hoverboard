@@ -28,6 +28,7 @@
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
     - [Scan Modes RPLidar](#scan-modes-rplidar)
+    - [Navigation & Localization Stack](#navigation--localization-stack)
 
 ## Project Structure
 ### Future
@@ -220,3 +221,18 @@ rosservice call /start_motor
 
 ![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
 Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht ist das Protokoll des RPLidar zu empfehlen: https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en Auf Seite 12 werden die verschiedenen Scan modes erklärt. Für diesen Fall wird **Boost** verwendet.
+
+### Navigation & Localization Stack
+  Map Server
+      |
+      | → provides (nav_msgs/OccupancyGrid)
+      ↓
+  Localization
+      |
+      | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
+      ↓
+  Navigation
+      |
+      | 
+      ↓
+  Moves Robot

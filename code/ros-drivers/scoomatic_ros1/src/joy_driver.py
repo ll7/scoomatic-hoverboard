@@ -70,7 +70,7 @@ def main(args=None):
     baudrate = 115200
     rosrate = rospy.Rate(rate)
 
-    # open serial port
+    # Open serial port
     with serial.Serial(port, baudrate) as ser:
         rospy.loginfo("Serial Port opened with %s Baud" % baudrate)
         while not rospy.is_shutdown():

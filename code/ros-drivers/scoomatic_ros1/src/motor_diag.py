@@ -111,7 +111,7 @@ def main(args=None):
             m7.data = data[6]
             m8.data = data[7]
 
-            # publi sh message
+            # publish message
             p1.publish(m1)
             p2.publish(m2)
             p3.publish(m3)
@@ -121,7 +121,8 @@ def main(args=None):
             p7.publish(m7)
             p8.publish(m8)
 
-            rosrate.sleep()  
+            rosrate.sleep()
+            rosrate.sleep
 
 if __name__ == '__main__':
     try:
