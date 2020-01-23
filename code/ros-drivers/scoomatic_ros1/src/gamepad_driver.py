@@ -118,5 +118,9 @@ if __name__ == '__main__':
     try:
         main()
     except rospy.ROSInterruptException:
-        pass
+        thread_active = False
+        armed = False
+        speed = 0
+        direction = 0
+        rospy.logwarn("STOP Gamepad Driver")
 
