@@ -7,6 +7,7 @@ import struct
 import params
 from geometry_msgs.msg import Twist
 
+maxspeed_factor
 send_bytes = struct.pack('<hh', 0, 0)
 
 def callback(message):
