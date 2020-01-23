@@ -57,7 +57,7 @@ def handle_game_controller():
         ## Maximum ABS_RZ / ABS_Z : 255
         ## Maximum ABS_X: 32767
         ## Minimum ABS_X: -32767
-        if event.code == 'BTN_SOUTH':  # Arm: Muss gedrückt werden, damit fährt.
+        if event.code == 'BTN_SOUTH':  # Arm: Must be pressed to drive
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
             speed = event.state / 256.0 # Normieren auf -+ 1.0
