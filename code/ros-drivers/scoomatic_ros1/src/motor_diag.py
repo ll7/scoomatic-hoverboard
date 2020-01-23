@@ -65,6 +65,7 @@ def main(args=None):
     # Read parameter
     port = params.get_param(node_name+'/port', '/dev/motor_diag')
     rate = params.get_param(node_name+'/rate', 5) # Hertz
+    rosrate = rospy.Rate(rate)
 
     # Create publisher
     p1 = rospy.Publisher(node_name+'/adc1', Int32, queue_size=10)
@@ -98,7 +99,7 @@ def main(args=None):
                 data = read_serial(ser)
             except:
                 rospy.logwarn("Serial package Invalid. Did you set the right port?")
-                rospy.sleep(rospy.Rate(rate))  
+                rosrate.sleep()  
                 continue
             # update message
             m1.data = data[0]
@@ -120,7 +121,7 @@ def main(args=None):
             p7.publish(m7)
             p8.publish(m8)
 
-            rospy.sleep(rospy.Rate(rate))  
+            rosrate.sleep()  
 
 if __name__ == '__main__':
     try:

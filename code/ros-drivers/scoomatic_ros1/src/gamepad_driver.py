@@ -84,6 +84,7 @@ def main(args=None):
     gain_ang = float(params.get_param(node_name+'/gain_ang',1.0))
     topic = params.get_param(node_name+'/topic', '/gamepad')
     rate = params.get_param(node_name+'/rate', 20)
+    rosrate = rospy.Rate(rate)
 
     # Create publisher
     publisher = rospy.Publisher(topic, Twist, queue_size=10)
@@ -109,7 +110,7 @@ def main(args=None):
         # publish message
         publisher.publish(msg)
 
-        rospy.sleep(rospy.Rate(rate))  
+        rosrate.sleep() 
 
     thread_active = False
 
