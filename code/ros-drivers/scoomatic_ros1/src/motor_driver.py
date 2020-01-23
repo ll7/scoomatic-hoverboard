@@ -26,7 +26,7 @@ def main():
     rospy.init_node('motor_driver', anonymous=True)
     node_name = rospy.get_name()
 
-    serial_port = params.get_param(node_name+'/topic',  '/dev/motor_driver')
+    serial_port = params.get_param(node_name+'/port',  '/dev/motor_driver')
     maxspeed_factor = params.get_param(node_name+'/maxspeed_factor',  '2')
 
     rospy.Subscriber('/cmd_vel', Twist, callback , queue_size=20)
