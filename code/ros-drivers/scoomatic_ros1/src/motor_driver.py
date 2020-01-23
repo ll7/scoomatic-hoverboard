@@ -7,11 +7,11 @@ import struct
 import params
 from geometry_msgs.msg import Twist
 
-maxspeed_factor
+global maxspeed_factor
 send_bytes = struct.pack('<hh', 0, 0)
 
 def callback(message):
-    global send_bytes
+    global send_bytes, maxspeed_factor
 
     lin_velocity = message.linear.x * 100 * maxspeed_factor
     ang_velocity = message.angular.z * 100 * maxspeed_factor
@@ -23,6 +23,7 @@ def send_serial(ser):
     ser.write(send_bytes)
 
 def main():
+    global maxspeed_factor
     # Start Node
     rospy.init_node('motor_driver', anonymous=True)
     node_name = rospy.get_name()
