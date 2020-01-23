@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import rospy
-import time
 import serial
 import struct
 import params
@@ -40,7 +39,7 @@ def main():
             send_serial(ser)
             global send_bytes
             # Hoverboard expects packets at ~50Hz
-            time.sleep(0.02) 
+            rospy.sleep(0.02) 
 
         # Generate bytecode for motor
         generated_bytes = struct.pack('<hh', 0, 0)

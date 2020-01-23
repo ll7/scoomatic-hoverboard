@@ -32,15 +32,12 @@
 import serial
 import rospy
 import params
-from time import sleep
 from std_msgs.msg import Int32, Float32
 
-node = None
-
 def read_serial(ser):
-    # read line
+    # read serial line
     data = ser.readline()
-    # print("Serial Data: %s" % data)
+
     # parse
     try:
         data = data.decode('ascii').replace("\r\n", "").split(' ')
@@ -53,7 +50,7 @@ def read_serial(ser):
         value = int(value)
         newdata.append(value)
     data = newdata
-    #print("Serial Data 2 : %s" % data)
+
     if (len(data) is not 8):
         rospy.logwarn("Corrupt Package from ESC (LEN). Have you used the right port?")
         raise Exception()
@@ -67,7 +64,7 @@ def main(args=None):
 
     # Read parameter
     port = params.get_param(node_name+'/port', '/dev/motor_diag')
-    rate = params.get_param(node_name+'/rate', 5)
+    rate = params.get_param(node_name+'/rate', 5) # Hertz
 
     # Create publisher
     p1 = rospy.Publisher(node_name+'/adc1', Int32, queue_size=10)
@@ -101,7 +98,7 @@ def main(args=None):
                 data = read_serial(ser)
             except:
                 rospy.logwarn("Serial package Invalid. Did you set the right port?")
-                sleep(1 / rate)
+                rospy.sleep(rospy.Rate(rate))  
                 continue
             # update message
             m1.data = data[0]
@@ -123,7 +120,7 @@ def main(args=None):
             p7.publish(m7)
             p8.publish(m8)
 
-            sleep(1 / rate)  # seconds
+            rospy.sleep(rospy.Rate(rate))  
 
 if __name__ == '__main__':
     try:

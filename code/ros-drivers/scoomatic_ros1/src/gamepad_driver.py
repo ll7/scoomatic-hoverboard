@@ -25,7 +25,6 @@
 import rospy
 import threading
 import params
-from time import sleep
 from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
 
@@ -48,7 +47,7 @@ def handle_game_controller():
         # Fehler ausgeben
         print(e)
         rospy.logwarn("Gamepad disconnected!")
-        sleep(5)
+        rospy.sleep(5.)
         return
 
     for event in events:
@@ -110,7 +109,7 @@ def main(args=None):
         # publish message
         publisher.publish(msg)
 
-        sleep(1 / rate)  # seconds
+        rospy.sleep(rospy.Rate(rate))  
 
     thread_active = False
 
