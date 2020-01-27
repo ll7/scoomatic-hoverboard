@@ -29,6 +29,8 @@
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
     - [Scan Modes RPLidar](#scan-modes-rplidar)
     - [Navigation & Localization Stack](#navigation--localization-stack)
+      - [Steps](#steps)
+  - [static_transform_publisher](#statictransformpublisher)
 
 ## Project Structure
 ### Future
@@ -236,3 +238,15 @@ Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Ra
       | 
       ↓
   Moves Robot
+
+#### Steps
+1. Karte erstellen
+   * SLAM
+   * Dann mit map_server Karte speichern
+2. Lokalisierung mit AMCL
+   * 2D Pose estimation in rviz
+   * an verschiedenen position versuchen
+
+
+## static_transform_publisher
+Sind dafür da Statische Koordinaten Verhältnisse zwischen tf frames regelmäßig zu publishen
