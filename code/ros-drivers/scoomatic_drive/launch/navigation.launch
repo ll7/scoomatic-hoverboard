@@ -1,0 +1,17 @@
+<launch>
+    <arg name="map_file" default="$(find map_server)/map.yaml" />
+
+    <!-- Transform from base platform to laser -> for navigation-->
+    <node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 0 0 0 1 base_link laser 100" />
+
+    <node name="MapServer" pkg="map_server" type="map_server"  args="$(arg map_file)"  output="screen">
+    	<param name="frame_id" value="map" />
+    </node>
+
+    <node name="AMCL" pkg="amcl" type="amcl" output="screen">
+
+    </node>
+
+    
+
+</launch>

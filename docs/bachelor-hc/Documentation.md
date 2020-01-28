@@ -27,10 +27,7 @@
     - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
-    - [Scan Modes RPLidar](#scan-modes-rplidar)
-    - [Navigation & Localization Stack](#navigation--localization-stack)
-      - [Steps](#steps)
-  - [static_transform_publisher](#statictransformpublisher)
+  - [ToDos](#todos-1)
 
 ## Project Structure
 ### Future
@@ -242,7 +239,7 @@ Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Ra
 #### Steps
 1. Karte erstellen
    * SLAM
-   * Dann mit map_server Karte speichern
+   -[x] Dann mit map_server Karte speichern
 2. Lokalisierung mit AMCL
    * 2D Pose estimation in rviz
    * an verschiedenen position versuchen
@@ -250,3 +247,20 @@ Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Ra
 
 ## static_transform_publisher
 Sind dafür da Statische Koordinaten Verhältnisse zwischen tf frames regelmäßig zu publishen
+
+## Map speichern und bereitstellen
+
+Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei im map_server package erstellt.
+
+```
+rosrun map_server map_saver -f mapfilename
+```
+
+Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt.
+
+Mehr Infos unter [wiki.ros.org/map_server](http://wiki.ros.org/map_server#YAML_format)
+
+
+
+## ToDos
+Transformations in rviz visualisieren

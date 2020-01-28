@@ -120,7 +120,7 @@ Kapitel Entwurf
   * Duckietown
   * self driving golf cart
 * Ros Robotics Buch
-  * <https://megastore.uni-augsburg.de/file/a902559c1a1435b248311676f18daa8f/5dd3b45c/hvqHO0f7nj/9781783554713-ROS_ROBOTICS_PROJECTS.pdf>
+  * <https://megastore.uni-augsburg.de/get/HvEWx82W_l>
 * [Probabilistic Robotics](https://github.com/liulinbo/slam/blob/master/Probabilistic%20Robotics%20_Sebastian%20Thrun%20et%20al..pdf)
 * <http://wiki.ros.org/navigation>
 
