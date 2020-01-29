@@ -9,12 +9,16 @@ from geometry_msgs.msg import Twist
 global maxspeed_factor
 send_bytes = struct.pack('<hh', 0, 0)
 
+# Limits value to +- max
+def limit(value, limit):
+    return min(limit, max(-limit, value))
+
 def callback(message):
     global send_bytes, maxspeed_factor
 
     # Calculate actual velocity from topic message
-    lin_velocity = message.linear.x * 100 * maxspeed_factor
-    ang_velocity = message.angular.z * 100 * maxspeed_factor
+    lin_velocity = limit(message.linear.x * 100 * maxspeed_factor, 100*maxspeed_factor)
+    ang_velocity = limit(message.angular.z * 100 * maxspeed_factor, 100*maxspeed_factor)
 
     # Generate bytes for motor: little endian, as short integer (h) -> 4 bytes
     send_bytes=(struct.pack("<hh", ang_velocity , lin_velocity))
