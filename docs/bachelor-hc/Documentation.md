@@ -208,11 +208,13 @@ Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
 
 ### Motor LIDAR stoppen
-Es ist möglich den LIDAR manuell zu stoppen, so dass er sich nicht mehr dreht:
+Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht:
+
 ```
 rosservice call /stop_motor
 ```
 Genauso kann dieser auch wieder gestartet:
+
 ```
 rosservice call /start_motor
 ```
