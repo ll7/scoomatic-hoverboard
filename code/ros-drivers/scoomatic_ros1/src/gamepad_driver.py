@@ -21,6 +21,12 @@
 #    ABS_Z (0..1023) = RT = Reverse Speed
 #    ABS_Y = (-32768.32767) = LStick lr = Lenken
 #
+# Key Mapping of EasySMX 2.4Ghz Controller
+#   Limitation of Buttons:
+#   Maximum ABS_RZ / ABS_Z : 255
+#   Maximum ABS_X: 32767
+#   Minimum ABS_X: -32767
+#
 
 import rospy
 import threading
@@ -52,10 +58,6 @@ def handle_game_controller():
 
     for event in events:
         # Configuration for EasySMX 2.4Ghz Controller
-        ## Limitation of Buttons:
-        ## Maximum ABS_RZ / ABS_Z : 255
-        ## Maximum ABS_X: 32767
-        ## Minimum ABS_X: -32767
         if event.code == 'BTN_SOUTH':  # Arm: Must be pressed to drive
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
@@ -99,6 +101,20 @@ def main(args=None):
     rospy.loginfo("Gamepad driver Online!")
     # open serial port
     while not rospy.is_shutdown():
+            # Robot is always facing the x-Axis
+            #
+            #         x
+            #         ↑
+            #         ↑
+            #         ↑
+            #       _____
+            #   ↑ /      \ ↑
+            #   O| Robot |O →→→→ y
+            #    ---------
+            #          ↘
+            #            ↘
+            #              ↘ Z
+
         #  read line from serial port
         if not armed:
             msg.linear.x = 0.0
