@@ -47,7 +47,8 @@ def main(args=None):
 
     # TODO: Calculate velocities, based on motor odometry
     # Motor outputs values in range [0,1000] without unit
-    vx = 0.0 # in m/s
+    # TODO: if speed_l and speed_r are the same => vx
+    vx = 0.0182 # in m/s
     vy = 0.0 # in m/s [is always 0]
     yaw = 0.0 # in rad/s
 

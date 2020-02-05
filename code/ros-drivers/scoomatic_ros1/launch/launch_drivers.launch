@@ -48,5 +48,8 @@
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
     </node>
+    <!-- Odom Publisher -->
+    <!-- <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">-->
+    <!-- </node> -->
 </launch>
 

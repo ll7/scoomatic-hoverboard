@@ -31,6 +31,7 @@
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
+    - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
 
 ## Project Structure
 ### Future
@@ -298,3 +299,6 @@ Standardisierte m/s Geschwindigkeit in Abhängigkeit der v_scoomatic
 Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
 
 => Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
+
+### Drehgeschwindigkeit des Scoomatics
+Die Breite des Scoomatics ist, gemessen an jeweils in der Mitte der Reifen, 622mm.
