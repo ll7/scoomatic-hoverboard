@@ -27,7 +27,10 @@
     - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
-  - [Odometrie](#odometrie)
+    - [Odometrie](#odometrie)
+    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
+    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
+    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
 
 ## Project Structure
 ### Future
@@ -221,6 +224,7 @@ rosservice call /start_motor
 ### Scan Modes RPLidar
 
 ![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
+
 Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht ist das Protokoll des RPLidar zu empfehlen: https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en Auf Seite 12 werden die verschiedenen Scan modes erklärt. Für diesen Fall wird **Boost** verwendet.
 
 ### Navigation & Localization Stack
@@ -242,6 +246,7 @@ Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Ra
 1. Karte erstellen
    * SLAM
    -[x] Dann mit map_server Karte speichern
+   * odometrie bereitstellen
 2. Lokalisierung mit AMCL
    * 2D Pose estimation in rviz
    * an verschiedenen position versuchen
@@ -262,7 +267,34 @@ Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* p
 
 Mehr Infos unter [wiki.ros.org/map_server](http://wiki.ros.org/map_server#YAML_format)
 
-## Odometrie
+### Odometrie
 Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
 
 Zudem sind die beiden Motoren unterschiedlich schnell bei gleichen Eingabegrößen.
+
+Bei voller Geschwindigkeit von 996 ist die tatsächliche geschwindigkeit 987
+
+### SLAM fortführen / Karte nachträglich verbessern
+Das ist nicht möglicht. Weder HectorSLAM noch Gmapping haben eine Möglichkeit dafür, eine gestoppte und erstellte Karte forzuführen.
+
+Mehr Infos: https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721
+
+### Unterschiedliche Geschwindigkeiten Räder
+Aufgrund der pneumatischen Reifen kann durch den unterschiedlichen Druck in linker und rechtem Reifen bei theoretisch gerader Fahrt eine Kurve gefahren werden.
+
+Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von ca. 250mm.
+
+### Geschwindigkeit des Scoomatics
+22 U/10sec bei 199,2 v_scoomatic_eingabe und bei 35 PSI ≈ 2,41 bar Reifenluftdruck
+199,2 v_scoomatic in der eingabe entspricht 190 gemessene geschwindigkeit am scoomatic
+
+Umfang [cm] = 2 * Pi * 25cm Radius = 157,1cm
+
+=> Bei 10sec : 157,1cm * 22 = 3456cm / 10sec
+=> m/s: 3,456 m/s bei 190 v_scoomatic
+
+Standardisierte m/s Geschwindigkeit in Abhängigkeit der v_scoomatic
+
+Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
+
+=> Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
