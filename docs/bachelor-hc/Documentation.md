@@ -27,7 +27,7 @@
     - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
-  - [ToDos](#todos-1)
+  - [Odometrie](#odometrie)
 
 ## Project Structure
 ### Future
@@ -262,7 +262,7 @@ Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* p
 
 Mehr Infos unter [wiki.ros.org/map_server](http://wiki.ros.org/map_server#YAML_format)
 
+## Odometrie
+Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
 
-
-## ToDos
-Transformations in rviz visualisieren
+Zudem sind die beiden Motoren unterschiedlich schnell bei gleichen Eingabegrößen.
