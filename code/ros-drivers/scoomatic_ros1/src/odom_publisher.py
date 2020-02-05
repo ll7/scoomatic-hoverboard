@@ -45,7 +45,8 @@ def main(args=None):
     y = 0.0 # in m
     rotation_z = 0.0 # in rad
 
-    # Set inital velocities
+    # TODO: Calculate velocities, based on motor odometry
+    # Motor outputs values in range [0,1000] without unit
     vx = 0.0 # in m/s
     vy = 0.0 # in m/s [is always 0]
     yaw = 0.0 # in rad/s
@@ -61,10 +62,43 @@ def main(args=None):
 
         # Compute odometry via pseudo integration
         dt = (current_time - last_time).to_sec()
+        delta_x = (vx * cos(th) - vy * sin(th)) * dt
+        delta_y = (vx * sin(th) + vy * cos(th)) * dt
+        delta_th = vth * dt
 
+        x += delta_x
+        y += delta_y
+        th += delta_th
 
+        # since all odometry is 6DOF we'll need a quaternion created from yaw
+        # create quaternion from euler angle
+        odom_quat = tf.transformations.quaternion_from_euler(0, 0, th)
 
+        # publish transformation to tf
+        odom_broadcaster.sendTransform(
+            (x, y, 0.),
+            odom_quat,
+            current_time,
+            "base_link",
+            "odom"
+        )
 
+        # Build message for ROS
+        odom = Odometry()
+        odom.header.stamp = current_time
+        odom.header.frame_id = "odom"
+
+        # Set position (pose)
+        odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*odom_quat))
+
+        # Set Velocity
+        odom.child_frame_id= "base_link"
+        odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0,0, vth))
+
+        # publish message to ROS
+        node_publisher = publish(odom)
+
+        last_time = current_time
         rate.sleep()
 
     rospy.spin()
