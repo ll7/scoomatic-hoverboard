@@ -5,13 +5,16 @@ import tf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
-def call_speed_l(message):
+speed_l, speed_r
 
+def call_speed_l(message):
+    global speed_l = message
 
 def call_speed_r(message):
-    
+    global speed_r = message
 
 def main(args=None):
+    global speed_l, speed_r
     # Start Node
     rospy.init_node('odom', anonymous=True)
     node_name = rospy.get_name()
@@ -43,14 +46,17 @@ def main(args=None):
     # Set position of robot to origin
     x = 0.0 # in m
     y = 0.0 # in m
-    rotation_z = 0.0 # in rad
+    th = 0.0 # in rad
+    l = 0.622 # width of scoomatic in m
 
     # TODO: Calculate velocities, based on motor odometry
     # Motor outputs values in range [0,1000] without unit
     # TODO: if speed_l and speed_r are the same => vx
-    vx = 0.0182 # in m/s
+    v_l = 0.0182 * speed_l # in m/s
+    v_r = 0.0182 * speed_r # in m/s
+    vx = (v_r +v_l) / 2
     vy = 0.0 # in m/s [is always 0]
-    yaw = 0.0 # in rad/s
+    vth = (v_r - v_l) / l # in rad/s
 
 
     current_time = rospy.Time.now()
