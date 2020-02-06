@@ -62,7 +62,7 @@ def main(args=None):
     current_time = rospy.Time.now()
     last_time = rospy.Time.now()
 
-    rate = rospy.Rate(1.0)
+    rate = rospy.Rate(2.0)
 
     while note rospy.is_shutdown():
         current_time = rospy.Time.now()

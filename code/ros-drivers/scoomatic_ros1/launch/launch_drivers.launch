@@ -49,7 +49,7 @@
         <param name="baudrate" type="str" value="115200"/>
     </node>
     <!-- Odom Publisher -->
-    <!-- <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">-->
-    <!-- </node> -->
+    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
+    </node>
 </launch>
 
