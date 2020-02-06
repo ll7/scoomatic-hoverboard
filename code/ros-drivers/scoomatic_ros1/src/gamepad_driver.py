@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
 
 # Gamepad Driver
 # Author: Martin Schoerner, changed for ROS1 from Henri Chilla
