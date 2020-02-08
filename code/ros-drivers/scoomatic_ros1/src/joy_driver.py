@@ -9,14 +9,12 @@
 # coded in ascii with
 # Publishes to:
 #   /$topic_vel: Joystick Position as geometry_msgs/Twist
-#   /$topic_btn: Butotn Pressed (True) or not Pressed (False)
-#                   as std_msgs/Bool
+#   /$topic_btn: Butotn Pressed (True) or not Pressed (False) as std_msgs/Bool
 # Params:
 #   port: Address of serial Port (e.g. /dev/ttyUSB0)
 #   topic_vel: Topicname for publishing joystick values
 #   topic_btn: Topicname for publishing button values
-#   rate: update rate for main loop. Should be same as
-#           in Arduino sketch (20Hz)
+#   rate: update rate for main loop. Should be same as in Arduino sketch (20Hz)
 
 import serial
 import params

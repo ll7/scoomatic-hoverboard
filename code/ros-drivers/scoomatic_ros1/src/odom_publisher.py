@@ -1,17 +1,35 @@
 #!/usr/bin/env python
+
+# Author: Henri Chilla
+# Based on code: from https://gist.github.com/atotto/f2754f75bedb6ea56e3e0264ec405dcf
+# Description: Calculates the correct odometry in SI-units, using the internal odometry of scoomatic
+
+# Subscribres to:
+#   /speed_l: Speed on left side
+#   /speed_r: Speed on right side
+# Publishes to:
+#   /odom: 
+# TF Transforms:
+#   /odom: from /base_link to /odom
+# Params: none
+
 import rospy
 import params
 import tf
+from math import cos, sin
+from std_msgs.msg import Int32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
 speed_l, speed_r
 
 def call_speed_l(message):
-    global speed_l = message
+    global speed_l
+    speed_l = message
 
 def call_speed_r(message):
-    global speed_r = message
+    global speed_r 
+    speed_r = message
 
 def main(args=None):
     global speed_l, speed_r
@@ -62,9 +80,9 @@ def main(args=None):
     current_time = rospy.Time.now()
     last_time = rospy.Time.now()
 
-    rate = rospy.Rate(2.0)
+    rate = rospy.Rate(3) # => Hz
 
-    while note rospy.is_shutdown():
+    while not rospy.is_shutdown():
         current_time = rospy.Time.now()
 
         # Compute odometry via pseudo integration
@@ -99,7 +117,7 @@ def main(args=None):
         odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*odom_quat))
 
         # Set Velocity
-        odom.child_frame_id= "base_link"
+        odom.child_frame_id = "base_link"
         odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0,0, vth))
 
         # publish message to ROS

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+"""Publishs motordriver debug/diagnositic data from UART via ROS messages"""
+
 # Scoomatic Sonar Driver
 # Author: Martin Schoerner
-# Reads motordriver debug data via uart
 # Debug packages are being received in the following form
 # 1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
 # 8 Key value pairs are being transmitted.
@@ -12,7 +13,7 @@
 # 3: output speed R 0-1000
 # 4: output speed L 0-1000
 # 5: battery voltage calibration
-# 6: battery voltage * 100
+# 6: battery voltage * 100 in V
 # 7: for board temperature calibration
 # 8: board temperature
 #
@@ -35,7 +36,7 @@ import params
 from std_msgs.msg import Int32, Float32
 
 def read_serial(ser):
-    # read serial line
+    """ Read serial input and convert data into list"""
     data = ser.readline()
 
     # parse
@@ -44,8 +45,8 @@ def read_serial(ser):
     except UnicodeDecodeError:
         pass
     newdata = list()
-    for s in data:  # Convert string values to integer
-        key, value = s.split(":")
+    for string in data: # Convert string into int
+        key, value = string.split(":")
         key = int(key) - 1
         value = int(value)
         newdata.append(value)
@@ -57,14 +58,15 @@ def read_serial(ser):
     return data
 
 
-def main(args=None):
+def main():
+    """""""
     # Start node
     rospy.init_node('motor_diag', anonymous=True)
     node_name = rospy.get_name()
 
-    # Read parameter
+    # Read parameter from motor/mainboard
     port = params.get_param(node_name+'/port', '/dev/motor_diag')
-    rate = params.get_param(node_name+'/rate', 5) # Hertz
+    rate = params.get_param(node_name+'/rate', 5) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
@@ -122,7 +124,6 @@ def main(args=None):
             p8.publish(m8)
 
             rosrate.sleep()
-            rosrate.sleep
 
 if __name__ == '__main__':
     try:

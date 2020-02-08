@@ -3,7 +3,6 @@
 
 # Gamepad Driver
 # Author: Martin Schoerner, changed for ROS1 from Henri Chilla
-# Last Change: 2019-07-11
 # Reads input from Gamepad and publishes as
 # geometry_msgs/Twist
 # Speed is stored in linear.x
@@ -20,17 +19,15 @@
 #    ABS_RZ (0..1023) = RT = Speed
 #
 #    ABS_Z (0..1023) = RT = Reverse Speed
-#    ABS_Y = (-32768.32767) = LStick lr = Lenken
+#    ABS_Y = (-32768.32767) = LStick lr = Steer
 #
 # Key Mapping of EasySMX 2.4Ghz Controller
-#   Limitation of Buttons:
-#   Maximum ABS_RZ / ABS_Z : 255
-#   Maximum ABS_X: 32767
-#   Minimum ABS_X: -32767
-#
+#   BTN_SOUTH (0,1) = A = Arm
+#   ABS_RZ (0..255) = RT = Speed
+#   ABS_X = (-32768.32767) = LStick lr = Steer
 
-import rospy
 import threading
+import rospy
 import params
 from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
