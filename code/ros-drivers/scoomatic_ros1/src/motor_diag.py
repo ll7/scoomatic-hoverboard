@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+"""Publishs motordriver debug/diagnositic data from UART via ROS messages"""
+
 # Scoomatic Sonar Driver
 # Author: Martin Schoerner
-# Reads motordriver debug data via uart
 # Debug packages are being received in the following form
 # 1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
 # 8 Key value pairs are being transmitted.
@@ -12,7 +13,7 @@
 # 3: output speed R 0-1000
 # 4: output speed L 0-1000
 # 5: battery voltage calibration
-# 6: battery voltage * 100
+# 6: battery voltage * 100 in V
 # 7: for board temperature calibration
 # 8: board temperature
 #
@@ -31,40 +32,43 @@
 
 import serial
 import rospy
-import params
+from params import get_param
 from std_msgs.msg import Int32, Float32
 
 def read_serial(ser):
-    # read serial line
+    """ Read serial input and convert data into list"""
     data = ser.readline()
 
-    # parse
+    # parse serial data
     try:
         data = data.decode('ascii').replace("\r\n", "").split(' ')
     except UnicodeDecodeError:
         pass
+
+    # Convert string into int
     newdata = list()
-    for s in data:  # Convert string values to integer
-        key, value = s.split(":")
+    for string in data:
+        key, value = string.split(":")
         key = int(key) - 1
         value = int(value)
         newdata.append(value)
     data = newdata
 
-    if (len(data) is not 8):
+    if len(data) is not 8:
         rospy.logwarn("Corrupt Package from ESC (LEN). Have you used the right port?")
         raise Exception()
     return data
 
 
-def main(args=None):
+def main():
+    """"Init publisher, paramter, read serial and publish debug data via ROS messages"""
     # Start node
     rospy.init_node('motor_diag', anonymous=True)
     node_name = rospy.get_name()
 
-    # Read parameter
-    port = params.get_param(node_name+'/port', '/dev/motor_diag')
-    rate = params.get_param(node_name+'/rate', 5) # Hertz
+    # Read parameter from motor/mainboard
+    port = get_param(node_name+'/port', '/dev/motor_diag')
+    rate = get_param(node_name+'/rate', 5) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
@@ -73,8 +77,8 @@ def main(args=None):
     p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=10)
     p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=10)
     p5 = rospy.Publisher(node_name+'/battery_voltage_calibration_value', Int32, queue_size=10)
-    p6 = rospy.Publisher(node_name+'/battery_voltage',Float32, queue_size=10)
-    p7 = rospy.Publisher(node_name+'/temperature_calibration_value',Int32, queue_size=10)
+    p6 = rospy.Publisher(node_name+'/battery_voltage', Float32, queue_size=10)
+    p7 = rospy.Publisher(node_name+'/temperature_calibration_value', Int32, queue_size=10)
     p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=10)
 
     # Create messages for the sensor values
@@ -87,11 +91,9 @@ def main(args=None):
     m7 = Int32()
     m8 = Int32()
 
-    rospy.loginfo("Using Serial Port " + str(port))
-
-    # open serial port  
+    # open serial port
     with serial.Serial(port, 115200) as ser:
-        rospy.loginfo("Serial Port opened with 115200 Baud")
+        rospy.loginfo("Serial Port opened with 115200 Baud using port "+str(port))
         while not rospy.is_shutdown():
             #  read line from serial port
             data = None
@@ -99,9 +101,9 @@ def main(args=None):
                 data = read_serial(ser)
             except:
                 rospy.logwarn("Serial package Invalid. Did you set the right port?")
-                rosrate.sleep()  
+                rosrate.sleep()
                 continue
-            # update message
+            # set message
             m1.data = data[0]
             m2.data = data[1]
             m3.data = data[2]
@@ -122,7 +124,6 @@ def main(args=None):
             p8.publish(m8)
 
             rosrate.sleep()
-            rosrate.sleep
 
 if __name__ == '__main__':
     try:
