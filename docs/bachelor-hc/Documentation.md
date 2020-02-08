@@ -21,13 +21,23 @@
   - [Good to know](#good-to-know)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
-    - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
-    - [Motor LIDAR stoppen](#motor-lidar-stoppen)
-    - [Rviz einrichten](#rviz-einrichten)
+    - [Hector SLAM](#hector-slam)
+      - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
+      - [Performance Issues](#performance-issues)
+    - [BAG Files](#bag-files)
+    - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
+    - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
+    - [Odometrie](#odometrie)
+    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
+    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
+    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
+    - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
 
 ## Project Structure
 ### Future
+
 **ROS Packages**
+
 * Provide Sensordata
   * Motor
   * LIDAR
@@ -61,6 +71,7 @@
 Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame festgelegt.
 
 ### Backlog
+
 - udev regeln
 - ros1 workspace
 - ros2 workspace
@@ -72,6 +83,7 @@ Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Robot
 ## Fixes
 ### Network configuration
 If ros is failing finding the correct host through hostname, just add the correct IP (localhost and local IP) in ```/etc/hosts``` like:
+
 ```
 127.0.0.1 localhost
 192.168.140.16  ubuntu
@@ -87,9 +99,9 @@ Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wik
 
 Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu```. In der Regel wird von DHCP. IP 192.168.140.16 vergeben.
 
-### udev Regeln 
+### udev Regeln
 
-Liegen unter ```/etc/udev/rules.d/10-local.rules```. Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
+Liegen unter ```/etc/udev/rules.d/10-local.rules```. Und im repository unter ```code/configuration/10-local.rules```. Die Datei ist per Symlink verknüpft.  Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
 
 Sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
@@ -112,6 +124,7 @@ Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how
 ```
 ros2 lifecycle set <nodename> shutdown
 ```
+
 Allerdings hat in diesem Projekt nicht funktioniert.
 Schlussendlich bleibt nur die Möglichkeit, den Prozess zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
 
@@ -132,9 +145,9 @@ Paramter lassen sich auch über das Kommandozeilenprogramm ```rosparam list``` a
 ### Motoransteuerung
 Die Serielle Schnittstelle zur Ansteuerung der Motoren verwendet ein eigenes Protokoll, welches sich aus vier Bytes zusammsetzt. Das Format ist wie folgt: ```b'\xUU\xUU\xUU\xUU'```, wobei U für ein Hexadezimale Zahl steht. 
 
-Im Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` oder ```b'\xfb\xff\xf8\xff'```
+Für Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` kann aber auch ```b'\xfb\xff\xf8\xff'``` entsprechen.
 
-```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
+Es können manuell steuersignale gesendet werden:```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
 
 ### Hector SLAM
 Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-slam ```.  Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
@@ -144,6 +157,7 @@ Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenstä
 
 #### Performance Issues
 Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern: Es ist möglich:
+
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
@@ -156,7 +170,6 @@ rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
 ```
 
 Also im Fall von SLAM: 
-
 ```
 rosbag record -O laserdata /scan 
 ```
@@ -165,8 +178,8 @@ Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt w
 ```
 rosbag play -r 2 laserdata.bag
 ```
-Mit -r kann die Abspielrate verändert werden.
 
+Mit -r kann die Abspielrate verändert werden.
 Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
 ### "Fixed Frame [map] does not exist" in rviz
@@ -198,16 +211,94 @@ Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
 
 ### Motor LIDAR stoppen
-Es ist möglich den LIDAR manuell zu stoppen, so dass er sich nicht mehr dreht:
+Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht:
+
 ```
 rosservice call /stop_motor
 ```
+Genauso kann dieser auch wieder gestartet:
 
-### Rviz einrichten
-Fehler ```No transform from [map] to [base_link]```
+```
+rosservice call /start_motor
+```
 
-Fehler ```Fixed Frame [map] does not exist```
+### Scan Modes RPLidar
 
-Grund: Upgrade der hector slam  ros packages
+![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
 
-ToDos: Eigenes ROS Package slam erstellen
+Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht ist das Protokoll des RPLidar zu empfehlen: https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en Auf Seite 12 werden die verschiedenen Scan modes erklärt. Für diesen Fall wird **Boost** verwendet.
+
+### Navigation & Localization Stack
+  Map Server
+      |
+      | → provides (nav_msgs/OccupancyGrid)
+      ↓
+  Localization
+      |
+      | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
+      ↓
+  Navigation
+      |
+      | 
+      ↓
+  Moves Robot
+
+#### Steps
+1. Karte erstellen
+   * SLAM
+   -[x] Dann mit map_server Karte speichern
+   * odometrie bereitstellen
+2. Lokalisierung mit AMCL
+   * 2D Pose estimation in rviz
+   * an verschiedenen position versuchen
+
+
+## static_transform_publisher
+Sind dafür da Statische Koordinaten Verhältnisse zwischen tf frames regelmäßig zu publishen
+
+## Map speichern und bereitstellen
+
+Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei im map_server package erstellt.
+
+```
+rosrun map_server map_saver -f mapfilename
+```
+
+Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt.
+
+Mehr Infos unter [wiki.ros.org/map_server](http://wiki.ros.org/map_server#YAML_format)
+
+### Odometrie
+Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
+
+Zudem sind die beiden Motoren unterschiedlich schnell bei gleichen Eingabegrößen.
+
+Bei voller Geschwindigkeit von 996 ist die tatsächliche geschwindigkeit 987
+
+### SLAM fortführen / Karte nachträglich verbessern
+Das ist nicht möglicht. Weder HectorSLAM noch Gmapping haben eine Möglichkeit dafür, eine gestoppte und erstellte Karte forzuführen.
+
+Mehr Infos: https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721
+
+### Unterschiedliche Geschwindigkeiten Räder
+Aufgrund der pneumatischen Reifen kann durch den unterschiedlichen Druck in linker und rechtem Reifen bei theoretisch gerader Fahrt eine Kurve gefahren werden.
+
+Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von ca. 250mm.
+
+### Geschwindigkeit des Scoomatics
+22 U/10sec bei 199,2 v_scoomatic_eingabe und bei 35 PSI ≈ 2,41 bar Reifenluftdruck
+199,2 v_scoomatic in der eingabe entspricht 190 gemessene geschwindigkeit am scoomatic
+
+Umfang [cm] = 2 * Pi * 25cm Radius = 157,1cm
+
+=> Bei 10sec : 157,1cm * 22 = 3456cm / 10sec
+=> m/s: 3,456 m/s bei 190 v_scoomatic
+
+Standardisierte m/s Geschwindigkeit in Abhängigkeit der v_scoomatic
+
+Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
+
+=> Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
+
+### Drehgeschwindigkeit des Scoomatics
+Die Breite des Scoomatics ist, gemessen an jeweils in der Mitte der Reifen, 622mm.

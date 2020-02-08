@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
 
 # Gamepad Driver
 # Author: Martin Schoerner, changed for ROS1 from Henri Chilla
-# Last Change: 2019-07-11
 # Reads input from Gamepad and publishes as
 # geometry_msgs/Twist
 # Speed is stored in linear.x
@@ -19,13 +19,16 @@
 #    ABS_RZ (0..1023) = RT = Speed
 #
 #    ABS_Z (0..1023) = RT = Reverse Speed
-#    ABS_Y = (-32768.32767) = LStick lr = Lenken
+#    ABS_Y = (-32768.32767) = LStick lr = Steer
 #
+# Key Mapping of EasySMX 2.4Ghz Controller
+#   BTN_SOUTH (0,1) = A = Arm
+#   ABS_RZ (0..255) = RT = Speed
+#   ABS_X = (-32768.32767) = LStick lr = Steer
 
-import rospy
 import threading
-import params
-from time import sleep
+import rospy
+from params import get_param
 from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
 
@@ -35,29 +38,26 @@ speed = 0.0  # +- 1
 thread_active = True
 
 def handle_game_controller():
+    """"Get button events and set speed & steering"""
     global armed, direction, speed
-    
+
     events = None
     try:
         events = get_gamepad()
     except Exception as e:
-        # Bei Abbrechen der Verbindung Abbremsen
+        # On conection
         armed = False
         speed = 0
         direction = 0
         # Fehler ausgeben
         print(e)
         rospy.logwarn("Gamepad disconnected!")
-        sleep(5)
+        rospy.sleep(5.)
         return
 
     for event in events:
         # Configuration for EasySMX 2.4Ghz Controller
-        ## Limitation of Buttons:
-        ## Maximum ABS_RZ / ABS_Z : 255
-        ## Maximum ABS_X: 32767
-        ## Minimum ABS_X: -32767
-        if event.code == 'BTN_SOUTH':  # Arm: Muss gedrückt werden, damit fährt.
+        if event.code == 'BTN_SOUTH':  # Arm: Must be pressed to drive
             armed = event.state == 1
         if event.code == 'ABS_RZ':  # Forward
             speed = event.state / 256.0 # Normieren auf -+ 1.0
@@ -65,33 +65,33 @@ def handle_game_controller():
             speed = -(event.state / 256.0) # Normieren auf -+ 1.0
         if event.code == 'ABS_X':  # Left / Right
             direction = event.state / 32768.0  # Normieren auf -+ 1.0
-            
+
 def gamepad_thread():
-    # Gamepad suchen und ausgeben
+    """Search for gamepad"""
     for device in devices:
             rospy.loginfo("Found Device %s"%device)
     while thread_active:
         handle_game_controller()
 
-def main(args=None):
+def main():
+    """"Publish ROS Twist message for velocity"""
     global thread_active
 
     # Start node
     rospy.init_node('gamepad_driver', anonymous=True)
     node_name = rospy.get_name()
 
-    # Read parameters
-    gain_lin = float(params.get_param(node_name+'/gain_lin',1.0))
-    gain_ang = float(params.get_param(node_name+'/gain_ang',1.0))
-    topic = params.get_param(node_name+'/topic', '/gamepad')
-    rate = params.get_param(node_name+'/rate', 20)
+    # Read parameters from launchfile
+    gain_lin = float(get_param(node_name+'/gain_lin', 1.0))
+    gain_ang = float(get_param(node_name+'/gain_ang', 1.0))
+    topic = get_param(node_name+'/topic', '/gamepad')
+    rate = get_param(node_name+'/rate', 20)
+    rosrate = rospy.Rate(rate)
 
     # Create publisher
     publisher = rospy.Publisher(topic, Twist, queue_size=10)
-
     # Create  message for the sensor values
     msg = Twist()
-
     # Start GameController update Thread
     t1 = threading.Thread(target=gamepad_thread)
     t1.start()
@@ -99,18 +99,32 @@ def main(args=None):
     rospy.loginfo("Gamepad driver Online!")
     # open serial port
     while not rospy.is_shutdown():
-        #  read line from serial port
+        # Robot is always facing the x-Axis
+        #
+        #         x
+        #         ↑
+        #         ↑
+        #         ↑
+        #       _____
+        #   ↑ /      \ ↑
+        #   O| Robot |O →→→→ y
+        #    ---------
+        #          ↘
+        #            ↘
+        #              ↘ Z
+
+        # For security reasons: stop, if not armed anymore or connection lost
         if not armed:
             msg.linear.x = 0.0
             msg.angular.z = 0.0
         else:
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
-            
+
+        msg.stamp = rospy.Time.now()
         # publish message
         publisher.publish(msg)
-
-        sleep(1 / rate)  # seconds
+        rosrate.sleep()
 
     thread_active = False
 
@@ -119,4 +133,3 @@ if __name__ == '__main__':
         main()
     except rospy.ROSInterruptException:
         pass
-
