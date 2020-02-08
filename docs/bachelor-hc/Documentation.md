@@ -2,6 +2,7 @@
 Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung des Scoomatics behilflich sein.
 
 - [Dokumentation](#dokumentation)
+  - [Zukünftige Struktur dieses Dokuments](#zuk%c3%bcnftige-struktur-dieses-dokuments)
   - [ROS Package-Structure](#ros-package-structure)
   - [Project/Time-Management](#projecttime-management)
     - [ToDos](#todos)
@@ -33,6 +34,27 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
+
+## Zukünftige Struktur dieses Dokuments
+Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der folgenden Struktur:
+
+* ROS
+  * Packageübersicht
+  * Node Übersicht
+  * Topic übersicht
+  * Paramter Einstellungen
+* TF
+  * Transformationen
+* Hardware
+  * Übersicht
+  * Zusammenspiel
+* Konfigurationsmöglichkeiten
+  * Remote PC Konfiguration
+  * Scoomatic RPi Konfiguration
+  * Software starten/stoppen usw.
+  * Befehle für benutzung
+* Tips&Tricks
+* Weitere Erklärungen
 
 ## ROS Package-Structure
 
