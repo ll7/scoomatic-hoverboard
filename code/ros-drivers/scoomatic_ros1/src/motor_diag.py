@@ -32,41 +32,43 @@
 
 import serial
 import rospy
-import params
+from params import get_param
 from std_msgs.msg import Int32, Float32
 
 def read_serial(ser):
     """ Read serial input and convert data into list"""
     data = ser.readline()
 
-    # parse
+    # parse serial data
     try:
         data = data.decode('ascii').replace("\r\n", "").split(' ')
     except UnicodeDecodeError:
         pass
+
+    # Convert string into int
     newdata = list()
-    for string in data: # Convert string into int
+    for string in data:
         key, value = string.split(":")
         key = int(key) - 1
         value = int(value)
         newdata.append(value)
     data = newdata
 
-    if (len(data) is not 8):
+    if len(data) is not 8:
         rospy.logwarn("Corrupt Package from ESC (LEN). Have you used the right port?")
         raise Exception()
     return data
 
 
 def main():
-    """""""
+    """"Init publisher, paramter, read serial and publish debug data via ROS messages"""
     # Start node
     rospy.init_node('motor_diag', anonymous=True)
     node_name = rospy.get_name()
 
     # Read parameter from motor/mainboard
-    port = params.get_param(node_name+'/port', '/dev/motor_diag')
-    rate = params.get_param(node_name+'/rate', 5) # in Hertz
+    port = get_param(node_name+'/port', '/dev/motor_diag')
+    rate = get_param(node_name+'/rate', 5) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
@@ -75,8 +77,8 @@ def main():
     p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=10)
     p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=10)
     p5 = rospy.Publisher(node_name+'/battery_voltage_calibration_value', Int32, queue_size=10)
-    p6 = rospy.Publisher(node_name+'/battery_voltage',Float32, queue_size=10)
-    p7 = rospy.Publisher(node_name+'/temperature_calibration_value',Int32, queue_size=10)
+    p6 = rospy.Publisher(node_name+'/battery_voltage', Float32, queue_size=10)
+    p7 = rospy.Publisher(node_name+'/temperature_calibration_value', Int32, queue_size=10)
     p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=10)
 
     # Create messages for the sensor values
@@ -89,11 +91,9 @@ def main():
     m7 = Int32()
     m8 = Int32()
 
-    rospy.loginfo("Using Serial Port " + str(port))
-
-    # open serial port  
+    # open serial port
     with serial.Serial(port, 115200) as ser:
-        rospy.loginfo("Serial Port opened with 115200 Baud")
+        rospy.loginfo("Serial Port opened with 115200 Baud using port "+str(port))
         while not rospy.is_shutdown():
             #  read line from serial port
             data = None
@@ -101,9 +101,9 @@ def main():
                 data = read_serial(ser)
             except:
                 rospy.logwarn("Serial package Invalid. Did you set the right port?")
-                rosrate.sleep()  
+                rosrate.sleep()
                 continue
-            # update message
+            # set message
             m1.data = data[0]
             m2.data = data[1]
             m3.data = data[2]

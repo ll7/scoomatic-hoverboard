@@ -24,6 +24,7 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
 def read_serial(ser):
+    """Read serial data from Joystick & construct list"""
     # read line
     data = ser.readline()
     # parse
@@ -38,7 +39,8 @@ def read_serial(ser):
         rospy.logwarn("Corrupt Package or wrong device selected (%s)" % params.get_param('port', '/dev/joydriver'))
         return [0, 0, 0]
     data.remove("JOY")
-    for s in data:  # Convert string values to integer
+    # Convert string values to integer
+    for s in data: 
         i = int(s)
         newdata.append(i)
     data = newdata
@@ -48,7 +50,8 @@ def read_serial(ser):
     return data
 
 
-def main(args=None):
+def main():
+    """"Publishs Twist messages for motor"""
     # Start node
     rospy.init_node('joy_driver', anonymous=True)
     node_name = rospy.get_name()
@@ -74,12 +77,12 @@ def main(args=None):
         while not rospy.is_shutdown():
             #  read line from serial port
             [vel, rot, btn_pressed] = read_serial(ser)
-            #print("vel: %s, rot %s"%(vel,rot))
+
             # Create pointcloud message for the sensor values
             msg_vel = Twist()
-            #    msg.header.stamp = rclpy.time() # Not implemented yet
             msg_vel.linear.x = -float((vel / 512.0) - 1.0) * 0.5
             msg_vel.angular.z = -float((rot / 512.0) - 1.0) * 0.5
+            msg_vel.stamp = rospy.Time.now()
 
             msg_btn = Bool()
             msg_btn.data = bool(btn_pressed)
@@ -87,7 +90,7 @@ def main(args=None):
             # publish messages
             publisher_vel.publish(msg_vel)
             publisher_btn.publish(msg_btn)
-            rosrate.sleep() 
+            rosrate.sleep()
 
 if __name__ == '__main__':
     try:
