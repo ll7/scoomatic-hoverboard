@@ -1,10 +1,12 @@
 # Scoomatic Hoverboard
 
-Übersicht über das Repository.
+* In [cad/](cad/) sind 3D Modelle des Scoomatics, sowie für Halterungen enthalten
+* In [code/](code/) ist insbesondere der gesamte Code von ROS sowie Hoverboard Firmware und Arduino zu finden
+* In [docs/](docs/) sind die Arbeiten bzw. die Dokumentationen der studentischen Arbeiten zufinden
 
 ## Martin Schörner @schoerma
 
-Bearbeitungszeitraum: 2018-12 bis 2019-05
+*Bearbeitungszeitraum: 2018-12 bis 2019-05
 
 Branch: master
 
