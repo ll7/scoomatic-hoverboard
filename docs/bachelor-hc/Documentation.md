@@ -1,7 +1,8 @@
 # Dokumentation
+Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung des Scoomatics behilflich sein.
+
 - [Dokumentation](#dokumentation)
-  - [Project Structure](#project-structure)
-    - [Future](#future)
+  - [ROS Package-Structure](#ros-package-structure)
   - [Project/Time-Management](#projecttime-management)
     - [ToDos](#todos)
   - [Configuration](#configuration)
@@ -33,19 +34,20 @@
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
 
-## Project Structure
-### Future
+## ROS Package-Structure
 
-**ROS Packages**
-
-* Provide Sensordata
-  * Motor
+* Sensordata & Input Publishing
+  * Motor diagnostics/debug
   * LIDAR
   * Ultrasonic
-  * ...?
+  * IMU
+  * Joystick
+  * Gamepad
 * Provide Processing
   * SLAM
-  * BAG Processing (?)
+  * Localisation
+  * Navigation
+  * Obstacle Avoidance
 
 ## Project/Time-Management
 ### ToDos

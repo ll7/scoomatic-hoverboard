@@ -1,4 +1,7 @@
 # Bachelorarbeit Henri Chilla
+Dies ist eine Übersicht über die formellen Eigenschaften der Bachelor-Arbeit.
+
+Für die Dokumentation der Arbeit siehe [Dokumentation](Documentation.md)
 
 ## 1. Rahmenbedingungen
 
@@ -9,8 +12,6 @@
 ## 2. Ziel
 
 ### 2.1. Titel und offizielle Themenbeschreibung
-
-Vorschlag (gerne in Frage stellen):
 
 **Titel**: Entwurf einer Hindernisserkennung und -vermeidung für die Mikromobilitätsplattform Scoomatic
 
@@ -30,15 +31,15 @@ In dieser Arbeit soll:
 
 ### 2.2. BA Ablauf
 
-Einarbeitung:
+#### Einarbeitung:
 
 * Martins Projekt ans Laufen bekommen.
 
-Engineering:
+#### Engineering
 
 * ROS 1 Portierung
 
-Engineering + Recherche
+#### Engineering + Recherche
 
 * [SLAM](https://de.wikipedia.org/wiki/Simultaneous_Localization_and_Mapping)
 * Wegpunkte abfahren
@@ -46,44 +47,41 @@ Engineering + Recherche
   * Anhalten
   * Umfahren
 
-Validierung:
+#### Validierung
 
 * Testszenario Flur
 
-Bonusziele:
-
-* Gazebo (erstmal nicht beachtent, macht vorläufig keinen Sinn)
-
 ### 2.3. Erweiterte Ziele
 
-ROS:
+#### ROS:
 
 * Ein Paket (Sammlung), welches die vorhandene Sensorik in ROS1 bereit stellt.
 * Ein Pakethaufen zur Datenverarbeitung.
 * Möglichst unabhängig voneinander!
 
-Bachelorarbeit:
+#### Bachelorarbeit:
 
 * Recherche
 * Konzeptbeschreibung
 * Vergleich von verschiedenen Algorithmen
 * Auswahl einer Lösung
 
-Bachelor Kolloquium
+#### Bachelor Kolloquium
 
-Git-Doku:
+#### Git-Doku:
 
 * Bedienungsanleitung mit Beispielen
 * Code 1:1 Dokumentieren, an jede Stelle springen und in 5 Minuten verstehen, was da passiert
 
-Projektplan
+#### Projektplan
 
-* OpenProject
+* Via OpenProject
 
 ### 2.4. Intel RealSense
 
 Kamera ist Anfang Dezember gekommen und steht Henri nach Bedarf zur Verfügung. VSLAM; freiwillig nach bedarf.
 
+Infos:
 * <https://www.youtube.com/watch?v=khSrWtB0Xik>
 * <https://www.youtube.com/watch?v=j8OYlSZcqMc>
 * <https://www.youtube.com/watch?v=Qrtz0a7HaQ4>
@@ -97,18 +95,7 @@ Kamera ist Anfang Dezember gekommen und steht Henri nach Bedarf zur Verfügung. 
 * Abgabe: Anfang - Mitte März
 
 ## 4. Bachelorarbeit Kapitel-Entwurf
-Kapitel Entwurf
-* Einleitung
-  * Big Picture erklären (Mikromobilitätsziel)
-* Stand der Technik
-  * Vorstelltung von SLAM Algorithmen
-  * Vergleich der Algorithmen
-  * Basierend auf verfügbaren Sensordaten
-* Algoritmus Funktionsweise
-  * Wie funktioniert der Algoritmus
-  * Welche Daten verwendet der Algorithmus?
-* ...
-* Ausblick und Zusammenfassung
+Siehe LaTeX Dokument
 
 ## 5. Resourcen
 
@@ -126,7 +113,7 @@ Kapitel Entwurf
 
 ## 6. Risiken
 
-<https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard/wiki/risiken>
+Siehe <https://openproject.informatik.uni-augsburg.de/openproject/projects/scoomatic-hoverboard/wiki/risiken>
 
 ## 7. Projektmanagement
 
