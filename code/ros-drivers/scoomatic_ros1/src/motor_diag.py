@@ -68,18 +68,18 @@ def main():
 
     # Read parameter from motor/mainboard
     port = get_param(node_name+'/port', '/dev/motor_diag')
-    rate = get_param(node_name+'/rate', 5) # in Hertz
+    rate = get_param(node_name+'/rate', 40) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
     p1 = rospy.Publisher(node_name+'/adc1', Int32, queue_size=10)
     p2 = rospy.Publisher(node_name+'/adc2', Int32, queue_size=10)
-    p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=10)
-    p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=10)
+    p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=20)
+    p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=20)
     p5 = rospy.Publisher(node_name+'/battery_voltage_calibration_value', Int32, queue_size=10)
     p6 = rospy.Publisher(node_name+'/battery_voltage', Float32, queue_size=10)
     p7 = rospy.Publisher(node_name+'/temperature_calibration_value', Int32, queue_size=10)
-    p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=10)
+    p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=20)
 
     # Create messages for the sensor values
     m1 = Int32()

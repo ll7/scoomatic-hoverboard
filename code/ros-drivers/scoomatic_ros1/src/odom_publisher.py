@@ -29,13 +29,13 @@ last_time = 0
 def call_speed_l(message):
     """Only saves speed_l from Publisher"""
     global speed_l
-    speed_l = message
+    speed_l = (-message.data) # speed is negative
 
 
 def call_speed_r(message):
     """Only saves speed_r from Publisher"""
     global speed_r
-    speed_r = message
+    speed_r = (-message.data) # speed is negative
 
 def calculate_odometry(v_x, v_y, v_th, x, y, th):
     """Compute odometry via pseudo integration"""
@@ -70,10 +70,10 @@ def build_odom_message(v_x, v_y, v_th, x, y, odom_quat):
     return odom
 
 def main():
-    """"Construct tf Transformation & odom message publishing"""
+    """Construct tf Transformation & odom message publishing"""
     global speed_l, speed_r, current_time, last_time
     # Start Node
-    rospy.init_node('/odom', anonymous=True)
+    rospy.init_node('odom', anonymous=True)
     node_name = rospy.get_name()
     
 
@@ -104,7 +104,7 @@ def main():
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
 
-    rate = rospy.Rate(3) # => Hz
+    rate = rospy.Rate(5) # => Hz
 
     last_time = rospy.Time.now()
     while not rospy.is_shutdown():
