@@ -299,6 +299,8 @@ Zudem sind die beiden Motoren unterschiedlich schnell bei gleichen Eingabegröß
 
 Bei voller Geschwindigkeit von 996 ist die tatsächliche geschwindigkeit 987
 
+Eingabe Parameter ist im Bereich [0..1023]. Ausgabe des Motors ist im Bereich [0..1000].
+
 ### SLAM fortführen / Karte nachträglich verbessern
 Das ist nicht möglicht. Weder HectorSLAM noch Gmapping haben eine Möglichkeit dafür, eine gestoppte und erstellte Karte forzuführen.
 

@@ -82,7 +82,6 @@ def main():
             msg_vel = Twist()
             msg_vel.linear.x = -float((vel / 512.0) - 1.0) * 0.5
             msg_vel.angular.z = -float((rot / 512.0) - 1.0) * 0.5
-            msg_vel.stamp = rospy.Time.now()
 
             msg_btn = Bool()
             msg_btn.data = bool(btn_pressed)

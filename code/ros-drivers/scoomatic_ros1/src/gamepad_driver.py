@@ -121,7 +121,6 @@ def main():
             msg.linear.x = float(speed) * gain_lin
             msg.angular.z = float(direction) * gain_ang
 
-        msg.stamp = rospy.Time.now()
         # publish message
         publisher.publish(msg)
         rosrate.sleep()

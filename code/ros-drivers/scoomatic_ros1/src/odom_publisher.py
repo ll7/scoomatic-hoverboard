@@ -68,10 +68,11 @@ def build_odom_message(v_x, v_y, v_th, x, y, odom_quat):
 
 def main():
     """"Construct tf Transformation & odom message publishing"""
-    global speed_l, speed_r, current_time, last_time
     # Start Node
     rospy.init_node('odom', anonymous=True)
     node_name = rospy.get_name()
+    
+    global speed_l, speed_r, current_time, last_time
 
     # Get speed from topics
     rospy.Subscriber('/speed_l', Int32, call_speed_l, queue_size=20)
@@ -93,7 +94,7 @@ def main():
     #          ↘
     #            ↘
     #              ↘ Z
- 
+
     # Set position of robot to origin
     x = 0.0 # in m
     y = 0.0 # in m
@@ -102,7 +103,6 @@ def main():
 
     # TODO: Calculate velocities, based on motor odometry
     # Motor outputs values in range [0,1000] without unit
-    # TODO: if speed_l and speed_r are the same => v_x
     v_l = 0.0182 * speed_l # in m/s
     v_r = 0.0182 * speed_r # in m/s
     v_x = (v_r +v_l) / 2
