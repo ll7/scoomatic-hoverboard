@@ -21,6 +21,11 @@ from std_msgs.msg import Int32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
+speed_l = 0
+speed_r = 0
+current_time = 0
+last_time = 0
+
 def call_speed_l(message):
     """"Only saves speed_l from Publisher"""
     global speed_l
@@ -31,7 +36,7 @@ def call_speed_r(message):
     global speed_r
     speed_r = message
 
-def calculate_delta_odometry(v_x, v_y, v_th, x, y, th):
+def calculate_odometry(v_x, v_y, v_th, x, y, th):
     """Compute odometry via pseudo integration"""
     global current_time, last_time
 
@@ -98,20 +103,20 @@ def main():
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
 
-    # TODO: Calculate velocities, based on motor odometry
-    # Motor outputs values in range [0,1000] without unit
-    v_l = 0.0182 * speed_l # in m/s
-    v_r = 0.0182 * speed_r # in m/s
-    v_x = (v_r +v_l) / 2
-    v_y = 0.0 # in m/s [is always 0]
-    v_th = (v_r - v_l) / l # in rad/s
-
     rate = rospy.Rate(3) # => Hz
 
+    last_time = rospy.Time.now()
     while not rospy.is_shutdown():
         current_time = rospy.Time.now()
 
-        x, y, th = calculate_delta_odometry(v_x, v_y, v_th, x, y, th)
+        # Motor outputs values in range [0,1000] without unit
+        v_l = 0.0182 * speed_l # in m/s
+        v_r = 0.0182 * speed_r # in m/s
+        v_x = (v_r +v_l) / 2
+        v_y = 0.0 # in m/s [is always 0]
+        v_th = (v_r - v_l) / l # in rad/s
+
+        x, y, th = calculate_odometry(v_x, v_y, v_th, x, y, th)
 
         # since all odometry is 6DOF we'll need a quaternion created from yaw
         # create quaternion from euler angle
