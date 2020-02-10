@@ -100,7 +100,7 @@ def main():
             try:
                 data = read_serial(ser)
             except:
-                rospy.logwarn("Serial package Invalid. Did you set the right port?")
+                # DEBUG: rospy.logwarn("Serial package Invalid. Did you set the right port?")
                 rosrate.sleep()
                 continue
             # set message

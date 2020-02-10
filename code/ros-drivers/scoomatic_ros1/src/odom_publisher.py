@@ -27,12 +27,13 @@ current_time = 0
 last_time = 0
 
 def call_speed_l(message):
-    """"Only saves speed_l from Publisher"""
+    """Only saves speed_l from Publisher"""
     global speed_l
     speed_l = message
 
+
 def call_speed_r(message):
-    """"Only saves speed_r from Publisher"""
+    """Only saves speed_r from Publisher"""
     global speed_r
     speed_r = message
 
@@ -72,13 +73,13 @@ def main():
     """"Construct tf Transformation & odom message publishing"""
     global speed_l, speed_r, current_time, last_time
     # Start Node
-    rospy.init_node('odom', anonymous=True)
+    rospy.init_node('/odom', anonymous=True)
     node_name = rospy.get_name()
     
 
     # Get speed from topics
-    rospy.Subscriber('/speed_l', Int32, call_speed_l, queue_size=20)
-    rospy.Subscriber('/speed_r', Int32, call_speed_r, queue_size=20)
+    rospy.Subscriber('/MotorDiag/speed_l', Int32, call_speed_l, queue_size=20)
+    rospy.Subscriber('/MotorDiag/speed_r', Int32, call_speed_r, queue_size=20)
     odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=20)
     tf_broadcaster = tf.TransformBroadcaster()
 
