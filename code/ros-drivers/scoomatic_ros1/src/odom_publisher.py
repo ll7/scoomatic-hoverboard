@@ -29,13 +29,13 @@ last_time = 0
 def call_speed_l(message):
     """Only saves speed_l from Publisher"""
     global speed_l
-    speed_l = (-message.data) # speed is negative
+    speed_l = message.data
 
 
 def call_speed_r(message):
     """Only saves speed_r from Publisher"""
     global speed_r
-    speed_r = (-message.data) # speed is negative
+    speed_r = message.data
 
 def calculate_odometry(v_x, v_y, v_th, x, y, th):
     """Compute odometry via pseudo integration"""
