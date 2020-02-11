@@ -36,7 +36,7 @@ from params import get_param
 from std_msgs.msg import Int32, Float32
 
 def read_serial(ser):
-    """ Read serial input and convert data into list"""
+    """Read serial input and convert data into list"""
     data = ser.readline()
 
     # parse serial data
@@ -124,6 +124,7 @@ def main():
             p8.publish(m8)
 
             rosrate.sleep()
+            ser.reset_input_buffer()
 
 if __name__ == '__main__':
     try:
