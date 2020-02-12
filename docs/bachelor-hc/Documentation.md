@@ -34,6 +34,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
+    - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
 
 ## Zukünftige Struktur dieses Dokuments
 Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der folgenden Struktur:
@@ -328,3 +329,9 @@ Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
 
 ### Drehgeschwindigkeit des Scoomatics
 Die Breite des Scoomatics ist, gemessen an jeweils in der Mitte der Reifen, 622mm.
+
+### Odometrie Daten anzeigen in rviz
+Start rviz mit ```rosrun rviz rviz```
+Starte Hector SLAM
+Füge den Odometry Layer hinzu
+Wähle die /OdomPublisher/odom topic aus

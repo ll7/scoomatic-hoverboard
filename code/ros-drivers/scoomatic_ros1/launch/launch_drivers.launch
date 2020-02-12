@@ -8,7 +8,7 @@
     	<param name="serial_port" type="string" value="/dev/rplidar" />
         <param name="frame_id" type="string" value="laser"/>
         <!-- for scan mode possibilities look at RPLidar docs (Page 12): https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en-->
-        <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples-->
+        <param name="scan_mode" type="string" value="Express"/> <!-- Boost ≙ 8K Samples--> <!-- Express ≙ 4K Samples--> 
     </node>
     <!-- Internal NODES -->
     <!-- tf static transform of laser -->
@@ -27,12 +27,12 @@
         <param name="rate" type="int" value="5"/>
     </node>
     <!-- Joy Driver -->
-    <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
+    <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
         <param name="rate" type="int" value="15"/>
         <param name="topic_vel" type="str" value="/joy"/>
         <param name="topic_btn" type="str" value="/btn"/>
-    </node>
+    </node>-->
     <!-- Gamepad Driver -->
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/cmd_vel"/>
@@ -42,12 +42,12 @@
         <param name="gain_ang" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->
-    <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
+    <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
         <param name="rate" type="int" value="3"/>
         <param name="topic" type="str" value="/sonar"/>
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
-    </node>
+    </node>-->
     <!-- Odom Publisher -->
     <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
     </node>
