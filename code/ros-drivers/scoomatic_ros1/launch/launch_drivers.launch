@@ -38,7 +38,7 @@
 	    <param name="topic" type="str" value="/cmd_vel"/>
         <param name="rate" type="int" value="10"/>
         <!-- Gain for Gamepad different from maxspeed_factor on MotorDriver -->
-        <param name="gain_lin" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
+        <param name="gain_lin" type="double" value="0.6"/> <!-- From 0.0 to 1.0-->
         <param name="gain_ang" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->

@@ -75,12 +75,12 @@ def main():
     # Start Node
     rospy.init_node('odom', anonymous=True)
     node_name = rospy.get_name()
-    
+
 
     # Get speed from topics
-    rospy.Subscriber('/MotorDiag/speed_l', Int32, call_speed_l, queue_size=20)
-    rospy.Subscriber('/MotorDiag/speed_r', Int32, call_speed_r, queue_size=20)
-    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=20)
+    rospy.Subscriber('/MotorDiag/speed_l', Int32, call_speed_l, queue_size=10)
+    rospy.Subscriber('/MotorDiag/speed_r', Int32, call_speed_r, queue_size=10)
+    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=10)
     tf_broadcaster = tf.TransformBroadcaster()
 
     # odom coordinate frame
@@ -103,19 +103,20 @@ def main():
     y = 0.0 # in m
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
+    velocity_multiplier = 0.0035
 
-    rate = rospy.Rate(5) # => Hz
+    rate = rospy.Rate(20) # => Hz
 
     last_time = rospy.Time.now()
     while not rospy.is_shutdown():
         current_time = rospy.Time.now()
 
         # Motor outputs values in range [0,1000] without unit
-        v_l = 0.0182 * speed_l # in m/s
-        v_r = 0.0182 * speed_r # in m/s
-        v_x = (v_r +v_l) / 2
+        v_l = velocity_multiplier * speed_l # in m/s
+        v_r = velocity_multiplier * speed_r # in m/s
+        v_x = (v_r + v_l) / 2
         v_y = 0.0 # in m/s [is always 0]
-        v_th = (v_r - v_l) / l # in rad/s
+        v_th = (v_l - v_r) / l # in rad/s
 
         x, y, th = calculate_odometry(v_x, v_y, v_th, x, y, th)
 

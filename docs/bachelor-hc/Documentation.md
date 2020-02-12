@@ -327,11 +327,15 @@ Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
 
 => Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
 
+Dies entspricht aber überhaupt nmicht der Realität. Die liegt etwa bei 4mm/s /1 v_scoomatic
+
 ### Drehgeschwindigkeit des Scoomatics
 Die Breite des Scoomatics ist, gemessen an jeweils in der Mitte der Reifen, 622mm.
 
 ### Odometrie Daten anzeigen in rviz
+Starte Hector SLAM. Schließe rviz.
 Start rviz mit ```rosrun rviz rviz```
-Starte Hector SLAM
 Füge den Odometry Layer hinzu
 Wähle die /OdomPublisher/odom topic aus
+Eine spezifische rviz config kann mit
+``rosrun rviz rviz -d "odometry&map.rviz"``` gestartet werden
