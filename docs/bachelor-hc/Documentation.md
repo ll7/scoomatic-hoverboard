@@ -3,9 +3,15 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
 
 - [Dokumentation](#dokumentation)
   - [Zukünftige Struktur dieses Dokuments](#zuk%c3%bcnftige-struktur-dieses-dokuments)
-  - [ROS Package-Structure](#ros-package-structure)
-  - [Project/Time-Management](#projecttime-management)
-    - [ToDos](#todos)
+  - [Einführung in das Projekt](#einf%c3%bchrung-in-das-projekt)
+  - [ROS](#ros)
+    - [ROS Package-Struktur](#ros-package-struktur)
+    - [Node & Topic Übersicht](#node--topic-%c3%9cbersicht)
+      - [scoomatic-ros1](#scoomatic-ros1)
+      - [scoomatic-drive](#scoomatic-drive)
+    - [Parameter Einstellungen](#parameter-einstellungen)
+    - [How To Use](#how-to-use)
+      - [ROS (Core) Starten](#ros-core-starten)
   - [Configuration](#configuration)
     - [tf](#tf)
     - [Backlog](#backlog)
@@ -29,12 +35,10 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
-    - [Odometrie](#odometrie)
-    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
-    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
-    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
-    - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
-    - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
+    - [TF error](#tf-error)
+- [ALT](#alt)
+  - [Project/Time-Management](#projecttime-management)
+    - [ToDos](#todos)
 
 ## Zukünftige Struktur dieses Dokuments
 Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der folgenden Struktur:
@@ -43,7 +47,8 @@ Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der f
   * Packageübersicht
   * Node Übersicht
   * Topic übersicht
-  * Paramter Einstellungen
+  * Parameter Einstellungen
+  * How to Use
 * TF
   * Transformationen
 * Hardware
@@ -54,42 +59,98 @@ Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der f
   * Scoomatic RPi Konfiguration
   * Software starten/stoppen usw.
   * Befehle für benutzung
+  * Vorgenomme Konfigurationen
 * Tips&Tricks
 * Weitere Erklärungen
+* Bestehende Probleme
 
-## ROS Package-Structure
+## Einführung in das Projekt
+Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](docs/projektmodul-ms/index.md).
+
+Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
+
+## ROS
+
+### ROS Package-Struktur
+Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomatic-ros1```, welche die Sensordaten des Scoomatics bereitstellt, eventuell auch umrechnet sowie die Eingabemöglichkeiten wie Gamepad verwaltet. Letzteres, das ```scoomatic-drive``` Package stellt die Nodes zur Benutzung der Navigation und SLAM bereit. 
 
 * Sensordata & Input Publishing
   * Motor diagnostics/debug
   * LIDAR
   * Ultrasonic
   * IMU
-  * Joystick
   * Gamepad
-* Provide Processing
+  * Joystick
+* Drive Processing
   * SLAM
   * Localisation
   * Navigation
   * Obstacle Avoidance
 
-## Project/Time-Management
-### ToDos
+### Node & Topic Übersicht
 
-- [x] ROS2 zum laufen bringen
-- [x] Verstehen, was start_ros2.bash macht
-- [x] Neuen ROS1 Workspace erstellen
-- [x] Lennarts Git Repo klonen
-- [x] Catkin Workspace einrichten
-  - [x] Nodes installieren
-- [x] ROS2 Nodes migrieren
-  - [x] motor_driver
-  - [x] motor_diag
-  - [x] gamepad_driver
-  - [x] sonar_driver
-  - [x] joy_driver
-- [x] checken welche tasten gamepad benutzt
-- [x] Mit Gamepad fahren lassen
-- [-] Korrektes terminieren der Nodes & rospy.spin()
+Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
+
+![](images/topics-and-nodes-with-slam.svg)
+
+#### scoomatic-ros1
+* /imu/
+  * i2c_imu_node (i2c_imu/i2c_imu_node)
+* /
+  * GamepadDriver (scoomatic_ros1/gamepad_driver.py)
+  * MotorDiag (scoomatic_ros1/motor_diag.py)
+  * MotorDriver (scoomatic_ros1/motor_driver.py)
+  * OdomPublisher (scoomatic_ros1/odom_publisher.py)
+  * RPLidar (rplidar_ros/rplidarNode)
+  * base_to_laser (tf/static_transform_publisher)
+  * imu_to_base (tf/static_transform_publisher)
+
+#### scoomatic-drive
+TODO
+
+### Parameter Einstellungen
+
+Die Nodes werden über Launchfiles, also Dateien mit *.launch* gestartet und eingestellt. Parameter zum einstellen erfolgen also überwiegend in diesen Dateien, die als XML File strukturiert sind.
+
+Im Package ```scoomatic_ros1``` existieren zwei Launchfiles. ```mpu_9259.launch``` ist zum starten der IMU, ```launch_drivers.launch``` für das starten aller anderen Sensoren und Eingabe-Nodes. Durch auskommentieren kann das Starten einer Node deaktiviert werden.
+
+In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM notwendige und angepasste Launchfiles. Mit ```start_hector_slam.launch``` kann der SLAM Vorgang gestartet werden und startet auch sofort. Mit ```start_navigation.launch``` werden alle Nodes notwendig für die Navigation gestartet. Dafür muss allerdings eine Karte erstellt worden sein und dessen YAML-Datei im Argument *map_file* korrekt festgelegt werden.
+
+### How To Use
+
+#### ROS (Core) Starten
+
+>>> Diese Anleitung setzt vorraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
+
+1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
+2. Mit ```ssh scoomatic``` per SSH verbinden
+3. ROS & Nodes starten: ```startros1```
+
+Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
+
+1. Neues Terminal öffnen und
+2. In den korrekten Ordner ```ros-drivers/scoomatic_drive/launch``` wechseln
+3. Hector SLAM ```roslaunch start_hector_slam.launch``` starten
+4. Wenn eine visuelle Darstellung gewünscht ist: Dann in einem neuen Terminal in den Ordner ```code/configuration/``` wechseln
+5. RViz mit ```rviz -d 'odometry-and-map.rviz'``` starten
+6. Ein neues Terminal öffnen, wenn das Kartieren abgeschlossen ist, damit die Karte gespeichert werden kann
+7. Mithilfe des Map servers ```rosrun map_server map_saver -f mapfilename``` ausführen
+
+>>> Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
+
+Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
+
+**TODO**
+
+
+
+
+
+
+
+
+
+
 
 ## Configuration
 ### tf
@@ -339,3 +400,36 @@ Füge den Odometry Layer hinzu
 Wähle die /OdomPublisher/odom topic aus
 Eine spezifische rviz config kann mit
 ``rosrun rviz rviz -d "odometry&map.rviz"``` gestartet werden
+
+### TF Transformationen numerisch anschauen
+``` 
+rosrun tf tf_echo turtle1 turtle2
+```
+oder einfach in rviz, siehe oben
+
+### TF error
+Bei diesem Fehler:
+
+>>> [ERROR] [1581586277.372654655]: Transform failed during publishing of map_odom transform: Lookup would require extrapolation into the future.  Requested time 1581586276.552239413 but the latest data is at time 1581586276.399903637, when looking up transform from frame [base_link] to frame [odom]
+
+publisht der odom publisher zu häufig
+
+# ALT
+## Project/Time-Management
+### ToDos
+
+- [x] ROS2 zum laufen bringen
+- [x] Verstehen, was start_ros2.bash macht
+- [x] Neuen ROS1 Workspace erstellen
+- [x] Lennarts Git Repo klonen
+- [x] Catkin Workspace einrichten
+  - [x] Nodes installieren
+- [x] ROS2 Nodes migrieren
+  - [x] motor_driver
+  - [x] motor_diag
+  - [x] gamepad_driver
+  - [x] sonar_driver
+  - [x] joy_driver
+- [x] checken welche tasten gamepad benutzt
+- [x] Mit Gamepad fahren lassen
+- [-] Korrektes terminieren der Nodes & rospy.spin()
