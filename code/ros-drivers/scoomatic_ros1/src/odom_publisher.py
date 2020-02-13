@@ -80,7 +80,7 @@ def main():
     # Get speed from topics
     rospy.Subscriber('/MotorDiag/speed_l', Int32, call_speed_l, queue_size=10)
     rospy.Subscriber('/MotorDiag/speed_r', Int32, call_speed_r, queue_size=10)
-    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=10)
+    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=15)
     tf_broadcaster = tf.TransformBroadcaster()
 
     # odom coordinate frame
@@ -103,9 +103,9 @@ def main():
     y = 0.0 # in m
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
-    velocity_multiplier = 0.0035
+    velocity_multiplier = 0.004
 
-    rate = rospy.Rate(20) # => Hz
+    rate = rospy.Rate(25) # => Hz
 
     last_time = rospy.Time.now()
     while not rospy.is_shutdown():

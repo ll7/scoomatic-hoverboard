@@ -19,7 +19,10 @@
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
         <param name="topic" type="str" value="/cmd_vel"/>
-        <param name="maxspeed_factor" type="int" value="2"/> <!-- From 1 to 10 -> 10: Max, 1:Min-->
+        <!-- Limit the maxspeed of the Scoomatic. For SLAM, 1 is recommended.
+        ! ATTENTION ! Maximum speed is very high and should not be underestimated !
+        Range from 1 to 10 -> 10: Max, 1:Min -->
+        <param name="maxspeed_factor" type="int" value="2"/> 
     </node>
     <!-- Motor Diagnostics -->
     <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
@@ -39,7 +42,7 @@
         <param name="rate" type="int" value="10"/>
         <!-- Gain for Gamepad different from maxspeed_factor on MotorDriver -->
         <param name="gain_lin" type="double" value="0.6"/> <!-- From 0.0 to 1.0-->
-        <param name="gain_ang" type="double" value="1.0"/> <!-- From 0.0 to 1.0-->
+        <param name="gain_ang" type="double" value="0.8"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->
     <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">

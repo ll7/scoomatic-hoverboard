@@ -68,7 +68,7 @@ def main():
 
     # Read parameter from motor/mainboard
     port = get_param(node_name+'/port', '/dev/motor_diag')
-    rate = get_param(node_name+'/rate', 40) # in Hertz
+    rate = get_param(node_name+'/rate', 30) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
