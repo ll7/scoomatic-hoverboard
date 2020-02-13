@@ -12,33 +12,45 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [Parameter Einstellungen](#parameter-einstellungen)
     - [How To Use](#how-to-use)
       - [ROS (Core) Starten](#ros-core-starten)
-  - [Configuration](#configuration)
-    - [tf](#tf)
-    - [Backlog](#backlog)
+      - [SLAM starten](#slam-starten)
+      - [Navigation starten](#navigation-starten)
+  - [TF](#tf)
+    - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
+  - [Hardware](#hardware)
+  - [Software](#software)
+    - [Hector SLAM](#hector-slam)
+    - [Navigation](#navigation)
+  - [Konfiguration](#konfiguration)
+    - [udev Regeln](#udev-regeln)
   - [Fixes](#fixes)
     - [Network configuration](#network-configuration)
-  - [Konfiguration](#konfiguration)
-    - [Installation von Ubuntu](#installation-von-ubuntu)
+  - [Konfiguration](#konfiguration-1)
     - [Verbinden mit Raspi](#verbinden-mit-raspi)
-    - [udev Regeln](#udev-regeln)
     - [Mehrere Fenster in einer Shell](#mehrere-fenster-in-einer-shell)
     - [Logs](#logs)
     - [ROS2 starten](#ros2-starten)
     - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
     - [Vereinfachungen](#vereinfachungen)
-  - [Good to know](#good-to-know)
+  - [Tips & Tricks](#tips--tricks)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
-    - [Hector SLAM](#hector-slam)
-      - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
-      - [Performance Issues](#performance-issues)
+    - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
+    - [Performance Issues](#performance-issues)
     - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
-    - [tf Tree / frames anschauen mit rqt](#tf-tree--frames-anschauen-mit-rqt)
+    - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
+    - [Motor LIDAR stoppen](#motor-lidar-stoppen)
+    - [Scan Modes RPLidar](#scan-modes-rplidar)
+    - [Navigation & Localization Stack](#navigation--localization-stack)
+    - [Map speichern und bereitstellen](#map-speichern-und-bereitstellen)
+    - [Odometrie](#odometrie)
+    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
+    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
+    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
+    - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
+    - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
+    - [TF Transformationen numerisch anschauen](#tf-transformationen-numerisch-anschauen)
     - [TF error](#tf-error)
-- [ALT](#alt)
-  - [Project/Time-Management](#projecttime-management)
-    - [ToDos](#todos)
 
 ## Zukünftige Struktur dieses Dokuments
 Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der folgenden Struktur:
@@ -54,6 +66,8 @@ Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der f
 * Hardware
   * Übersicht
   * Zusammenspiel
+* Software
+  * Installation
 * Konfigurationsmöglichkeiten
   * Remote PC Konfiguration
   * Scoomatic RPi Konfiguration
@@ -106,7 +120,7 @@ Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selb
   * imu_to_base (tf/static_transform_publisher)
 
 #### scoomatic-drive
-TODO
+**TODO**
 
 ### Parameter Einstellungen
 
@@ -120,12 +134,14 @@ In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM notwendige u
 
 #### ROS (Core) Starten
 
->>> Diese Anleitung setzt vorraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
+> Diese Anleitung setzt vorraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
 
 1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
 2. Mit ```ssh scoomatic``` per SSH verbinden
 3. ROS & Nodes starten: ```startros1```
+Dies ist generell notwendig um weitere Schritte auszuführen.
 
+#### SLAM starten
 Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 
 1. Neues Terminal öffnen und
@@ -136,38 +152,69 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 6. Ein neues Terminal öffnen, wenn das Kartieren abgeschlossen ist, damit die Karte gespeichert werden kann
 7. Mithilfe des Map servers ```rosrun map_server map_saver -f mapfilename``` ausführen
 
->>> Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
+> Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
 
+#### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
 **TODO**
 
+## TF
+
+ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realten Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes gepublisht und verwendet werden können. Da dieser Roboter, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
+
+> Am besten folgenden Befehl auf dem Remote Rechner ausführen
+
+Mit ```rosrun rqt_tf_tree rqt_tf_tree``` kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
+
+### Aktuelle TF Baumstruktur
+
+Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
+
+Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
+
+**TODO: Bild aktualisieren!!!**
+
+![](images/rqt_tf_tree-hector-slam.png)
+
+## Hardware
+
+Zunächst sei angemerkt, dass keine Hardwareänderungen vorgenommen wurden. Zudem sei auf [Projektmodul-MS](docs/projektmodul-ms/index.md) verwiesen.
+
+Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und in naher Zukunft kein Bedarf für diesen Treiber besteht.
+
+**TODO**
+
+## Software
+
+Die Installation von SLAM und der Navigation wird hier beschrieben.
+
+### Hector SLAM
+Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation: ```sudo apt-get install ros-melodic-hector-slam ```. Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
+
+### Navigation
+**TODO**
+
+## Konfiguration
+### udev Regeln
+
+Die udev Regeln sind notwendig, weil Linux die USB-Geräte nicht deterministisch Identifikationsnummern zuweist. Damit wird ein früheres Problem behoben, dass die USB-Geräte immer nach einem Systemneustart in der korrekten Reihenfolge eingesteckt werden mussten. Die udev Regeln erkennen die Geräte anhand der USB-Steckplätze und weisen diesen konkrete lesbare Namen wie ```/rplidar``` zu.
+
+Alle USB-Geräte können mit ```ls /dev/ttyUSB*``` angezeigt werden. Dort stehen auch die passenden Zuordnungen dabei.
+
+> !Achtung! Die USB-Geräte müssen trotzdem immer noch immer in die vorherigen USB-Steckplätze gesteckt werden. Sonst werden die die Zuordnungen nicht korrekt durchgeführt.
+
+Unter Ubuntu 18.04 liegen die udev-Regeln unter ```/etc/udev/rules.d``` und die konkreten für Scoomatic in ```/etc/udev/rules.d/10-local.rules```. Dies ist jedoch nur eine Symbolische Verknüpfung und liegt im Repository unter ```code/configuration/10-local.rules```. Änderungen können mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne das System neustarten zu müssen.
+
+Die udev Regeln sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```.
+Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
 
 
-
-
-
-
-
-
-
-
-## Configuration
-### tf
-Der ```base_link``` frame muss für die Navigation im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame festgelegt.
-
-### Backlog
-
-- udev regeln
-- ros1 workspace
-- ros2 workspace
-- IMU / MPU9250 working
-- 6/8 ultraschallsensoren
-- rviz mit laser daten
-- hector-slam 
+----------------------------------------------------------------------------
 
 ## Fixes
 ### Network configuration
+
 If ros is failing finding the correct host through hostname, just add the correct IP (localhost and local IP) in ```/etc/hosts``` like:
 
 ```
@@ -177,26 +224,17 @@ If ros is failing finding the correct host through hostname, just add the correc
 
 ## Konfiguration
 
-### Installation von Ubuntu
-
-Die notwendige Ubuntu Server 18.04 ARM Version kann im [Ubuntu Wiki](https://wiki.ubuntu.com/ARM/RaspberryPi#Download) heruntergeladen werden. Danach kann es auf die microSD geflasht werden, bspw. mit [Etcher](https://www.balena.io/etcher/). Mit ubuntu als username und password kann sich eingeloggt werden. Das Passwort wird beim ersten einloggen auf ```notubuntu``` festgelegt.
-
 ### Verbinden mit Raspi
 
 Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu```. In der Regel wird von DHCP. IP 192.168.140.16 vergeben.
 
-### udev Regeln
 
-Liegen unter ```/etc/udev/rules.d/10-local.rules```. Und im repository unter ```code/configuration/10-local.rules```. Die Datei ist per Symlink verknüpft.  Können nach Änderungen mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne System neustart.
-
-Sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```
-Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
 
 ### Mehrere Fenster in einer Shell
 Mit ```tmux```. Neuer Tab: ```Ctrl+A C```. Wechseln der Tabs mit ```Shift+ArrowKey```.
 
 ### Logs
-Generelle Log Messages sollte auf ```/rosout``` gepublisht werden. Siehe auch [http://wiki.ros.org/rospy_tutorials/Tutorials/Logging]
+Generelle Log Messages sollten auf ```/rosout``` gepublisht werden. Siehe auch [http://wiki.ros.org/rospy_tutorials/Tutorials/Logging]
 
 ### ROS2 starten
 ```sourceros2``` sourced alle ros2 files.
@@ -222,7 +260,7 @@ alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
 ```
 
-## Good to know
+## Tips & Tricks
 ### Parameter
 Parameter, welche über ein launchfile gesetzt werden, sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter port per ```MotorDriver/port```.
 
@@ -235,13 +273,12 @@ Für Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` kann aber auch ```b'\xfb\
 
 Es können manuell steuersignale gesendet werden:```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
 
-### Hector SLAM
-Installation erfolgt über Ubuntu: ```sudo apt-get install ros-melodic-hector-slam ```.  Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
-#### Hector SLAM ausführen
+
+### Hector SLAM ausführen
 Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
 
-#### Performance Issues
+### Performance Issues
 Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern: Es ist möglich:
 
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
@@ -269,14 +306,7 @@ Mit -r kann die Abspielrate verändert werden.
 Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
 ### "Fixed Frame [map] does not exist" in rviz
-map einfach entfernen und wieder hinzufügen.
-
-### tf Tree / frames anschauen mit rqt
-Mit 
-```rosrun rqt_tf_tree rqt_tf_tree``` kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
-
-Beispiel mit Hector SLAM:
-![rqt_tf_tree-hector-slam](./images/rqt_tf_tree-hector-slam.png)
+In rviz auf **Reset** klicken
 
 ### Karte wird nicht gespeichert
 Eigentlich sollte per mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
@@ -329,20 +359,7 @@ Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Ra
       ↓
   Moves Robot
 
-#### Steps
-1. Karte erstellen
-   * SLAM
-   -[x] Dann mit map_server Karte speichern
-   * odometrie bereitstellen
-2. Lokalisierung mit AMCL
-   * 2D Pose estimation in rviz
-   * an verschiedenen position versuchen
-
-
-## static_transform_publisher
-Sind dafür da Statische Koordinaten Verhältnisse zwischen tf frames regelmäßig zu publishen
-
-## Map speichern und bereitstellen
+### Map speichern und bereitstellen
 
 Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei im map_server package erstellt.
 
@@ -412,24 +429,4 @@ Bei diesem Fehler:
 
 >>> [ERROR] [1581586277.372654655]: Transform failed during publishing of map_odom transform: Lookup would require extrapolation into the future.  Requested time 1581586276.552239413 but the latest data is at time 1581586276.399903637, when looking up transform from frame [base_link] to frame [odom]
 
-publisht der odom publisher zu häufig
-
-# ALT
-## Project/Time-Management
-### ToDos
-
-- [x] ROS2 zum laufen bringen
-- [x] Verstehen, was start_ros2.bash macht
-- [x] Neuen ROS1 Workspace erstellen
-- [x] Lennarts Git Repo klonen
-- [x] Catkin Workspace einrichten
-  - [x] Nodes installieren
-- [x] ROS2 Nodes migrieren
-  - [x] motor_driver
-  - [x] motor_diag
-  - [x] gamepad_driver
-  - [x] sonar_driver
-  - [x] joy_driver
-- [x] checken welche tasten gamepad benutzt
-- [x] Mit Gamepad fahren lassen
-- [-] Korrektes terminieren der Nodes & rospy.spin()
+publisht der odom publisher zu häufig bzw. die anderen im vergleich zu wenig häufig
