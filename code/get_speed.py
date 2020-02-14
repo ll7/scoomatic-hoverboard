@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""Read the speed of motor via serial"""
+# Author: Henri Chilla
+# Date: Feb 2020
+
 import serial
 
 def read_serial(ser):

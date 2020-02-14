@@ -2,84 +2,60 @@
 Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung des Scoomatics behilflich sein.
 
 - [Dokumentation](#dokumentation)
-  - [Zukünftige Struktur dieses Dokuments](#zuk%c3%bcnftige-struktur-dieses-dokuments)
   - [Einführung in das Projekt](#einf%c3%bchrung-in-das-projekt)
   - [ROS](#ros)
     - [ROS Package-Struktur](#ros-package-struktur)
     - [Node & Topic Übersicht](#node--topic-%c3%9cbersicht)
       - [scoomatic-ros1](#scoomatic-ros1)
       - [scoomatic-drive](#scoomatic-drive)
+      - [ROS Logs](#ros-logs)
     - [Parameter Einstellungen](#parameter-einstellungen)
     - [How To Use](#how-to-use)
+      - [Raspberry Pi einschalten](#raspberry-pi-einschalten)
       - [ROS (Core) Starten](#ros-core-starten)
       - [SLAM starten](#slam-starten)
       - [Navigation starten](#navigation-starten)
+  - [ROS 2](#ros-2)
+    - [ROS2 starten](#ros2-starten)
+    - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
   - [TF](#tf)
     - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
   - [Hardware](#hardware)
-  - [Software](#software)
+  - [Software Installation](#software-installation)
     - [Hector SLAM](#hector-slam)
     - [Navigation](#navigation)
   - [Konfiguration](#konfiguration)
+    - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
+    - [Bash Aliasse](#bash-aliasse)
     - [udev Regeln](#udev-regeln)
-  - [Fixes](#fixes)
-    - [Network configuration](#network-configuration)
-  - [Konfiguration](#konfiguration-1)
-    - [Verbinden mit Raspi](#verbinden-mit-raspi)
-    - [Mehrere Fenster in einer Shell](#mehrere-fenster-in-einer-shell)
-    - [Logs](#logs)
-    - [ROS2 starten](#ros2-starten)
-    - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
-    - [Vereinfachungen](#vereinfachungen)
   - [Tips & Tricks](#tips--tricks)
+    - [Hilfreiche Commands](#hilfreiche-commands)
+    - [Motor des LIDAR starten & stoppen](#motor-des-lidar-starten--stoppen)
+    - [Mehrere Fenster in einer Shell verwenden](#mehrere-fenster-in-einer-shell-verwenden)
+    - [BAG Files](#bag-files)
+    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
+  - [Bestehende Probleme](#bestehende-probleme)
+    - [Performance Probleme des RPi](#performance-probleme-des-rpi)
+    - [Vereinfachungen](#vereinfachungen)
+  - [Tips & Tricks](#tips--tricks-1)
     - [Parameter](#parameter)
     - [Motoransteuerung](#motoransteuerung)
     - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
-    - [Performance Issues](#performance-issues)
-    - [BAG Files](#bag-files)
     - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
     - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
-    - [Motor LIDAR stoppen](#motor-lidar-stoppen)
     - [Scan Modes RPLidar](#scan-modes-rplidar)
     - [Navigation & Localization Stack](#navigation--localization-stack)
     - [Map speichern und bereitstellen](#map-speichern-und-bereitstellen)
     - [Odometrie](#odometrie)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
-    - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
     - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
     - [TF Transformationen numerisch anschauen](#tf-transformationen-numerisch-anschauen)
     - [TF error](#tf-error)
 
-## Zukünftige Struktur dieses Dokuments
-Dieses Dokument wird fortwährend strukturell verbessert & geändert, nach der folgenden Struktur:
-
-* ROS
-  * Packageübersicht
-  * Node Übersicht
-  * Topic übersicht
-  * Parameter Einstellungen
-  * How to Use
-* TF
-  * Transformationen
-* Hardware
-  * Übersicht
-  * Zusammenspiel
-* Software
-  * Installation
-* Konfigurationsmöglichkeiten
-  * Remote PC Konfiguration
-  * Scoomatic RPi Konfiguration
-  * Software starten/stoppen usw.
-  * Befehle für benutzung
-  * Vorgenomme Konfigurationen
-* Tips&Tricks
-* Weitere Erklärungen
-* Bestehende Probleme
-
 ## Einführung in das Projekt
-Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](docs/projektmodul-ms/index.md).
+Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
 
 Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
 
@@ -122,6 +98,13 @@ Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selb
 #### scoomatic-drive
 **TODO**
 
+#### ROS Logs
+Alle Ausgaben der Nodes bzw. Topics landen in der Topic ```/rosout```. Dies gilt natürlich auch für selbst erstellte Nodes. In Python kann mit ```rospy.loginfo(STRING)``` ein STRING als Info veröffentlicht werden. Mit ```rospy.logwarn(WARNING)``` kann eine Warnung veröffentlicht werden.
+
+Mehr Infos zum Thema [Logging](http://wiki.ros.org/rospy/Overview/Logging).
+
+> /rosout kann einfach mit ```rostopic echo /rosout``` angeschaut werden
+
 ### Parameter Einstellungen
 
 Die Nodes werden über Launchfiles, also Dateien mit *.launch* gestartet und eingestellt. Parameter zum einstellen erfolgen also überwiegend in diesen Dateien, die als XML File strukturiert sind.
@@ -132,9 +115,14 @@ In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM notwendige u
 
 ### How To Use
 
+#### Raspberry Pi einschalten
+Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der Stromversorgung des Scoomatics zu versorgen. Zudem ist es aber auch möglich den RPi direkt per Micro-USB an eine USB Stromversorgung anzuschließen. Ein Computer reicht in der Regel dafür aus.
+
+> Voraussetzung ist, wenn die Stromversorgung des Scoomatics verwendet wird, dass die Verbindung zwischen Akku und Mainboard hergestellt ist
+
 #### ROS (Core) Starten
 
-> Diese Anleitung setzt vorraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
+> Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
 
 1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
 2. Mit ```ssh scoomatic``` per SSH verbinden
@@ -159,13 +147,38 @@ Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet we
 
 **TODO**
 
+## ROS 2
+
+Für ausführliche Erklärungen sei auf [Projektmodul-MS#ros2-bedienung](../projektmodul-ms/index.md#ros2-bedienung) verwiesen. Eine kurze Übersicht ist hier zu finden.
+
+### ROS2 starten
+```sourceros2``` sourced alle notwendigen ROS2 Dateien. Dies ist bpsw. bei einem wechsel von ROS1 zu ROS2 im gleichen Terminal Fenster notwendig.
+```startros2``` startet ROS2.
+
+### ROS2 Nodes stoppen
+Es gibt keine einfache Möglichkeit die Gesamtheit der ROS2 Nodes zu stoppen. Dies kann höchstens Node-weise passieren.
+
+Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how-to-kill-nodes-in-ros2/), gelingt das stoppen von einer ROS2 Node folgendermaßen:
+```
+ros2 lifecycle set <nodename> shutdown
+```
+
+Allerdings hat dies in diesem Projekt nicht funktioniert.
+Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill PID``` und der passenden PID zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
+
 ## TF
 
 ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realten Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes gepublisht und verwendet werden können. Da dieser Roboter, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
 
 > Am besten folgenden Befehl auf dem Remote Rechner ausführen
 
-Mit ```rosrun rqt_tf_tree rqt_tf_tree``` kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
+Mit 
+
+```
+rosrun rqt_tf_tree rqt_tf_tree
+``` 
+
+kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
 
 ### Aktuelle TF Baumstruktur
 
@@ -185,17 +198,39 @@ Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und
 
 **TODO**
 
-## Software
+## Software Installation
 
 Die Installation von SLAM und der Navigation wird hier beschrieben.
 
 ### Hector SLAM
-Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation: ```sudo apt-get install ros-melodic-hector-slam ```. Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM. Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
+Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation: ```sudo apt-get install ros-melodic-hector-slam ```. Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM.
+
+Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
 ### Navigation
 **TODO**
 
 ## Konfiguration
+### ssh Verbindung einrichten
+> Voraussetzungen dafür sind: Rechner & RPi sind mit dem ```rt``` WiFi-Netzwerk verbunden
+> und der avahi-daemon unter Ubuntu läuft. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
+
+Im Ordner ```configuration``` liegt die [SSH-Config](../../code/configuration/ssh-config), welche sich mit dem Raspberry Pi verbinden kann. Diese Config muss unter Ubuntu 18.04 unter ```~/.ssh/config``` gespeichert werden.
+
+Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi verbunden werden.
+
+> In der Regel wird vom DHCP dem RPi die IP 192.168.140.16 vergeben
+
+Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
+
+### Bash Aliasse
+**TODO: Alias config in configuration packen** 
+In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Die verwendeten Alias können in der [bash-aliases](../../code/configuration/bash-aliases) nachgelesen werden.
+
+Wenn diese in der Bash verwendet werden wollen müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
+
+ Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
+
 ### udev Regeln
 
 Die udev Regeln sind notwendig, weil Linux die USB-Geräte nicht deterministisch Identifikationsnummern zuweist. Damit wird ein früheres Problem behoben, dass die USB-Geräte immer nach einem Systemneustart in der korrekten Reihenfolge eingesteckt werden mussten. Die udev Regeln erkennen die Geräte anhand der USB-Steckplätze und weisen diesen konkrete lesbare Namen wie ```/rplidar``` zu.
@@ -206,51 +241,81 @@ Alle USB-Geräte können mit ```ls /dev/ttyUSB*``` angezeigt werden. Dort stehen
 
 Unter Ubuntu 18.04 liegen die udev-Regeln unter ```/etc/udev/rules.d``` und die konkreten für Scoomatic in ```/etc/udev/rules.d/10-local.rules```. Dies ist jedoch nur eine Symbolische Verknüpfung und liegt im Repository unter ```code/configuration/10-local.rules```. Änderungen können mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne das System neustarten zu müssen.
 
-Die udev Regeln sind im Format ```SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"```.
+Die udev Regeln sind im Format 
+```
+SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"
+```
+zu schreiben.
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
 
+## Tips & Tricks
+### Hilfreiche Commands
+> Voraussetzung hierfür ist, dass die [Konfiguration](#Konfiguration) abgeschlossen wurde.
+* Alle Topics listen: ```rostopic list```
+* Alle Nodes listen: ```rosnode list```
+* Topic Nachrichten anschauen: ```rostopic echo /topic_name```
+* ROS1 starten: ```startros1```
+* ROS2 starten: ```startros2```
+
+### Motor des LIDAR starten & stoppen
+Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht. Dies ist mit einem ROS Service erreichbar:
+
+```
+rosservice call /stop_motor
+```
+Genauso kann dieser auch wieder gestartet werden:
+
+```
+rosservice call /start_motor
+```
+
+### Mehrere Fenster in einer Shell verwenden
+> Hierfür muss tmux installiert sein, was mit apt-get erledigt werden kann.
+
+**TODO original config file**
+In Terminal ```tmux``` eingeben. Neuer Tab: ```Ctrl+A C```. Wechseln der Tabs mit ```Shift+ArrowKey```.
+
+### BAG Files
+BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
+
+> ```rosbag``` ist das Tool in ROS um .bag Dateien aufzunehmen bzw. abzuspielen.
+
+Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
+```
+rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
+```
+
+Also im Fall von SLAM: 
+```
+rosbag record -O laserdata /scan 
+```
+
+Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt werden mit 
+```
+rosbag play -r 2 laserdata.bag
+```
+
+Mit -r kann die Abspielrate verändert werden.
+Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
+
+### Unterschiedliche Geschwindigkeiten Räder
+Aufgrund der pneumatischen Reifen kann es vorkommen, dass durch den unterschiedlichen Druck in linkem und rechtem Reifen bei vorgegebener, gerader Fahrt eine Kurve gefahren wird.
+
+Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von **ca. 250mm**.
+
+## Bestehende Probleme
+### Performance Probleme des RPi
+Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern bzw. zu umgehen.
+
+Es ist möglich:
+
+1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
+2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf dem Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
 ----------------------------------------------------------------------------
 
-## Fixes
-### Network configuration
-
-If ros is failing finding the correct host through hostname, just add the correct IP (localhost and local IP) in ```/etc/hosts``` like:
-
-```
-127.0.0.1 localhost
-192.168.140.16  ubuntu
-```
-
-## Konfiguration
-
-### Verbinden mit Raspi
-
-Weil die IP Adresse im Netzwerk per DHCP vergeben wird, kann der lokale Netzwerkname ```ubuntu``` verwendet werden. Mit ssh verbindet man sich also: ```ssh -X ubuntu@ubuntu```. In der Regel wird von DHCP. IP 192.168.140.16 vergeben.
 
 
-
-### Mehrere Fenster in einer Shell
-Mit ```tmux```. Neuer Tab: ```Ctrl+A C```. Wechseln der Tabs mit ```Shift+ArrowKey```.
-
-### Logs
-Generelle Log Messages sollten auf ```/rosout``` gepublisht werden. Siehe auch [http://wiki.ros.org/rospy_tutorials/Tutorials/Logging]
-
-### ROS2 starten
-```sourceros2``` sourced alle ros2 files.
-```startros2``` startet ros2 oder per: ```~/ros2_ws/src/scoomatic_drivers/start_ros2.bash```
-Sind in ~/.bashrc hinterlegt.
-
-### ROS2 Nodes stoppen
-Es gibt keine einfache Möglichkeit die Gesamtheit der ROS2 Nodes zu stoppen. Es kann höchstens Node-weise passieren.
-
-Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how-to-kill-nodes-in-ros2/), gelingt das stoppen von einer ROS2 Node folgendermaßen:
-```
-ros2 lifecycle set <nodename> shutdown
-```
-
-Allerdings hat in diesem Projekt nicht funktioniert.
-Schlussendlich bleibt nur die Möglichkeit, den Prozess zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
 
 ### Vereinfachungen
 Mithilfe der ```~/.bashrc``` können viele Einstellungen automatisch vorgenommen werden. Auf Remote Rechner: ```export ROS_MASTER_URI=http://ubuntu:11311/``` für rviz, auf lokalem RPi:
@@ -278,32 +343,9 @@ Es können manuell steuersignale gesendet werden:```echo -e "\x84\x03\x00\x00" >
 ### Hector SLAM ausführen
 Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
 
-### Performance Issues
-Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern: Es ist möglich:
 
-1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
-2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf einem Desktop Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
-### BAG Files
-BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
 
-Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
-```
-rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
-```
-
-Also im Fall von SLAM: 
-```
-rosbag record -O laserdata /scan 
-```
-
-Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt werden mit 
-```
-rosbag play -r 2 laserdata.bag
-```
-
-Mit -r kann die Abspielrate verändert werden.
-Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
 
 ### "Fixed Frame [map] does not exist" in rviz
 In rviz auf **Reset** klicken
@@ -326,17 +368,7 @@ Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector
 Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
 
-### Motor LIDAR stoppen
-Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht:
 
-```
-rosservice call /stop_motor
-```
-Genauso kann dieser auch wieder gestartet:
-
-```
-rosservice call /start_motor
-```
 
 ### Scan Modes RPLidar
 
@@ -385,10 +417,7 @@ Das ist nicht möglicht. Weder HectorSLAM noch Gmapping haben eine Möglichkeit 
 
 Mehr Infos: https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721
 
-### Unterschiedliche Geschwindigkeiten Räder
-Aufgrund der pneumatischen Reifen kann durch den unterschiedlichen Druck in linker und rechtem Reifen bei theoretisch gerader Fahrt eine Kurve gefahren werden.
 
-Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von ca. 250mm.
 
 ### Geschwindigkeit des Scoomatics
 22 U/10sec bei 199,2 v_scoomatic_eingabe und bei 35 PSI ≈ 2,41 bar Reifenluftdruck
