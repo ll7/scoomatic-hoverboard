@@ -21,43 +21,58 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
   - [TF](#tf)
     - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
   - [Hardware](#hardware)
-  - [Software Installation](#software-installation)
-    - [Hector SLAM](#hector-slam)
-    - [Navigation](#navigation)
+    - [Scoomatic Maße](#scoomatic-ma%c3%9fe)
+  - [Software](#software)
+    - [Hector SLAM Installation](#hector-slam-installation)
+    - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
+    - [Navigation installieren & ausühren](#navigation-installieren--aus%c3%bchren)
+    - [SLAM-Karte speichern und bereitstellen](#slam-karte-speichern-und-bereitstellen)
+    - [RViz](#rviz)
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [Bash Aliasse](#bash-aliasse)
     - [udev Regeln](#udev-regeln)
+    - [RPLidar | Scan Modes](#rplidar--scan-modes)
   - [Tips & Tricks](#tips--tricks)
     - [Hilfreiche Commands](#hilfreiche-commands)
+    - [Numerische Werte der TF Transformationen anzeigen](#numerische-werte-der-tf-transformationen-anzeigen)
     - [Motor des LIDAR starten & stoppen](#motor-des-lidar-starten--stoppen)
     - [Mehrere Fenster in einer Shell verwenden](#mehrere-fenster-in-einer-shell-verwenden)
     - [BAG Files](#bag-files)
+    - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
   - [Bestehende Probleme](#bestehende-probleme)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
-    - [Vereinfachungen](#vereinfachungen)
-  - [Tips & Tricks](#tips--tricks-1)
-    - [Parameter](#parameter)
-    - [Motoransteuerung](#motoransteuerung)
-    - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
-    - ["Fixed Frame [map] does not exist" in rviz](#%22fixed-frame-map-does-not-exist%22-in-rviz)
-    - [Karte wird nicht gespeichert](#karte-wird-nicht-gespeichert)
-    - [Scan Modes RPLidar](#scan-modes-rplidar)
-    - [Navigation & Localization Stack](#navigation--localization-stack)
-    - [Map speichern und bereitstellen](#map-speichern-und-bereitstellen)
-    - [Odometrie](#odometrie)
-    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
+    - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
+    - [TF Transform Error](#tf-transform-error)
+  - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
-    - [Drehgeschwindigkeit des Scoomatics](#drehgeschwindigkeit-des-scoomatics)
-    - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
-    - [TF Transformationen numerisch anschauen](#tf-transformationen-numerisch-anschauen)
-    - [TF error](#tf-error)
+    - [Odometrie Differenz zwischen Ein- & Ausgabe](#odometrie-differenz-zwischen-ein---ausgabe)
+    - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
+    - [Hector GeoTIFF wird nicht gespeichert](#hector-geotiff-wird-nicht-gespeichert)
 
 ## Einführung in das Projekt
 Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
 
 Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
+
+Als kleine Übersicht, das grobe Message-passing:
+
+```
+  Map Server
+      |
+      | → provides (nav_msgs/OccupancyGrid)
+      ↓
+  Localization
+      |
+      | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
+      ↓
+  Navigation
+      |
+      | 
+      ↓
+  Moves Robot
+```
 
 ## ROS
 
@@ -78,10 +93,11 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
   * Obstacle Avoidance
 
 ### Node & Topic Übersicht
+![](images/topics-and-nodes-with-slam.svg)
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
 
-![](images/topics-and-nodes-with-slam.svg)
+Es existieren Paramter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
 
 #### scoomatic-ros1
 * /imu/
@@ -196,19 +212,60 @@ Zunächst sei angemerkt, dass keine Hardwareänderungen vorgenommen wurden. Zude
 
 Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und in naher Zukunft kein Bedarf für diesen Treiber besteht.
 
+### Scoomatic Maße
+Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
+
 **TODO**
 
-## Software Installation
+## Software
 
 Die Installation von SLAM und der Navigation wird hier beschrieben.
 
-### Hector SLAM
-Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation: ```sudo apt-get install ros-melodic-hector-slam ```. Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM.
+### Hector SLAM Installation
+Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation:
+
+```
+sudo apt-get install ros-melodic-hector-slam
+```
+
+Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM.
 
 Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
-### Navigation
+### Hector SLAM ausführen
+```
+roslaunch scoomatic_ros1 hector_slam.launch
+```
+kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
+
+### Navigation installieren & ausühren
 **TODO**
+
+### SLAM-Karte speichern und bereitstellen
+
+Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
+
+```
+rosrun map_server map_saver -f mapfilename
+```
+
+Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt. Dafür muss diese aber im korrekten Ordner sich befinden bzw. der Pfad im Launchfile angegeben sein.
+
+Mehr Infos: [map_server](http://wiki.ros.org/map_server#YAML_format)
+
+### RViz
+**TODO**
+Mit RViz ist es möglich viele Daten rund um den Scoomatic innerhalb der Welt anzeigen zu lassen.
+
+Dies umfasst unter anderem folgende Daten:
+
+* LaserScan
+* Odometry
+* Map
+* PoseWithCovariance (Also Pose mit Unsicherheit)
+* Trajectory
+
+RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst die ROS MASTER URI neu gesetzt werden.
 
 ## Konfiguration
 ### ssh Verbindung einrichten
@@ -229,6 +286,12 @@ In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung
 
 Wenn diese in der Bash verwendet werden wollen müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
 
+```
+alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
+alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
+alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
+```
+
  Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
 ### udev Regeln
@@ -246,7 +309,18 @@ Die udev Regeln sind im Format
 SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"
 ```
 zu schreiben.
-Wobei XXX durch den von Linux vergebenen Port geändert werden muss. 
+Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
+
+### RPLidar | Scan Modes
+
+![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
+
+Es existieren verschiedene Scan Modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht und Erklärung ist die Dokumentation des Protokoll des RPLidar zu empfehlen. Auf Seite 12 werden die verschiedenen Scan Modes erklärt.
+
+**TODO was ist besser Express oder Boost?**
+> SLAM wurde mit Boost und Express erfolgreich getestet.
+
+Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en)
 
 ## Tips & Tricks
 ### Hilfreiche Commands
@@ -256,6 +330,15 @@ Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 * Topic Nachrichten anschauen: ```rostopic echo /topic_name```
 * ROS1 starten: ```startros1```
 * ROS2 starten: ```startros2```
+* Parameter listen: ```rosparam list```
+
+### Numerische Werte der TF Transformationen anzeigen
+Bspw. die in Beziehung stehenden frames *turtle1* und *turtle2*
+``` 
+rosrun tf tf_echo turtle1 turtle2
+```
+
+Siehe Auch 
 
 ### Motor des LIDAR starten & stoppen
 Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht. Dies ist mit einem ROS Service erreichbar:
@@ -285,18 +368,32 @@ Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
 rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
 ```
 
-Also im Fall von SLAM: 
+Also für das Beispiel (Hector) SLAM: 
 ```
 rosbag record -O laserdata /scan 
 ```
 
-Wenn dann die Karte erstellt werden soll, kann das BAG-File einfach abgespielt werden mit 
+Wenn dann die Karte erstellt werden soll, kann das BAG-File in zweifacher Geschwindigkeit abgespielt werden 
 ```
 rosbag play -r 2 laserdata.bag
 ```
 
 Mit -r kann die Abspielrate verändert werden.
-Siehe auch: [http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data]
+
+Siehe auch: [Recording and playing back data (ROS wiki)](http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data)
+
+### Odometrie Daten anzeigen in rviz
+1. Starte Hector SLAM
+2. Starte RViz mit ```rosrun rviz rviz``` oder, siehe unten.
+3. Füge den Odometry Layer hinzu
+4. Wähle die ```/OdomPublisher/odom``` Topic aus
+
+
+>Eine spezifische rviz config kann mit
+>```
+>rosrun rviz rviz -d "odometry-and-map.rviz"
+>```
+>gestartet werden
 
 ### Unterschiedliche Geschwindigkeiten Räder
 Aufgrund der pneumatischen Reifen kann es vorkommen, dass durch den unterschiedlichen Druck in linkem und rechtem Reifen bei vorgegebener, gerader Fahrt eine Kurve gefahren wird.
@@ -312,114 +409,28 @@ Es ist möglich:
 1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf dem Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
-----------------------------------------------------------------------------
-
-
-
-
-### Vereinfachungen
-Mithilfe der ```~/.bashrc``` können viele Einstellungen automatisch vorgenommen werden. Auf Remote Rechner: ```export ROS_MASTER_URI=http://ubuntu:11311/``` für rviz, auf lokalem RPi:
-```
-alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
-alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
-alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
-```
-
-## Tips & Tricks
-### Parameter
-Parameter, welche über ein launchfile gesetzt werden, sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter port per ```MotorDriver/port```.
-
-Paramter lassen sich auch über das Kommandozeilenprogramm ```rosparam list``` auslesen.
-
-### Motoransteuerung
-Die Serielle Schnittstelle zur Ansteuerung der Motoren verwendet ein eigenes Protokoll, welches sich aus vier Bytes zusammsetzt. Das Format ist wie folgt: ```b'\xUU\xUU\xUU\xUU'```, wobei U für ein Hexadezimale Zahl steht. 
-
-Für Stillstand ist es bspw: ```b'\x00\x00\x00\x00'``` kann aber auch ```b'\xfb\xff\xf8\xff'``` entsprechen.
-
-Es können manuell steuersignale gesendet werden:```echo -e "\x84\x03\x00\x00" > /dev/motor_driver``` funktioniert. Dann drehen sich die Räder entgegengesetzt. Bei wiederholtert Eingabe erhöht sich die Geschwindigkeit.
-
-
-
-### Hector SLAM ausführen
-Mit ```roslaunch scoomatic_ros1 hector_slam.launch``` kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
-
-
-
-
-
-### "Fixed Frame [map] does not exist" in rviz
+### RViz: "Fixed Frame [map] does not exist" 
 In rviz auf **Reset** klicken
 
-### Karte wird nicht gespeichert
-Eigentlich sollte per mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
+### TF Transform Error
+Beispiel Fehler:
 
-Es besteht keine ausreichende erlaubnis, weil HectorSLAM per apt-get installiert wurde: 
+> [ERROR] [1581586277.372654655]: Transform failed during publishing of map_odom transform: Lookup would require extrapolation into the future.  Requested time 1581586276.552239413 but the latest data is at time 1581586276.399903637, when looking up transform from frame [base_link] to frame [odom]
 
-```
-sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff
-```
+In diesem Fall kann es sein, dass der frame ```odom``` zu häufig die TF Transformationen veröffentlicht bzw. im Verhältnis zu den in Beziehung stehenden Frames.
 
-User und Group sind in der Regel identisch.
-
-Es kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package  mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
-
-Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
-
-Beispiel Karte kann so aussehen:
-![hector-slam-map-example](./images/hector-slam-map-example.png)
-
-
-
-### Scan Modes RPLidar
-
-![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
-
-Es existieren verschiedene Scan modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht ist das Protokoll des RPLidar zu empfehlen: https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en Auf Seite 12 werden die verschiedenen Scan modes erklärt. Für diesen Fall wird **Boost** verwendet.
-
-### Navigation & Localization Stack
-  Map Server
-      |
-      | → provides (nav_msgs/OccupancyGrid)
-      ↓
-  Localization
-      |
-      | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
-      ↓
-  Navigation
-      |
-      | 
-      ↓
-  Moves Robot
-
-### Map speichern und bereitstellen
-
-Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei im map_server package erstellt.
-
-```
-rosrun map_server map_saver -f mapfilename
-```
-
-Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt.
-
-Mehr Infos unter [wiki.ros.org/map_server](http://wiki.ros.org/map_server#YAML_format)
-
-### Odometrie
-Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
-
-Zudem sind die beiden Motoren unterschiedlich schnell bei gleichen Eingabegrößen.
-
-Bei voller Geschwindigkeit von 996 ist die tatsächliche geschwindigkeit 987
-
-Eingabe Parameter ist im Bereich [0..1023]. Ausgabe des Motors ist im Bereich [0..1000].
-
-### SLAM fortführen / Karte nachträglich verbessern
-Das ist nicht möglicht. Weder HectorSLAM noch Gmapping haben eine Möglichkeit dafür, eine gestoppte und erstellte Karte forzuführen.
-
-Mehr Infos: https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721
-
-
-
+## Hinweise
 ### Geschwindigkeit des Scoomatics
+Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
+
+Dies kann unteranderem durch diese beiden Verfahren erfolgen:
+1. Der Radumfang wird berechnet/gemessen und dann innerhalb einer bestimmten Zeit die Anzahl der umdrehungen gemessen
+2. Für eine vorgegebene Geschwindigkeit wird die Wegstrecke gemessen, die der Scoomatic in einer bestimmten Zeit absolviert hat
+
+Zur ermittlung wurde Erstere Variante verwendet.
+
+**TODO verschönern**
+
 22 U/10sec bei 199,2 v_scoomatic_eingabe und bei 35 PSI ≈ 2,41 bar Reifenluftdruck
 199,2 v_scoomatic in der eingabe entspricht 190 gemessene geschwindigkeit am scoomatic
 
@@ -434,28 +445,37 @@ Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
 
 => Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
 
-Dies entspricht aber überhaupt nmicht der Realität. Die liegt etwa bei 4mm/s /1 v_scoomatic
+Dies entspricht allerdings nicht der Realität, wenn der Scoomatic auf dem Boden fährt! Die liegt etwa bei 4mm/s /1 v_scoomatic
 
-### Drehgeschwindigkeit des Scoomatics
-Die Breite des Scoomatics ist, gemessen an jeweils in der Mitte der Reifen, 622mm.
+### Odometrie Differenz zwischen Ein- & Ausgabe
+Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
 
-### Odometrie Daten anzeigen in rviz
-Starte Hector SLAM. Schließe rviz.
-Start rviz mit ```rosrun rviz rviz```
-Füge den Odometry Layer hinzu
-Wähle die /OdomPublisher/odom topic aus
-Eine spezifische rviz config kann mit
-``rosrun rviz rviz -d "odometry&map.rviz"``` gestartet werden
+Beispiel: Bei voller Geschwindigkeit von 996 ist die tatsächliche Geschwindigkeit 987.
 
-### TF Transformationen numerisch anschauen
-``` 
-rosrun tf tf_echo turtle1 turtle2
+Teilweise werden auch nicht die volle Geschwindigkeit mithilfe des Gamepads erreicht.
+
+Grund dafür ist unteranderem, dass die Numerischen Bereiche unterscheidlich sind: Der Eingabe Parameter ist im Bereich [0..1023]. Die Ausgabe des Motors ist im Bereich [0..1000].
+
+### SLAM fortführen / Karte nachträglich verbessern
+Nach aktuellem Kenntnis Stand des Autors ist es nicht möglich eine abgeschlossene und gespeicherte SLAM Karte von Hector SLAM in irgendeiner Art und Weise fortzuführen oder den Prozess zu pausieren.
+
+Mehr Infos: [ROS Answers](https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721)
+
+Allerdings ist es möglich eine PGM Karte mithilfe eines Bildbearbeitungsprogramms, bspw. [GIMP](https://www.gimp.org/) zu bearbeiten.
+
+### Hector GeoTIFF wird nicht gespeichert
+Im Regelfall sollte mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
+
+Allerdings bestehen keine ausreichenden Rechte, weil HectorSLAM per apt-get installiert wurde. Deswegen wurde vorgeschlagen die Rechte für die Nutzenden zu erlangen:
+
 ```
-oder einfach in rviz, siehe oben
+sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff
+```
+Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Problem nicht behoben werden.
 
-### TF error
-Bei diesem Fehler:
+Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
 
->>> [ERROR] [1581586277.372654655]: Transform failed during publishing of map_odom transform: Lookup would require extrapolation into the future.  Requested time 1581586276.552239413 but the latest data is at time 1581586276.399903637, when looking up transform from frame [base_link] to frame [odom]
+Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
 
-publisht der odom publisher zu häufig bzw. die anderen im vergleich zu wenig häufig
+Beispiel Karte kann so aussehen:
+![hector-slam-map-example](./images/hector-slam-map-example.png)
