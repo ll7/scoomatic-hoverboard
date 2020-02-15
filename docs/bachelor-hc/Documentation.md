@@ -25,7 +25,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
   - [Software](#software)
     - [Hector SLAM Installation](#hector-slam-installation)
     - [Hector SLAM ausführen](#hector-slam-ausf%c3%bchren)
-    - [Navigation installieren & ausühren](#navigation-installieren--aus%c3%bchren)
+    - [Navigation installieren & ausführen](#navigation-installieren--ausf%c3%bchren)
     - [SLAM-Karte speichern und bereitstellen](#slam-karte-speichern-und-bereitstellen)
     - [RViz](#rviz)
   - [Konfiguration](#konfiguration)
@@ -56,23 +56,42 @@ Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wur
 
 Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
 
-Als kleine Übersicht, das grobe Message-passing:
+Das Projekt ist so aufgebaut, dass ein Paket die gesamte Sensorik zur Verfügung stellt, ein Anderes die gesamte Verarbeitung (SLAM, Navigation). 
+
+Die Sensordaten, welche per I2C, UART bzw. Serieller Verbindung gelesen werden, werden per ROS Node als ROS Messages zur Verfügung gestellt. Damit kann jeder Rechner im Netzwerk auf diese Werte ebenfalls zugreifen. Unter andere
+
+Der Prozess, der es ermöglicht eine Navigation zu starten, setzt voraus, dass vorher eine Karte erstellt wurde. Sonst ist eine globale Routenplanung nicht möglich. Dementsprechend ist der grobe Prozess, welcher erledigt werden muss folgender:
+
+1. Gerät vorbereiten und starten
+2. SLAM Vorgang starten
+3. Nach fertigstellen der Karte, selbige speichern & SLAM Prozess stoppen
+4. Nun kann der Navigation Modus gestartet werden
+5. Der Roboter lokalisiert sich, dann kann ein Ziel-Punkt festgelegt werden
+
+Die Lokalisierung kann verbessert werden, indem im Raum hin und her gefahren wird. Denn die Lokalisierung funktioniert mit AMCL, also einer [Monte-Carlo Lokalisierung](https://en.wikipedia.org/wiki/Monte_Carlo_localization). Deshalb verbessert sich das Ergebnis, wenn mehr Daten "gesammelt" werden können.
+
+Als kleine Übersicht, das grobe Message-passing für die Navigation:
 
 ```
-  Map Server
-      |
-      | → provides (nav_msgs/OccupancyGrid)
-      ↓
-  Localization
-      |
-      | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
-      ↓
-  Navigation
-      |
-      | 
-      ↓
-  Moves Robot
+Map Server
+    |
+    | → provides (nav_msgs/OccupancyGrid)
+    ↓
+Localization
+    |
+    | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
+    ↓
+Navigation
+    |
+    | 
+    ↓
+Moves Robot
 ```
+
+Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle möglichen Informationsquellen verwendet.
+![Navigation Übersicht](images/overview_navigation.png)
+
+Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
 ## ROS
 
@@ -97,7 +116,7 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
 
-Es existieren Paramter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
+Es existieren Parameter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
 
 #### scoomatic-ros1
 * /imu/
@@ -228,7 +247,7 @@ Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic
 sudo apt-get install ros-melodic-hector-slam
 ```
 
-Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Paramter Einstellungen für das SLAM.
+Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Parameter Einstellungen für das SLAM.
 
 Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
@@ -238,7 +257,14 @@ roslaunch scoomatic_ros1 hector_slam.launch
 ```
 kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
 
-### Navigation installieren & ausühren
+### Navigation installieren & ausführen
+Das Paket *navigation* installiert mehrere davon abhängige Pakete mit. 
+
+Die Installation ist möglich mit 
+```
+sudo apt-get install ros-melodic-navigation
+```
+
 **TODO**
 
 ### SLAM-Karte speichern und bereitstellen
