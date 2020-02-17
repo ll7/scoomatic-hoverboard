@@ -45,11 +45,13 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
     - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
     - [TF Transform Error](#tf-transform-error)
+    - [........ escalating to SIGKILL / SIGTERM](#escalating-to-sigkill--sigterm)
   - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [Odometrie Differenz zwischen Ein- & Ausgabe](#odometrie-differenz-zwischen-ein---ausgabe)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
     - [Hector GeoTIFF wird nicht gespeichert](#hector-geotiff-wird-nicht-gespeichert)
+  - [ToDo](#todo)
 
 ## Einführung in das Projekt
 Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
@@ -453,6 +455,10 @@ Beispiel Fehler:
 
 In diesem Fall kann es sein, dass der frame ```odom``` zu häufig die TF Transformationen veröffentlicht bzw. im Verhältnis zu den in Beziehung stehenden Frames.
 
+### ........ escalating to SIGKILL / SIGTERM
+Beim beenden eines roslaunch Files bzw. Nodes.
+Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
+
 ## Hinweise
 ### Geschwindigkeit des Scoomatics
 Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
@@ -513,3 +519,11 @@ Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector
 
 Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
+
+## ToDo
+* AMCL laufen bekommen
+* pyLint aufschreiben
+* Koordinaten systeme richtig ausrichten
+* Maps (PGM/YAML) können nicht einfach nur umbenannt werden
+* Dokumentieren von ubuntu hosts eintrag
+* Problem: AMCL erkennt ROS Master nicht & umgekehrt
