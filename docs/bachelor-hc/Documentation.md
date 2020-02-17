@@ -116,6 +116,14 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
 
+Es existiert die Möglichkeit mithilfe von
+
+```
+rosrun rqt_graph rqt_graph
+```
+
+sich die Nodes Beziehungen mit Topics anzeigen zu lassen.
+
 Es existieren Parameter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
 
 #### scoomatic-ros1
@@ -223,7 +231,7 @@ Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LI
 
 **TODO: Bild aktualisieren!!!**
 
-![](images/rqt_tf_tree-hector-slam.png)
+![](images/tf-frames.svg)
 
 ## Hardware
 
