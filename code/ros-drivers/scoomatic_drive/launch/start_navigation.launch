@@ -1,5 +1,5 @@
 <launch>
-    <arg name="map_file" value="/home/chillahe/maps/map-0.0.1.yaml" />
+    <arg name="map_file" value="/home/chillahe/maps/buero.yaml" />
 
     <node name="MapServer" pkg="map_server" type="map_server"  args="$(arg map_file)"  output="screen">
     	<param name="frame_id" value="map" />

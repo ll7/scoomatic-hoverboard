@@ -29,13 +29,6 @@
 	    <param name="port" type="str" value="/dev/motor_diag"/>
         <param name="rate" type="int" value="5"/>
     </node>
-    <!-- Joy Driver -->
-    <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
-	    <param name="port" type="str" value="/dev/joydriver"/>
-        <param name="rate" type="int" value="15"/>
-        <param name="topic_vel" type="str" value="/joy"/>
-        <param name="topic_btn" type="str" value="/btn"/>
-    </node>-->
     <!-- Gamepad Driver -->
     <node name="GamepadDriver" pkg="scoomatic_ros1" type="gamepad_driver.py">
 	    <param name="topic" type="str" value="/cmd_vel"/>
@@ -44,6 +37,13 @@
         <param name="gain_lin" type="double" value="0.6"/> <!-- From 0.0 to 1.0-->
         <param name="gain_ang" type="double" value="0.8"/> <!-- From 0.0 to 1.0-->
     </node>
+    <!-- Joy Driver -->
+    <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
+	    <param name="port" type="str" value="/dev/joydriver"/>
+        <param name="rate" type="int" value="15"/>
+        <param name="topic_vel" type="str" value="/joy"/>
+        <param name="topic_btn" type="str" value="/btn"/>
+    </node>-->
     <!-- Sonar Driver -->
     <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
         <param name="rate" type="int" value="3"/>
@@ -52,7 +52,6 @@
         <param name="baudrate" type="str" value="115200"/>
     </node>-->
     <!-- Odom Publisher -->
-    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
-    </node>
+    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>
 </launch>
 
