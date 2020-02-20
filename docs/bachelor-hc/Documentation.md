@@ -29,8 +29,12 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [Bash Aliasse](#bash-aliasse)
+    - [Netzwerknamen festlegen](#netzwerknamen-festlegen)
+    - [Bash Aliasse auf RPi](#bash-aliasse-auf-rpi)
+    - [Bash Einstellungen Rechner](#bash-einstellungen-rechner)
     - [udev Regeln](#udev-regeln)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
+    - [Integration von pyLint in VS Code](#integration-von-pylint-in-vs-code)
   - [Tips & Tricks](#tips--tricks)
     - [Hilfreiche Commands](#hilfreiche-commands)
     - [Numerische Werte der TF Transformationen anzeigen](#numerische-werte-der-tf-transformationen-anzeigen)
@@ -39,6 +43,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [BAG Files](#bag-files)
     - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
+    - [Karten umbenennen](#karten-umbenennen)
   - [Bestehende Probleme](#bestehende-probleme)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
     - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
@@ -92,6 +97,8 @@ Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu se
 ![Navigation Übersicht](images/overview_navigation.png)
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
+
+Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Als Editor wurde [VS Code](https://code.visualstudio.com/) verwendet. Für beide ist auch Weiteres unter [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
 
 ## ROS
 
@@ -306,9 +313,18 @@ Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
 ### Bash Aliasse
 
+### Netzwerknamen festlegen
+Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werden, sonst kann ROS unter Umständen den ROS Master o.ä. nicht finden:
+```
+127.0.0.1 localhost
+127.0.0.1 ubuntu
+```
+
+### Bash Aliasse auf RPi
+**TODO: Alias config in configuration packen** 
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Die verwendeten Alias können in der [bash-aliases](../../code/configuration/bash-aliases) nachgelesen werden.
 
-Wenn diese in der Bash verwendet werden wollen müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
+Wenn diese auf dem RPi in der Bash verwendet werden sollen, müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
 
 ```bash
 alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
@@ -316,7 +332,19 @@ alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
 ```
 
- Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
+Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
+
+### Bash Einstellungen Rechner
+Auf dem externen Rechner können folgende Vereinfachungen festgelegt werden:
+```
+# ROS Master festlegen
+export ROS_MASTER_URI=http://ubuntu:11311/
+
+# ROS1 Workspace automatisch einrichten
+source /opt/ros/melodic/setup.bash
+```
+
+Dadurch wird der ROS Master auf den RPi festgelegt und der ROS1 Workspace bei jedem neuen Terminal automatisch eingerichtet, so dass die ROS Tools, wie ```rostopic``` verwendet werden können.
 
 ### udev Regeln
 
@@ -342,6 +370,22 @@ Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 Es existieren verschiedene Scan Modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht und Erklärung ist die Dokumentation des Protokoll des RPLidar zu empfehlen. Auf Seite 12 werden die verschiedenen Scan Modes erklärt.
 
 Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en)
+
+### Integration von pyLint in VS Code
+Zunächst einmal muss pyLint durch die Paketverwaltung installiert werden:
+```
+sudo apt-get install pylint pylint3
+```
+
+Nun kann in VS Code die [Extension Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) installiert werden. Die Warnungen und Fehler werden dann direkt angezeigt. 
+
+Nun möchten wir aber auch den Code Style einhalten und entfernen deshalb in den Extension Einstellungen den Haken bei:
+```
+Python › Linting: Pylint Use Minimal Checkers
+Whether to run Pylint with minimal set of rules.
+```
+
+Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder ```STRG+SHIFT+P > Problems: Focus on Problems View```) auch Code Style Probleme angezeigt.
 
 ## Tips & Tricks
 ### Hilfreiche Commands
@@ -424,6 +468,9 @@ Siehe auch: [Recording and playing back data (ROS wiki)](http://wiki.ros.org/ros
 Aufgrund der pneumatischen Reifen kann es vorkommen, dass durch den unterschiedlichen Druck in linkem und rechtem Reifen bei vorgegebener, gerader Fahrt eine Kurve gefahren wird.
 
 Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von **ca. 250mm**.
+
+### Karten umbenennen
+Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazugehörigen YAML Datei geändert werden. Sonst wird Diese nicht gefunden.
 
 ## Bestehende Probleme
 ### Performance Probleme des RPi
@@ -511,8 +558,9 @@ Beispiel Karte kann so aussehen:
 
 ## ToDo
 * AMCL laufen bekommen
-* pyLint aufschreiben
-* Koordinaten systeme richtig ausrichten
-* Maps (PGM/YAML) können nicht einfach nur umbenannt werden
-* Dokumentieren von ubuntu hosts eintrag
-* Problem: AMCL erkennt ROS Master nicht & umgekehrt
+  * Problem: AMCL erke nnt ROS Master nicht & umgekehrt
+* Koordinaten systeme richtig ausrichten (TF)
+* BASH Environmental variables speichern für ROS
+* imech WLAN: 10.42.0.67
+* amcl global localize ausprobieren
+* mit catkin workspace einrichten , damit package verfügbar
