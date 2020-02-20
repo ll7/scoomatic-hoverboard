@@ -6,8 +6,6 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
   - [ROS](#ros)
     - [ROS Package-Struktur](#ros-package-struktur)
     - [Node & Topic Übersicht](#node--topic-%c3%9cbersicht)
-      - [scoomatic-ros1](#scoomatic-ros1)
-      - [scoomatic-drive](#scoomatic-drive)
       - [ROS Logs](#ros-logs)
     - [Parameter Einstellungen](#parameter-einstellungen)
     - [How To Use](#how-to-use)
@@ -120,28 +118,13 @@ Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selb
 
 Es existiert die Möglichkeit mithilfe von
 
-```
+```bash
 rosrun rqt_graph rqt_graph
 ```
 
 sich die Nodes Beziehungen mit Topics anzeigen zu lassen.
 
 Es existieren Parameter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
-
-#### scoomatic-ros1
-* /imu/
-  * i2c_imu_node (i2c_imu/i2c_imu_node)
-* /
-  * GamepadDriver (scoomatic_ros1/gamepad_driver.py)
-  * MotorDiag (scoomatic_ros1/motor_diag.py)
-  * MotorDriver (scoomatic_ros1/motor_driver.py)
-  * OdomPublisher (scoomatic_ros1/odom_publisher.py)
-  * RPLidar (rplidar_ros/rplidarNode)
-  * base_to_laser (tf/static_transform_publisher)
-  * imu_to_base (tf/static_transform_publisher)
-
-#### scoomatic-drive
-**TODO**
 
 #### ROS Logs
 Alle Ausgaben der Nodes bzw. Topics landen in der Topic ```/rosout```. Dies gilt natürlich auch für selbst erstellte Nodes. In Python kann mit ```rospy.loginfo(STRING)``` ein STRING als Info veröffentlicht werden. Mit ```rospy.logwarn(WARNING)``` kann eine Warnung veröffentlicht werden.
@@ -190,7 +173,11 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 #### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
-**TODO**
+```bash
+roslaunch scoomatc_driver start_navigation.launch
+```
+
+Startet alle notwendigen Nodes, welche für die Navgation nützlich und notwendig sind.
 
 ## ROS 2
 
@@ -219,7 +206,7 @@ ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-
 
 Mit 
 
-```
+```bash
 rosrun rqt_tf_tree rqt_tf_tree
 ``` 
 
@@ -230,8 +217,6 @@ kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&No
 Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
 
 Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
-
-**TODO: Bild aktualisieren!!!**
 
 ![](images/tf-frames.svg)
 
@@ -253,7 +238,7 @@ Die Installation von SLAM und der Navigation wird hier beschrieben.
 ### Hector SLAM Installation
 Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic verwendet wird, lautet die Installation:
 
-```
+```bash
 sudo apt-get install ros-melodic-hector-slam
 ```
 
@@ -262,7 +247,7 @@ Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei ent
 Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
 
 ### Hector SLAM ausführen
-```
+```bash
 roslaunch scoomatic_ros1 hector_slam.launch
 ```
 kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
@@ -270,8 +255,9 @@ kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros
 ### Navigation installieren & ausführen
 Das Paket *navigation* installiert mehrere davon abhängige Pakete mit. 
 
-Die Installation ist möglich mit 
-```
+Die Installation ist möglich mit
+
+```bash
 sudo apt-get install ros-melodic-navigation
 ```
 
@@ -281,7 +267,7 @@ sudo apt-get install ros-melodic-navigation
 
 Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
 
-```
+```bash
 rosrun map_server map_saver -f mapfilename
 ```
 
@@ -303,6 +289,8 @@ Dies umfasst unter anderem folgende Daten:
 
 RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst die ROS MASTER URI neu gesetzt werden.
 
+[RViz](http://wiki.ros.org/rviz)
+
 ## Konfiguration
 ### ssh Verbindung einrichten
 > Voraussetzungen dafür sind: Rechner & RPi sind mit dem ```rt``` WiFi-Netzwerk verbunden
@@ -317,12 +305,12 @@ Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi
 Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
 ### Bash Aliasse
-**TODO: Alias config in configuration packen** 
+
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Die verwendeten Alias können in der [bash-aliases](../../code/configuration/bash-aliases) nachgelesen werden.
 
 Wenn diese in der Bash verwendet werden wollen müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
 
-```
+```bash
 alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
 alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
@@ -341,7 +329,7 @@ Alle USB-Geräte können mit ```ls /dev/ttyUSB*``` angezeigt werden. Dort stehen
 Unter Ubuntu 18.04 liegen die udev-Regeln unter ```/etc/udev/rules.d``` und die konkreten für Scoomatic in ```/etc/udev/rules.d/10-local.rules```. Dies ist jedoch nur eine Symbolische Verknüpfung und liegt im Repository unter ```code/configuration/10-local.rules```. Änderungen können mit ```udevadm control --reload-rules``` bzw ```sudo service udev reload``` & ```sudo service udev restart``` neu eingelesen werden, ohne das System neustarten zu müssen.
 
 Die udev Regeln sind im Format 
-```
+```bash
 SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX --attribute-walk)", SYMLINK+="gerätename"
 ```
 zu schreiben.
@@ -352,9 +340,6 @@ Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 ![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
 
 Es existieren verschiedene Scan Modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht und Erklärung ist die Dokumentation des Protokoll des RPLidar zu empfehlen. Auf Seite 12 werden die verschiedenen Scan Modes erklärt.
-
-**TODO was ist besser Express oder Boost?**
-> SLAM wurde mit Boost und Express erfolgreich getestet.
 
 Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en)
 
@@ -370,7 +355,7 @@ Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/r
 
 ### Numerische Werte der TF Transformationen anzeigen
 Bspw. die in Beziehung stehenden frames *turtle1* und *turtle2*
-``` 
+```bash
 rosrun tf tf_echo turtle1 turtle2
 ```
 
@@ -379,20 +364,23 @@ Siehe Auch
 ### Motor des LIDAR starten & stoppen
 Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht. Dies ist mit einem ROS Service erreichbar:
 
-```
+```bash
 rosservice call /stop_motor
 ```
 Genauso kann dieser auch wieder gestartet werden:
 
-```
+```bash
 rosservice call /start_motor
 ```
 
 ### Mehrere Fenster in einer Shell verwenden
 > Hierfür muss tmux installiert sein, was mit apt-get erledigt werden kann.
 
-**TODO original config file**
-In Terminal ```tmux``` eingeben. Neuer Tab: ```Ctrl+A C```. Wechseln der Tabs mit ```Shift+ArrowKey```.
+In Terminal ```tmux``` eingeben. Neuer Tab: ```Ctrl+B C```. Wechseln der Tabs mit ```Ctrl+B ArrowKey```.
+
+> Der Vorteil liegt hier darin, dass nicht mehrere SSH-Sessions eröffnet werden müssen.
+
+Mehr Infos: [Ubuntuusers/tmux](https://wiki.ubuntuusers.de/tmux/)
 
 ### BAG Files
 BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu einem späteren Zeitpunkt wieder "abspielen".
@@ -400,17 +388,18 @@ BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu e
 > ```rosbag``` ist das Tool in ROS um .bag Dateien aufzunehmen bzw. abzuspielen.
 
 Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
-```
+
+```bash
 rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
 ```
 
 Also für das Beispiel (Hector) SLAM: 
-```
+```bash
 rosbag record -O laserdata /scan 
 ```
 
 Wenn dann die Karte erstellt werden soll, kann das BAG-File in zweifacher Geschwindigkeit abgespielt werden 
-```
+```bash
 rosbag play -r 2 laserdata.bag
 ```
 
@@ -426,7 +415,7 @@ Siehe auch: [Recording and playing back data (ROS wiki)](http://wiki.ros.org/ros
 
 
 >Eine spezifische rviz config kann mit
->```
+>```bash
 >rosrun rviz rviz -d "odometry-and-map.rviz"
 >```
 >gestartet werden
@@ -446,7 +435,7 @@ Es ist möglich:
 2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf dem Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
 
 ### RViz: "Fixed Frame [map] does not exist" 
-In rviz auf **Reset** klicken
+In rviz auf **Reset** klicken oder RViz neu starten.
 
 ### TF Transform Error
 Beispiel Fehler:
@@ -508,7 +497,7 @@ Im Regelfall sollte mit dem Aufruf von ```rostopic pub syscommand std_msgs/Strin
 
 Allerdings bestehen keine ausreichenden Rechte, weil HectorSLAM per apt-get installiert wurde. Deswegen wurde vorgeschlagen die Rechte für die Nutzenden zu erlangen:
 
-```
+```bash
 sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff
 ```
 Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Problem nicht behoben werden.
