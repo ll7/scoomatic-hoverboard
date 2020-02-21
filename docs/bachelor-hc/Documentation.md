@@ -28,7 +28,6 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [RViz](#rviz)
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
-    - [Bash Aliasse](#bash-aliasse)
     - [Netzwerknamen festlegen](#netzwerknamen-festlegen)
     - [Bash Aliasse auf RPi](#bash-aliasse-auf-rpi)
     - [Bash Einstellungen Rechner](#bash-einstellungen-rechner)
@@ -311,8 +310,6 @@ Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi
 
 Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
-### Bash Aliasse
-
 ### Netzwerknamen festlegen
 Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werden, sonst kann ROS unter Umständen den ROS Master o.ä. nicht finden:
 ```
@@ -335,10 +332,10 @@ alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
 Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
 ### Bash Einstellungen Rechner
-Auf dem externen Rechner können folgende Vereinfachungen festgelegt werden:
+Auf dem externen Rechner können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
 ```
 # ROS Master festlegen
-export ROS_MASTER_URI=http://ubuntu:11311/
+export ROS_MASTER_URI=http://ubuntu.local:11311/
 
 # ROS1 Workspace automatisch einrichten
 source /opt/ros/melodic/setup.bash
@@ -398,12 +395,12 @@ Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder 
 * Parameter listen: ```rosparam list```
 
 ### Numerische Werte der TF Transformationen anzeigen
-Bspw. die in Beziehung stehenden frames *turtle1* und *turtle2*
+Bspw. die in Beziehung stehenden frames *map* und *base_link*
 ```bash
-rosrun tf tf_echo turtle1 turtle2
+rosrun tf tf_echo map base_link
 ```
 
-Siehe Auch 
+Siehe Auch [tf](http://wiki.ros.org/tf#tf_echo)
 
 ### Motor des LIDAR starten & stoppen
 Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht. Dies ist mit einem ROS Service erreichbar:
@@ -449,7 +446,7 @@ rosbag play -r 2 laserdata.bag
 
 Mit -r kann die Abspielrate verändert werden.
 
-Siehe auch: [Recording and playing back data (ROS wiki)](http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data)
+Siehe auch: [Recording and playing back data](http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data)
 
 ### Odometrie Daten anzeigen in rviz
 1. Starte Hector SLAM
@@ -557,10 +554,11 @@ Beispiel Karte kann so aussehen:
 ![hector-slam-map-example](./images/hector-slam-map-example.png)
 
 ## ToDo
-* AMCL laufen bekommen
-  * Problem: AMCL erke nnt ROS Master nicht & umgekehrt
 * Koordinaten systeme richtig ausrichten (TF)
-* BASH Environmental variables speichern für ROS
-* imech WLAN: 10.42.0.67
-* amcl global localize ausprobieren
-* mit catkin workspace einrichten , damit package verfügbar
+* mit catkin workspace auf rechner einrichten , damit package verfügbar
+* was ist ein quaternion? -> klären
+  * quaternion in fixen
+* Nochmals Karte erstellen
+* AMCL Lokalisierung funktionsfähig machen
+* /odom reparieren
+  * laser/slam deaktivieren und schauen was passiert

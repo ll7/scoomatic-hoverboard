@@ -115,6 +115,7 @@ def main():
         v_l = velocity_multiplier * speed_l # in m/s
         v_r = velocity_multiplier * speed_r # in m/s
         v_x = (v_r + v_l) / 2
+        #rospy.logwarn("Velocity VX: "+v_r+" v_r + "+v_l+"v_l /2="+v_x)
         v_y = 0.0 # in m/s [is always 0]
         v_th = (v_l - v_r) / l # in rad/s
 
