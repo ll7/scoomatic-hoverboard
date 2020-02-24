@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /Map1
         - /LaserScan1
-        - /PoseWithCovariance1
         - /PoseArray1
       Splitter Ratio: 0.5
     Tree Height: 848
@@ -161,45 +160,6 @@ Visualization Manager:
       Use rainbow: true
       Value: true
     - Alpha: 1
-      Class: rviz_plugin_tutorials/Imu
-      Color: 204; 51; 204
-      Enabled: false
-      History Length: 1
-      Name: Imu
-      Topic: ""
-      Unreliable: false
-      Value: false
-    - Alpha: 1
-      Axes Length: 1
-      Axes Radius: 0.10000000149011612
-      Class: rviz/PoseWithCovariance
-      Color: 255; 25; 0
-      Covariance:
-        Orientation:
-          Alpha: 0.5
-          Color: 255; 255; 127
-          Color Style: Unique
-          Frame: Local
-          Offset: 1
-          Scale: 1
-          Value: true
-        Position:
-          Alpha: 0.30000001192092896
-          Color: 204; 51; 204
-          Scale: 1
-          Value: true
-        Value: true
-      Enabled: true
-      Head Length: 0.30000001192092896
-      Head Radius: 0.10000000149011612
-      Name: PoseWithCovariance
-      Shaft Length: 1
-      Shaft Radius: 0.05000000074505806
-      Shape: Arrow
-      Topic: /amcl_pose
-      Unreliable: false
-      Value: true
-    - Alpha: 1
       Arrow Length: 0.30000001192092896
       Axes Length: 0.30000001192092896
       Axes Radius: 0.009999999776482582
@@ -243,25 +203,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 13.154818534851074
+      Distance: 6.845667839050293
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -2.540876626968384
-        Y: -1.0376560688018799
-        Z: 0.21290874481201172
+        X: -0.09309691935777664
+        Y: -0.7858918309211731
+        Z: -0.7673291563987732
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1147966384887695
+      Pitch: 0.6647965312004089
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.72539883852005
+      Yaw: 1.3604007959365845
     Saved: ~
 Window Geometry:
   Displays:
