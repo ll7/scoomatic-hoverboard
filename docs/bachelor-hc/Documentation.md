@@ -29,7 +29,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [Netzwerknamen festlegen](#netzwerknamen-festlegen)
-    - [Bash Aliasse auf RPi](#bash-aliasse-auf-rpi)
+    - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
     - [Bash Einstellungen Rechner](#bash-einstellungen-rechner)
     - [udev Regeln](#udev-regeln)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
@@ -179,11 +179,22 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 #### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
+> Folgender Ausdruck ist nur verfügbar, wenn ein Catkin Workspace eingerichtet wurde
+
 ```bash
-roslaunch scoomatc_driver start_navigation.launch
+roslaunch scoomatc_drive start_navigation.launch
 ```
 
-Startet alle notwendigen Nodes, welche für die Navgation nützlich und notwendig sind.
+Damit werden unter anderem der MapServer, welcher die Karte bereitstellt, die per SLAM erstellt wurde, und AMCL, zur Lokalisierung gestartet.
+
+AMCL benötigt initial eine ungefähre, vorgegbene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann.
+Es ist allerdings auch möglich mit 
+
+```
+rosservice call global_localization
+```
+
+einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden.
 
 ## ROS 2
 
@@ -224,7 +235,7 @@ Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen El
 
 Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
 
-![](images/tf-frames.svg)
+![Alle TF Frames als Diagramm](images/tf-frames.svg)
 
 ## Hardware
 
@@ -234,8 +245,6 @@ Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und
 
 ### Scoomatic Maße
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
-
-**TODO**
 
 ## Software
 
@@ -282,7 +291,6 @@ Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* p
 Mehr Infos: [map_server](http://wiki.ros.org/map_server#YAML_format)
 
 ### RViz
-**TODO**
 Mit RViz ist es möglich viele Daten rund um den Scoomatic innerhalb der Welt anzeigen zu lassen.
 
 Dies umfasst unter anderem folgende Daten:
@@ -294,6 +302,22 @@ Dies umfasst unter anderem folgende Daten:
 * Trajectory
 
 RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst die ROS MASTER URI neu gesetzt werden.
+
+> Die ROS_MASTER_URI kann folgendermaßen neu gesetzt werden: ```export ROS_MASTER_URI="http://ADRESSE:11311"``` Der Port ist in der Regel 11311, diese Einstellung gilt nur für das aktuelle Terminal und wird beim schließen verworfen. ADRESSE kann eine IP Adresse, .local-Adresse oder Ähnliches sein.
+
+Es gibt zwei vorgefertigte Ansichten für RViz. Diese sind unter ```code/configuration/``` mit der Endung *.rviz* gespeichert.
+
+**odometry-and-mapping.rviz** ist für die herstellen von SLAM Maps geeignet
+
+**amcl.rviz** ist geeignet für die Überprüfung der korrekten Lokalisierung
+
+Eine RViz Instanz mit einer bestimmten Konfiguration kann im Terminal gestartet werden:
+
+```
+rviz -d configuration.rviz
+bzw.
+rosrun rviz rviz -d configuration.rviz
+```
 
 [RViz](http://wiki.ros.org/rviz)
 
@@ -317,13 +341,16 @@ Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werd
 127.0.0.1 ubuntu
 ```
 
-### Bash Aliasse auf RPi
-**TODO: Alias config in configuration packen** 
-In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Die verwendeten Alias können in der [bash-aliases](../../code/configuration/bash-aliases) nachgelesen werden.
+### Einrichtung ~/.bashrc auf RPi
+In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Zudem ist es eine Erleichterung automatisch die notwendigen Dateien von ROS source-Befehle ausführen zu lassen.
 
 Wenn diese auf dem RPi in der Bash verwendet werden sollen, müssen diese einfach in die ```~/.bashrc``` am Ende der Datei eingefügt werden.
 
 ```bash
+# Auto-source ROS1
+source /opt/ros/melodic/setup.bash
+source ~/lennart_catkin_ws/devel/setup.bash
+# Create alias
 alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
 alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
@@ -400,7 +427,7 @@ Bspw. die in Beziehung stehenden frames *map* und *base_link*
 rosrun tf tf_echo map base_link
 ```
 
-Siehe Auch [tf](http://wiki.ros.org/tf#tf_echo)
+Siehe Auch [tf](http://wiki.ros.org/tf#tf_echo) und [Debugging Tools TF](http://wiki.ros.org/tf/Debugging%20tools)
 
 ### Motor des LIDAR starten & stoppen
 Es ist möglich den LIDAR Motor manuell zu stoppen, so dass er sich nicht mehr dreht. Dies ist mit einem ROS Service erreichbar:
@@ -562,3 +589,10 @@ Beispiel Karte kann so aussehen:
 * AMCL Lokalisierung funktionsfähig machen
 * /odom reparieren
   * laser/slam deaktivieren und schauen was passiert
+* Schreiben, wie catkin workspace eingerichtet wird
+* verschiedne tf frames erklären
+  * laser frame verändert sich, wenn odometry sich ändert, aber odometry ändert nicht seine koordinaten
+  * https://www.ros.org/reps/rep-0105.html
+* base local planner anschauen
+* frontier explorer beschreiben
+* https://www.ros.org/reps/rep-0103.html

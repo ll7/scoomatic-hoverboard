@@ -1,4 +1,5 @@
 <launch>
+    <!-- map file argument takes YAML-File, not Image-File! -->
     <arg name="map_file" value="/home/chillahe/maps/buero.yaml" />
 
     <node name="MapServer" pkg="map_server" type="map_server"  args="$(arg map_file)"  output="screen">

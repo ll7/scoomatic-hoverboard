@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
-""""Calculates the correct odometry in SI-units, using the internal odometry of scoomatic"""
+"""Calculates the correct odometry in SI-units, using the internal odometry of scoomatic"""
 
 # Author: Henri Chilla
 # Based on code: from https://gist.github.com/atotto/f2754f75bedb6ea56e3e0264ec405dcf
