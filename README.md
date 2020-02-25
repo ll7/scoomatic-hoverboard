@@ -25,4 +25,5 @@ Die von Henri verwendeten Branches beginnen mit hc:
 Branch: hc/
 
 [Bachelorarbeit Übersicht](docs/bachelor-hc/README.md)
+
 [Dokumentation](docs/bachelor-hc/Documentation.md)

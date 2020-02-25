@@ -1,5 +1,5 @@
 # Dokumentation
-Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung des Scoomatics behilflich sein.
+Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung des Scoomatics behilflich sein.
 
 - [Dokumentation](#dokumentation)
   - [Einführung in das Projekt](#einf%c3%bchrung-in-das-projekt)
@@ -43,7 +43,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [BAG Files](#bag-files)
     - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
-    - [Karten umbenennen](#karten-umbenennen)
+    - [PGM / YAML Karten umbenennen](#pgm--yaml-karten-umbenennen)
     - [ROS Topic-Messages werden nicht empfangen](#ros-topic-messages-werden-nicht-empfangen)
   - [Bestehende Probleme](#bestehende-probleme)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
@@ -52,10 +52,8 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [........ escalating to SIGKILL / SIGTERM](#escalating-to-sigkill--sigterm)
   - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
-    - [Odometrie Differenz zwischen Ein- & Ausgabe](#odometrie-differenz-zwischen-ein---ausgabe)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
-    - [Hector GeoTIFF wird nicht gespeichert](#hector-geotiff-wird-nicht-gespeichert)
-  - [ToDo](#todo)
+    - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
 
 ## Einführung in das Projekt
 Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
@@ -232,12 +230,11 @@ rosrun rqt_tf_tree rqt_tf_tree
 kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
 
 ### Aktuelle TF Baumstruktur
+![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.svg)
 
 Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
 
 Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
-
-![Alle TF Frames als Diagramm](images/tf-frames.svg)
 
 ## Hardware
 
@@ -282,10 +279,12 @@ sudo apt-get install ros-melodic-navigation
 
 ### SLAM-Karte speichern und bereitstellen
 
+![SLAM Karte Beispiel](./images/map-example.png)
+
 Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
 
 ```bash
-rosrun map_server map_saver -f mapfilename
+rosrun map_server map_saver -f map-roomname
 ```
 
 Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt. Dafür muss diese aber im korrekten Ordner sich befinden bzw. der Pfad im Launchfile angegeben sein.
@@ -514,7 +513,6 @@ Siehe auch: [Recording and playing back data](http://wiki.ros.org/rosbag/Tutoria
 3. Füge den Odometry Layer hinzu
 4. Wähle die ```/OdomPublisher/odom``` Topic aus
 
-
 >Eine spezifische rviz config kann mit
 >```bash
 >rosrun rviz rviz -d "odometry-and-map.rviz"
@@ -524,82 +522,88 @@ Siehe auch: [Recording and playing back data](http://wiki.ros.org/rosbag/Tutoria
 ### Unterschiedliche Geschwindigkeiten Räder
 Aufgrund der pneumatischen Reifen kann es vorkommen, dass durch den unterschiedlichen Druck in linkem und rechtem Reifen bei vorgegebener, gerader Fahrt eine Kurve gefahren wird.
 
-Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von **ca. 250mm**.
+Dann kann der Reifendruck überprüft werden und, wie auf dem Reifen angegeben auf 35 PSI aufgepumpt werden. In diesem Fall hat der Reifen einen Durchmesser von **ca. 250mm**.
 
-### Karten umbenennen
-Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazugehörigen YAML Datei geändert werden. Sonst wird Diese nicht gefunden.
+### PGM / YAML Karten umbenennen
+Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazugehörigen YAML Datei geändert werden. Sonst wird die PGM Datei nicht gefunden.
+
+> Es ist zu beachten, dass in dem Launchfile immer nur der Dateiname der YAML Datei angegeben werden muss und diese einen beliebigen Namen haben kann.
 
 ### ROS Topic-Messages werden nicht empfangen
 Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte in ```/etc/hosts``` die statische Route mit der passenden IP von ```ubuntu``` festgelegt werden.
 
 ## Bestehende Probleme
 ### Performance Probleme des RPi
-Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern bzw. zu umgehen.
+**Tritt auf**: Beim Karte erstellen mit SLAM
 
-Es ist möglich:
+**Mögliche Gründe**:
+* (Hector)SLAM wird auf RPi ausgeführt, RPi ist zu langsam dafür
 
-1. Die Daten zunächst nur aufzunehmen, in einem BAG File zu speichern und später auf einem leistungsstärkeren Rechner auszuführen oder
-2. Über Das Netzwerk in Echtzeit per SLAM eine Karte auf dem Rechner berechnen zu lassen während der RPi die Daten aufnimmt.
+**Mögliche Lösungen**:
+* SLAM auf Desktop Rechner ausführen
+* Die Daten zunächst nur aufzunehmen, in einem BAG File speichern und danach auf einem leistungsstärkeren Rechner SLAM ausführen mit dem BAG File
 
-### RViz: "Fixed Frame [map] does not exist" 
-In rviz auf **Reset** klicken oder RViz neu starten.
+### RViz: "Fixed Frame [map] does not exist"
+**Tritt auf**: In RViz, beim Anzeigen der Karte / immer
+
+**Mögliche Gründe**:
+* Es kommen tatsächlich keine Daten an, überprüfen mit ```rostopic echo /tf```
+* Angaben/Daten sind veraltet
+
+**Mögliche Lösungen**:
+* In RViz links unten auf "Reset" klicken
+* RViz neustarten
+* Die Netzwerkkonfiguration überprüfen, eventuell stimmt die statische Route in ```/etc/hosts``` nicht
 
 ### TF Transform Error
-Beispiel Fehler:
+**Tritt auf**: Bei HectorSLAM
 
+**Mögliche Gründe**:
+* ROS war noch nicht fertig gestartet
+* Andere TF Nodes veröffentlichen zu häufig bzw. zu wenig oft ihre TF Transformationen
+
+**Mögliche Lösungen**:
+* HectorSLAM beenden und neustarten
+* Publishing Häufigkeit ändern
+
+> **Beispiel Fehler**:
+> ```
 > [ERROR] [1581586277.372654655]: Transform failed during publishing of map_odom transform: Lookup would require extrapolation into the future.  Requested time 1581586276.552239413 but the latest data is at time 1581586276.399903637, when looking up transform from frame [base_link] to frame [odom]
-
-In diesem Fall kann es sein, dass der frame ```odom``` zu häufig die TF Transformationen veröffentlicht bzw. im Verhältnis zu den in Beziehung stehenden Frames.
+> ```
+> In diesem Fall kann es sein, dass der frame ```odom``` zu häufig die TF Transformationen veröffentlicht bzw. im Verhältnis zu den in Beziehung stehenden Frames.
 
 ### ........ escalating to SIGKILL / SIGTERM
-Beim beenden eines roslaunch Files bzw. Nodes.
-Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
+**Tritt auf**: Beim Beenden eines von ROS / einzelnen Nodes.
+
+**Möglicher Grund**: Der Threshold von ROS ist für den RPi zu niedrig eingestellt, da dieser zu lange braucht um sie zu beenden
+
+**Mögliche Lösungen**:
+* Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
+* Keine
 
 ## Hinweise
 ### Geschwindigkeit des Scoomatics
 Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
 
 Dies kann unteranderem durch diese beiden Verfahren erfolgen:
-1. Der Radumfang wird berechnet/gemessen und dann innerhalb einer bestimmten Zeit die Anzahl der umdrehungen gemessen
+1. Der Radumfang wird berechnet/gemessen und dann innerhalb einer bestimmten Zeit die Anzahl der Umdrehungen gemessen
 2. Für eine vorgegebene Geschwindigkeit wird die Wegstrecke gemessen, die der Scoomatic in einer bestimmten Zeit absolviert hat
 
-Zur ermittlung wurde Erstere Variante verwendet.
+Zur Ermittlung wurde Erstere Variante verwendet. Allerdings ist diese mit einem zu hohen Fehler behaftet und kann nicht sinnvoll verwendet werden.
 
-**TODO verschönern**
-
-22 U/10sec bei 199,2 v_scoomatic_eingabe und bei 35 PSI ≈ 2,41 bar Reifenluftdruck
-199,2 v_scoomatic in der eingabe entspricht 190 gemessene geschwindigkeit am scoomatic
-
-Umfang [cm] = 2 * Pi * 25cm Radius = 157,1cm
-
-=> Bei 10sec : 157,1cm * 22 = 3456cm / 10sec
-=> m/s: 3,456 m/s bei 190 v_scoomatic
-
-Standardisierte m/s Geschwindigkeit in Abhängigkeit der v_scoomatic
-
-Standardisierte v: 3,456 m/s / 190 v_scoomatic ≈ 18,2 mm/s /1 v_scoomatic
-
-=> Bei voller Geschwindigkeit von 996 entspricht dies: 996 * 18,2 mm/s = 18,13m/s = 65,26 km/h. Wohlgemerkt im leerlauf, ohne belastung.
-
-Dies entspricht allerdings nicht der Realität, wenn der Scoomatic auf dem Boden fährt! Die liegt etwa bei 4mm/s /1 v_scoomatic
-
-### Odometrie Differenz zwischen Ein- & Ausgabe
-Im Leerlauf besteht etwa eine 5%iger Unterschied zwischen Eingabe Geschwindigkeit und der tatsächlichen Geschwindigkeit. Bsp: -199 Eingabe; -190 Tatsächlich. Dieser kann aber auch höher sein. Beachtenswert ist die negative Geschwindigkeit bei Vorwärtsbewegung. Und umgekehrt bei Rückwärtsbewegung.
-
-Beispiel: Bei voller Geschwindigkeit von 996 ist die tatsächliche Geschwindigkeit 987.
-
-Teilweise werden auch nicht die volle Geschwindigkeit mithilfe des Gamepads erreicht.
-
-Grund dafür ist unteranderem, dass die Numerischen Bereiche unterscheidlich sind: Der Eingabe Parameter ist im Bereich [0..1023]. Die Ausgabe des Motors ist im Bereich [0..1000].
+Der Schätzwert der Geschwindigkeit für eine Einheitslose Geschwindigkeit v_{scoomatic} ≈ 4mm/s/v_{scoomatic} = 0,004m/s/v_{scoomatic}
 
 ### SLAM fortführen / Karte nachträglich verbessern
 Nach aktuellem Kenntnis Stand des Autors ist es nicht möglich eine abgeschlossene und gespeicherte SLAM Karte von Hector SLAM in irgendeiner Art und Weise fortzuführen oder den Prozess zu pausieren.
 
+Allerdings ist es möglich eine PGM Karte mithilfe eines Bildbearbeitungsprogramms, bspw. [GIMP](https://www.gimp.org/) zu bearbeiten. Allerdings sollte dies nur in geringem Umfang passieren
+
 Mehr Infos: [ROS Answers](https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721)
 
-Allerdings ist es möglich eine PGM Karte mithilfe eines Bildbearbeitungsprogramms, bspw. [GIMP](https://www.gimp.org/) zu bearbeiten.
+### Hector GeoTIFF (wird nicht gespeichert)
+> Es ist zusätzlich, zu dem unter [SLAM Karte speichern und bereitstellen](#slam-karte-speichern-und-bereitstellen) beschriebenen Möglichkeit eine PGM Karte mithilfe des map_server zu erstellen, möglich eine GeoTIFF zu speichern. Diese Möglichkeit bietet das Paket ```hector_geotiff```, welches mit HectorSLAM geliefert wird. Allerdings ist es zum aktuellen Zeitpunkt nicht möglich diese Karte auch wieder als [OccupancyGrid](http://docs.ros.org/melodic/api/nav_msgs/html/msg/OccupancyGrid.html) als Node auszuliefern. Deswegen ist dieses Paket für dieses Projekt aktuell nicht hilfreich.
 
-### Hector GeoTIFF wird nicht gespeichert
+
 Im Regelfall sollte mit dem Aufruf von ```rostopic pub syscommand std_msgs/String "savegeotiff"``` eine Karte unter dem angegeben Dateinamen, der in ```geotiff_mapper.launch```  bestimmt ist, gespeichert werden.
 
 Allerdings bestehen keine ausreichenden Rechte, weil HectorSLAM per apt-get installiert wurde. Deswegen wurde vorgeschlagen die Rechte für die Nutzenden zu erlangen:
@@ -611,21 +615,19 @@ Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Pr
 
 Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
 
-Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
+Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
 
-Beispiel Karte kann so aussehen:
+<!-- ### Template Problemlösungen
+**Tritt auf**: 
 
-![hector-slam-map-example](./images/map-example.png)
+**Mögliche Gründe**:
 
-## ToDo
+**Mögliche Lösungen**:
+-->
+
+<!-- !!!! TODOs
 * Koordinaten systeme richtig ausrichten (TF)
 * mit catkin workspace auf rechner einrichten , damit package verfügbar
-* was ist ein quaternion? -> klären
-  * quaternion in fixen
-* Nochmals Karte erstellen
-* AMCL Lokalisierung funktionsfähig machen
-* /odom reparieren
-  * laser/slam deaktivieren und schauen was passiert
 * Schreiben, wie catkin workspace eingerichtet wird
 * verschiedne tf frames erklären
   * laser frame verändert sich, wenn odometry sich ändert, aber odometry ändert nicht seine koordinaten
@@ -634,5 +636,5 @@ Beispiel Karte kann so aussehen:
 * frontier explorer beschreiben
 * https://www.ros.org/reps/rep-0103.html
 * Latex: collision (detection) / urdf 
-* wifi priority nmcli schreiben
-* tf mit TP Link nicht funktionsfähig
+
+-->
