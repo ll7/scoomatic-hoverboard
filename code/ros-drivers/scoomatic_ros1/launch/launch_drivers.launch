@@ -8,7 +8,7 @@
     	<param name="serial_port" type="string" value="/dev/rplidar" />
         <param name="frame_id" type="string" value="laser"/>
         <!-- for scan mode possibilities look at RPLidar docs (Page 12): https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en-->
-        <param name="scan_mode" type="string" value="Express"/> <!-- Boost ≙ 8K Samples--> <!-- Express ≙ 4K Samples--> 
+        <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples--> <!-- Express ≙ 4K Samples--> 
     </node>
     <!-- Internal NODES -->
     <!-- tf static transform of laser -->
