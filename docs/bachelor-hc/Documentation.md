@@ -34,6 +34,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [udev Regeln](#udev-regeln)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
     - [Integration von pyLint in VS Code](#integration-von-pylint-in-vs-code)
+    - [WiFi Netzwerk Verbindung & Konfiguration](#wifi-netzwerk-verbindung--konfiguration)
   - [Tips & Tricks](#tips--tricks)
     - [Hilfreiche Commands](#hilfreiche-commands)
     - [Numerische Werte der TF Transformationen anzeigen](#numerische-werte-der-tf-transformationen-anzeigen)
@@ -43,6 +44,7 @@ Dieser Leitfaden soll bei der Konfiguration, weiterentwicklung und Veränderung 
     - [Odometrie Daten anzeigen in rviz](#odometrie-daten-anzeigen-in-rviz)
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [Karten umbenennen](#karten-umbenennen)
+    - [ROS Topic-Messages werden nicht empfangen](#ros-topic-messages-werden-nicht-empfangen)
   - [Bestehende Probleme](#bestehende-probleme)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
     - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
@@ -156,7 +158,7 @@ Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der St
 
 #### ROS (Core) Starten
 
-> Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel eingerichtet wurde.
+> Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel [Konfiguration](#Konfiguration) eingerichtet wurde.
 
 1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
 2. Mit ```ssh scoomatic``` per SSH verbinden
@@ -340,6 +342,16 @@ Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werd
 127.0.0.1 localhost
 127.0.0.1 ubuntu
 ```
+----------------------------------------------------------------
+
+Auf dem Desktop Rechner werden folgende Routen festgelegt:
+```
+192.168.140.16	ubuntu
+127.0.0.1	localhost
+```
+
+Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche.
+Der WiFi-Hotspot spielt eine Sonderrolle.
 
 ### Einrichtung ~/.bashrc auf RPi
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Zudem ist es eine Erleichterung automatisch die notwendigen Dateien von ROS source-Befehle ausführen zu lassen.
@@ -397,7 +409,7 @@ Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/r
 
 ### Integration von pyLint in VS Code
 Zunächst einmal muss pyLint durch die Paketverwaltung installiert werden:
-```
+```bash
 sudo apt-get install pylint pylint3
 ```
 
@@ -410,6 +422,27 @@ Whether to run Pylint with minimal set of rules.
 ```
 
 Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder ```STRG+SHIFT+P > Problems: Focus on Problems View```) auch Code Style Probleme angezeigt.
+
+### WiFi Netzwerk Verbindung & Konfiguration
+Auf dem RPi sind drei WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
+
+Folgende 3 Netzwerke sind mit absteigender Priorität eingerichtet:
+* TP-LINK_A264
+* imech139-u
+* rt
+
+Dies bedeutet, dass sich der RPi mit TP-LINK_A264 automatisch verbindet, wenn alle drei zur Verfügung stehen. Wenn das nicht der Fall ist mit imech139-u und wenn nur rt zur Verfügung steht, mit diesem.
+
+Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
+
+Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden:
+```bash
+nmcli c mod rt connection.autoconnect-priority 1
+```
+
+Höhere Nummern bedeuteten höhere Priorität.
+
+Mehr Infos zum thema NM Priorities auf [NetworkManager connection priority](http://bss.technology/tutorials/red-hat-enterprise-linux-v7-networking/networkmanager-connection-priority-manage-network-profile-priority-in-linux/)
 
 ## Tips & Tricks
 ### Hilfreiche Commands
@@ -496,6 +529,9 @@ Dann muss der Reifendruck überprüft werden und, wie auf dem Reifen angegeben a
 ### Karten umbenennen
 Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazugehörigen YAML Datei geändert werden. Sonst wird Diese nicht gefunden.
 
+### ROS Topic-Messages werden nicht empfangen
+Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte in ```/etc/hosts``` die statische Route mit der passenden IP von ```ubuntu``` festgelegt werden.
+
 ## Bestehende Probleme
 ### Performance Probleme des RPi
 Der RPi ist beim ausführen von SLAM sehr träge. Deshalb gibt es verschiedene Möglichkeiten dies zu verbessern bzw. zu umgehen.
@@ -578,7 +614,8 @@ Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` R
 Siehe auch: https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/
 
 Beispiel Karte kann so aussehen:
-![hector-slam-map-example](./images/hector-slam-map-example.png)
+
+![hector-slam-map-example](./images/map-example.png)
 
 ## ToDo
 * Koordinaten systeme richtig ausrichten (TF)
@@ -596,3 +633,6 @@ Beispiel Karte kann so aussehen:
 * base local planner anschauen
 * frontier explorer beschreiben
 * https://www.ros.org/reps/rep-0103.html
+* Latex: collision (detection) / urdf 
+* wifi priority nmcli schreiben
+* tf mit TP Link nicht funktionsfähig
