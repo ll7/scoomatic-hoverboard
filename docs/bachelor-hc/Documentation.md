@@ -45,7 +45,8 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [PGM / YAML Karten umbenennen](#pgm--yaml-karten-umbenennen)
     - [ROS Topic-Messages werden nicht empfangen](#ros-topic-messages-werden-nicht-empfangen)
-  - [Bestehende Probleme](#bestehende-probleme)
+  - [Mögliche Probleme](#m%c3%b6gliche-probleme)
+    - [ssh: Could not resolve hostname ubuntu.local: Name or service not known](#ssh-could-not-resolve-hostname-ubuntulocal-name-or-service-not-known)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
     - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
     - [TF Transform Error](#tf-transform-error)
@@ -365,6 +366,8 @@ source ~/lennart_catkin_ws/devel/setup.bash
 alias sourceros2="source /opt/ros/crystal/setup.bash && source ~/ros2_ws/install/setup.bash"
 alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
+# Set ROS Hostname
+export ROS_HOSTNAME=ubuntu.local
 ```
 
 Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
@@ -426,8 +429,8 @@ Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder 
 Auf dem RPi sind drei WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
 
 Folgende 3 Netzwerke sind mit absteigender Priorität eingerichtet:
-* TP-LINK_A264
-* imech139-u
+* TP-LINK_A264 | Passwort: 95394787
+* imech139-u | Passwort siehe WLAN Hotspot Ubuntu
 * rt
 
 Dies bedeutet, dass sich der RPi mit TP-LINK_A264 automatisch verbindet, wenn alle drei zur Verfügung stehen. Wenn das nicht der Fall ist mit imech139-u und wenn nur rt zur Verfügung steht, mit diesem.
@@ -532,7 +535,27 @@ Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazuge
 ### ROS Topic-Messages werden nicht empfangen
 Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte in ```/etc/hosts``` die statische Route mit der passenden IP von ```ubuntu``` festgelegt werden.
 
-## Bestehende Probleme
+## Mögliche Probleme
+
+<!-- ### Template Problemlösungen
+**Tritt auf**: 
+
+**Mögliche Gründe**:
+
+**Mögliche Lösungen**:
+-->
+
+### ssh: Could not resolve hostname ubuntu.local: Name or service not known
+**Tritt auf**: Beim Verbinden zum RPi
+
+**Mögliche Gründe**:
+* Der ```avahi-daemon``` läuft nicht
+* Rechner oder RPi ist in einem anderem WiFi-Netzwerk als der jeweilige Partner
+
+**Mögliche Lösungen**:
+* ```sudo systemctl start avahi-daemon``` ausführen. Zum permanent machen: ```sudo systemctl enable avahi-daemon```
+* WiFi-Netzwerk wechseln
+
 ### Performance Probleme des RPi
 **Tritt auf**: Beim Karte erstellen mit SLAM
 
@@ -561,10 +584,12 @@ Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic
 **Mögliche Gründe**:
 * ROS war noch nicht fertig gestartet
 * Andere TF Nodes veröffentlichen zu häufig bzw. zu wenig oft ihre TF Transformationen
+* Uhrzeiten auf den Rechnern sind zu unterschiedlich
 
 **Mögliche Lösungen**:
 * HectorSLAM beenden und neustarten
 * Publishing Häufigkeit ändern
+* Uhrzeiten angleichen; http://wiki.ros.org/ROS/NetworkSetup#Timing_issues.2C_TF_complaining_about_extrapolation_into_the_future.3F
 
 > **Beispiel Fehler**:
 > ```
@@ -573,13 +598,14 @@ Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic
 > In diesem Fall kann es sein, dass der frame ```odom``` zu häufig die TF Transformationen veröffentlicht bzw. im Verhältnis zu den in Beziehung stehenden Frames.
 
 ### ........ escalating to SIGKILL / SIGTERM
-**Tritt auf**: Beim Beenden eines von ROS / einzelnen Nodes.
+**Tritt auf**: Beim Beenden von ROS / einzelnen Nodes.
 
 **Möglicher Grund**: Der Threshold von ROS ist für den RPi zu niedrig eingestellt, da dieser zu lange braucht um sie zu beenden
 
 **Mögliche Lösungen**:
-* Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
-* Keine
+* Keine Notwendig
+
+>Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
 
 ## Hinweise
 ### Geschwindigkeit des Scoomatics
@@ -591,7 +617,9 @@ Dies kann unteranderem durch diese beiden Verfahren erfolgen:
 
 Zur Ermittlung wurde Erstere Variante verwendet. Allerdings ist diese mit einem zu hohen Fehler behaftet und kann nicht sinnvoll verwendet werden.
 
-Der Schätzwert der Geschwindigkeit für eine Einheitslose Geschwindigkeit v_{scoomatic} ≈ 4mm/s/v_{scoomatic} = 0,004m/s/v_{scoomatic}
+Der Schätzwert der Geschwindigkeit für eine Einheitslose Geschwindigkeit v_{scoomatic} 
+
+≈ 4mm/s/v_{scoomatic} = 0,004m/s/v_{scoomatic}
 
 ### SLAM fortführen / Karte nachträglich verbessern
 Nach aktuellem Kenntnis Stand des Autors ist es nicht möglich eine abgeschlossene und gespeicherte SLAM Karte von Hector SLAM in irgendeiner Art und Weise fortzuführen oder den Prozess zu pausieren.
@@ -617,24 +645,33 @@ Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` R
 
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
 
-<!-- ### Template Problemlösungen
-**Tritt auf**: 
-
-**Mögliche Gründe**:
-
-**Mögliche Lösungen**:
--->
-
-<!-- !!!! TODOs
+<!-- !!! TODOs
 * Koordinaten systeme richtig ausrichten (TF)
 * mit catkin workspace auf rechner einrichten , damit package verfügbar
 * Schreiben, wie catkin workspace eingerichtet wird
 * verschiedne tf frames erklären
   * laser frame verändert sich, wenn odometry sich ändert, aber odometry ändert nicht seine koordinaten
   * https://www.ros.org/reps/rep-0105.html
+* https://www.ros.org/reps/rep-0103.html
 * base local planner anschauen
 * frontier explorer beschreiben
-* https://www.ros.org/reps/rep-0103.html
 * Latex: collision (detection) / urdf 
+* ROS service schreiben für zurücksetzen der odometrie?
+* Versuch machen mit gleichen bedingungen , einmal mit express und einmal boost
+* schreiben: odometrie ausschalten für SLAM
+* schreiben: VM mit rviz aufsetzen
+* schreiben: ros ip, ros hostname und master uri 
+* navigation integrieren
+  * plan?!
+* http://wiki.ros.org/navigation/Tutorials/RobotSetup 
+* http://wiki.ros.org/base_local_planner
+* durchlesen
+-->
 
+<!-- !!! Festellungen
+* ohne odometrie node sind die koordiantensysteme immer noch falsch
+* neue karte mit neuem router erstellen
+  * wifi genauso schlecht
+* drehungen gehen mit oder ohne odometrie gleich schlecht(?)
+  * gleich schlecht
 -->
