@@ -45,6 +45,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [Unterschiedliche Geschwindigkeiten Räder](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
     - [PGM / YAML Karten umbenennen](#pgm--yaml-karten-umbenennen)
     - [ROS Topic-Messages werden nicht empfangen](#ros-topic-messages-werden-nicht-empfangen)
+    - [Odometrie Node ausschalten](#odometrie-node-ausschalten)
   - [Mögliche Probleme](#m%c3%b6gliche-probleme)
     - [ssh: Could not resolve hostname ubuntu.local: Name or service not known](#ssh-could-not-resolve-hostname-ubuntulocal-name-or-service-not-known)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
@@ -57,6 +58,9 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
 
 ## Einführung in das Projekt
+
+![Systemübersicht mit allen Maschinen](images/MachineOverview.png)
+
 Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
 
 Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
@@ -535,6 +539,22 @@ Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazuge
 ### ROS Topic-Messages werden nicht empfangen
 Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte in ```/etc/hosts``` die statische Route mit der passenden IP von ```ubuntu``` festgelegt werden.
 
+### Odometrie Node ausschalten
+Um ein debuggen von SLAM zu erleichtern, kann die Odometrie Daten ausgeschaltet werden.
+
+Dazu wird in ```launch_drivers.launch``` die Zeile des OdomPublisher auskommentiert:
+```XML
+<!--<node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>-->
+```
+
+Zudem muss in ```start_hector_slam.launch``` die Zeilen mit ```odom_frame``` ein- bzw. auskommentiert werden:
+```XML
+<!-- use odom frame; comment out either this or next line -->
+<!--<arg name="odom_frame" default="odom"/>-->
+<!-- don't use odom frame-->
+<arg name="odom_frame" default="base_link"/>
+```
+
 ## Mögliche Probleme
 
 <!-- ### Template Problemlösungen
@@ -654,18 +674,14 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
   * https://www.ros.org/reps/rep-0105.html
 * https://www.ros.org/reps/rep-0103.html
 * base local planner anschauen
-* frontier explorer beschreiben
 * Latex: collision (detection) / urdf 
 * ROS service schreiben für zurücksetzen der odometrie?
-* Versuch machen mit gleichen bedingungen , einmal mit express und einmal boost
-* schreiben: odometrie ausschalten für SLAM
 * schreiben: VM mit rviz aufsetzen
 * schreiben: ros ip, ros hostname und master uri 
 * navigation integrieren
   * plan?!
-* http://wiki.ros.org/navigation/Tutorials/RobotSetup 
-* http://wiki.ros.org/base_local_planner
-* durchlesen
+* http://wiki.ros.org/navigation/Tutorials/RobotSetup und
+* http://wiki.ros.org/base_local_planner durchlesen
 -->
 
 <!-- !!! Festellungen
