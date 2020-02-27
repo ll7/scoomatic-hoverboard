@@ -32,6 +32,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
     - [Bash Einstellungen Rechner](#bash-einstellungen-rechner)
     - [udev Regeln](#udev-regeln)
+    - [Catkin Workspace einrichten](#catkin-workspace-einrichten)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
     - [Integration von pyLint in VS Code](#integration-von-pylint-in-vs-code)
     - [WiFi Netzwerk Verbindung & Konfiguration](#wifi-netzwerk-verbindung--konfiguration)
@@ -123,6 +124,70 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
   * Obstacle Avoidance
 
 ### Node & Topic Übersicht
+
+<!-- ALLE NODES mit AMCL + Navigation stack
+/AMCL/parameter_descriptions
+/AMCL/parameter_updates
+/MotorDiag/adc1
+/MotorDiag/adc2
+/MotorDiag/battery_voltage
+/MotorDiag/battery_voltage_calibration_value
+/MotorDiag/speed_l
+/MotorDiag/speed_r
+/MotorDiag/temperature
+/MotorDiag/temperature_calibration_value
+/OdomPublisher/odom
+/amcl_pose
+/cmd_vel
+/diagnostics
+/imu/data
+/initialpose
+/map
+/map_metadata
+/move_base/NavfnROS/plan
+/move_base/TrajectoryPlannerROS/cost_cloud
+/move_base/TrajectoryPlannerROS/global_plan
+/move_base/TrajectoryPlannerROS/local_plan
+/move_base/TrajectoryPlannerROS/parameter_descriptions
+/move_base/TrajectoryPlannerROS/parameter_updates
+/move_base/cancel
+/move_base/current_goal
+/move_base/feedback
+/move_base/global_costmap/costmap
+/move_base/global_costmap/costmap_updates
+/move_base/global_costmap/footprint
+/move_base/global_costmap/inflation_layer/parameter_descriptions
+/move_base/global_costmap/inflation_layer/parameter_updates
+/move_base/global_costmap/obstacle_layer/parameter_descriptions
+/move_base/global_costmap/obstacle_layer/parameter_updates
+/move_base/global_costmap/parameter_descriptions
+/move_base/global_costmap/parameter_updates
+/move_base/global_costmap/static_layer/parameter_descriptions
+/move_base/global_costmap/static_layer/parameter_updates
+/move_base/goal
+/move_base/local_costmap/costmap
+/move_base/local_costmap/costmap_updates
+/move_base/local_costmap/footprint
+/move_base/local_costmap/inflation_layer/parameter_descriptions
+/move_base/local_costmap/inflation_layer/parameter_updates
+/move_base/local_costmap/obstacle_layer/parameter_descriptions
+/move_base/local_costmap/obstacle_layer/parameter_updates
+/move_base/local_costmap/parameter_descriptions
+/move_base/local_costmap/parameter_updates
+/move_base/parameter_descriptions
+/move_base/parameter_updates
+/move_base/result
+/move_base/status
+/move_base_simple/goal
+/odom
+/particlecloud
+/rosout
+/rosout_agg
+/scan
+/tf
+/tf_static
+-->
+
 ![](images/topics-and-nodes-with-slam.svg)
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
@@ -405,6 +470,31 @@ SUBSYSTEM=="tty", KERNELS=="(ermittelbar mit udevadm info --name=/dev/ttyUSBXXX 
 zu schreiben.
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 
+### Catkin Workspace einrichten
+Catkin ist das Builld-System von ROS1. Damit die Packages gebaut und von ROS verwaltet werden können, richten wir einen Workspace auf dem Desktop Rechner ein.
+
+Wir führen folgende Befehle aus:
+```bash
+mkdir -p ~/catkin_ws/src
+$ cd ~/catkin_ws/
+$ catkin_make
+$ source devel/setup.bash
+```
+
+Jetzt kann überprüft werden ob der Pfad auch in ROS festgelegt wurde:
+```bash
+$ echo $ROS_PACKAGE_PATH
+/home/<USERNAME>/catkin_ws/src:/opt/ros/melodic/share
+```
+So sieht der korrekte Pfad aus.
+
+Nun müssen wir noch die programmierten Packages mit einem symbolischen Link verlinken, damit diese in ROS verfügbar sind:
+```
+<USERNAME>@imech139-u:~/catkin_ws$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/ros-drivers/scoomatic_drive src/scoomatic_drive
+```
+
+[Tutorial im ROS Wiki](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
+
 ### RPLidar | Scan Modes
 
 ![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
@@ -666,9 +756,8 @@ Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` R
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
 
 <!-- !!! TODOs
-* Koordinaten systeme richtig ausrichten (TF)
-* mit catkin workspace auf rechner einrichten , damit package verfügbar
-* Schreiben, wie catkin workspace eingerichtet wird
+* !!! Koordinaten systeme richtig ausrichten (TF)
+  * Auf Rosanswers fragen !!!
 * verschiedne tf frames erklären
   * laser frame verändert sich, wenn odometry sich ändert, aber odometry ändert nicht seine koordinaten
   * https://www.ros.org/reps/rep-0105.html
@@ -679,8 +768,6 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * schreiben: VM mit rviz aufsetzen
 * schreiben: ros ip, ros hostname und master uri 
 * navigation integrieren
-  * plan?!
-* http://wiki.ros.org/navigation/Tutorials/RobotSetup und
 * http://wiki.ros.org/base_local_planner durchlesen
 -->
 
