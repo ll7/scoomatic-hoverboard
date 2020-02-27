@@ -30,7 +30,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [Netzwerknamen festlegen](#netzwerknamen-festlegen)
     - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
-    - [Bash Einstellungen Rechner](#bash-einstellungen-rechner)
+    - [Einrichtung ~/.bashrc auf Desktop-Rechner](#einrichtung-bashrc-auf-desktop-rechner)
     - [udev Regeln](#udev-regeln)
     - [Catkin Workspace einrichten](#catkin-workspace-einrichten)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
@@ -406,6 +406,7 @@ Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi
 Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
 ### Netzwerknamen festlegen
+**TODO: überarbeiten, wegten ros_hostname!!!**
 Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werden, sonst kann ROS unter Umständen den ROS Master o.ä. nicht finden:
 ```
 127.0.0.1 localhost
@@ -418,6 +419,7 @@ Auf dem Desktop Rechner werden folgende Routen festgelegt:
 192.168.140.16	ubuntu
 127.0.0.1	localhost
 ```
+**/TODO**
 
 Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche.
 Der WiFi-Hotspot spielt eine Sonderrolle.
@@ -437,18 +439,22 @@ alias startros2="~/ros2_ws/src/scoomatic_drivers/start_ros2.bash"
 alias startros1="~/lennart_catkin_ws/src/scoomatic_ros1/start_ros1.bash"
 # Set ROS Hostname
 export ROS_HOSTNAME=ubuntu.local
+export ROS_MASTER_URI=http://ubuntu.local:11311
 ```
 
 Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
-### Bash Einstellungen Rechner
+### Einrichtung ~/.bashrc auf Desktop-Rechner
 Auf dem externen Rechner können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
-```
+```bash
+# Eigenen Hostname fuer ROS festlegen
+export ROS_HOSTNAME=imech139.local
 # ROS Master festlegen
 export ROS_MASTER_URI=http://ubuntu.local:11311/
 
 # ROS1 Workspace automatisch einrichten
 source /opt/ros/melodic/setup.bash
+source ~/catkin_ws/devel/setup.bash
 ```
 
 Dadurch wird der ROS Master auf den RPi festgelegt und der ROS1 Workspace bei jedem neuen Terminal automatisch eingerichtet, so dass die ROS Tools, wie ```rostopic``` verwendet werden können.
@@ -492,6 +498,8 @@ Nun müssen wir noch die programmierten Packages mit einem symbolischen Link ver
 ```
 <USERNAME>@imech139-u:~/catkin_ws$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/ros-drivers/scoomatic_drive src/scoomatic_drive
 ```
+
+Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf Desktop-Rechner](#einrichtung-bashrc-auf-desktop-rechner) gezeigt, noch das ```source``` statement hinzugefügt werden.
 
 [Tutorial im ROS Wiki](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
@@ -769,6 +777,9 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * schreiben: ros ip, ros hostname und master uri 
 * navigation integrieren
 * http://wiki.ros.org/base_local_planner durchlesen
+* Fehler, dass 2D pose estimate und nav goal nicht ggesetzt werden -> netzwerk issues
+* Probieren: rplidar frame drehen
+* rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
 -->
 
 <!-- !!! Festellungen
@@ -777,4 +788,5 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
   * wifi genauso schlecht
 * drehungen gehen mit oder ohne odometrie gleich schlecht(?)
   * gleich schlecht
+
 -->
