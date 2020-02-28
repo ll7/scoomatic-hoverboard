@@ -19,6 +19,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
   - [TF](#tf)
     - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
   - [Hardware](#hardware)
+    - [RPLidar A1](#rplidar-a1)
     - [Scoomatic Maße](#scoomatic-ma%c3%9fe)
   - [Software](#software)
     - [Hector SLAM Installation](#hector-slam-installation)
@@ -28,7 +29,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [RViz](#rviz)
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
-    - [Netzwerknamen festlegen](#netzwerknamen-festlegen)
+    - [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration)
     - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
     - [Einrichtung ~/.bashrc auf Desktop-Rechner](#einrichtung-bashrc-auf-desktop-rechner)
     - [udev Regeln](#udev-regeln)
@@ -53,8 +54,9 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [RViz: "Fixed Frame [map] does not exist"](#rviz-%22fixed-frame-map-does-not-exist%22)
     - [TF Transform Error](#tf-transform-error)
     - [........ escalating to SIGKILL / SIGTERM](#escalating-to-sigkill--sigterm)
+    - [Festlegen von 2D Estimate Pose / 2D Goal nicht möglich](#festlegen-von-2d-estimate-pose--2d-goal-nicht-m%c3%b6glich)
   - [Hinweise](#hinweise)
-    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
+    - [Geschwindigkei#ros-netzwerkkonfigurationt des Scoomatics](#geschwindigkeiros-netzwerkkonfigurationt-des-scoomatics)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
     - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
 
@@ -125,70 +127,7 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
 
 ### Node & Topic Übersicht
 
-<!-- ALLE NODES mit AMCL + Navigation stack
-/AMCL/parameter_descriptions
-/AMCL/parameter_updates
-/MotorDiag/adc1
-/MotorDiag/adc2
-/MotorDiag/battery_voltage
-/MotorDiag/battery_voltage_calibration_value
-/MotorDiag/speed_l
-/MotorDiag/speed_r
-/MotorDiag/temperature
-/MotorDiag/temperature_calibration_value
-/OdomPublisher/odom
-/amcl_pose
-/cmd_vel
-/diagnostics
-/imu/data
-/initialpose
-/map
-/map_metadata
-/move_base/NavfnROS/plan
-/move_base/TrajectoryPlannerROS/cost_cloud
-/move_base/TrajectoryPlannerROS/global_plan
-/move_base/TrajectoryPlannerROS/local_plan
-/move_base/TrajectoryPlannerROS/parameter_descriptions
-/move_base/TrajectoryPlannerROS/parameter_updates
-/move_base/cancel
-/move_base/current_goal
-/move_base/feedback
-/move_base/global_costmap/costmap
-/move_base/global_costmap/costmap_updates
-/move_base/global_costmap/footprint
-/move_base/global_costmap/inflation_layer/parameter_descriptions
-/move_base/global_costmap/inflation_layer/parameter_updates
-/move_base/global_costmap/obstacle_layer/parameter_descriptions
-/move_base/global_costmap/obstacle_layer/parameter_updates
-/move_base/global_costmap/parameter_descriptions
-/move_base/global_costmap/parameter_updates
-/move_base/global_costmap/static_layer/parameter_descriptions
-/move_base/global_costmap/static_layer/parameter_updates
-/move_base/goal
-/move_base/local_costmap/costmap
-/move_base/local_costmap/costmap_updates
-/move_base/local_costmap/footprint
-/move_base/local_costmap/inflation_layer/parameter_descriptions
-/move_base/local_costmap/inflation_layer/parameter_updates
-/move_base/local_costmap/obstacle_layer/parameter_descriptions
-/move_base/local_costmap/obstacle_layer/parameter_updates
-/move_base/local_costmap/parameter_descriptions
-/move_base/local_costmap/parameter_updates
-/move_base/parameter_descriptions
-/move_base/parameter_updates
-/move_base/result
-/move_base/status
-/move_base_simple/goal
-/odom
-/particlecloud
-/rosout
-/rosout_agg
-/scan
-/tf
-/tf_static
--->
-
-![](images/topics-and-nodes-with-slam.svg)
+![Node mit Topics Übersicht](images/topics-and-nodes-with-slam.svg)
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
 
@@ -312,6 +251,13 @@ Zunächst sei angemerkt, dass keine Hardwareänderungen vorgenommen wurden. Zude
 
 Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und in naher Zukunft kein Bedarf für diesen Treiber besteht.
 
+### RPLidar A1
+Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SDK:
+
+![Koordinatensystem des RPLidar A1](images/rplidar_A1.png)
+
+Dies entspricht dann auch der Koordinaten in TF.
+
 ### Scoomatic Maße
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
 
@@ -345,7 +291,7 @@ Die Installation ist möglich mit
 sudo apt-get install ros-melodic-navigation
 ```
 
-**TODO**
+Die Konfiguration der Navigation ist unter []()
 
 ### SLAM-Karte speichern und bereitstellen
 
@@ -405,24 +351,16 @@ Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi
 
 Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
-### Netzwerknamen festlegen
-**TODO: überarbeiten, wegten ros_hostname!!!**
-Auf dem RPi sollte in der ```/etc/hosts``` Datei folgende Routen festgelegt werden, sonst kann ROS unter Umständen den ROS Master o.ä. nicht finden:
-```
-127.0.0.1 localhost
-127.0.0.1 ubuntu
-```
-----------------------------------------------------------------
+### ROS Netzwerkkonfiguration
+In diesem Projekt gibt es mehrere Teilnehmende in der ROS Umgebung. Dementsprechend muss die Konfiguration von ROS so vorgenommen werden, dass alle Teilnehmende sich gegenseitig finden können. Im Netzwerk existiert, bzw. sollte immer nur einen ROS Master existieren. Dementsprechend wird auf den jeweiligen Computern ein identischer, eindeutiger ROS Master festgelegt.
 
-Auf dem Desktop Rechner werden folgende Routen festgelegt:
-```
-192.168.140.16	ubuntu
-127.0.0.1	localhost
-```
-**/TODO**
+Zudem hat jeder Computer eine eindeutige Bezeichnung, welche als ```ROS_HOSTNAME``` festgelegt wird, damit dieser Computer auch im Netzwerk gefunden werden können. Alternative kann eine ```ROS_IP``` festgelegt werden, was allerdings nicht bevorzugt wird, da sich diese Ändern kann.
 
-Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche.
-Der WiFi-Hotspot spielt eine Sonderrolle.
+Diese Einstellungen werden in der ~/.bashrc vorgenommen und in den folgenden zwei Abschnitten erklärt.
+
+Mehr Infos: [ROS Environment Variables](http://wiki.ros.org/ROS/EnvironmentVariables#ROS_IP.2BAC8-ROS_HOSTNAME)
+
+>Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche. Der WiFi-Hotspot spielt eine Sonderrolle.
 
 ### Einrichtung ~/.bashrc auf RPi
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Zudem ist es eine Erleichterung automatisch die notwendigen Dateien von ROS source-Befehle ausführen zu lassen.
@@ -446,16 +384,19 @@ Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
 ### Einrichtung ~/.bashrc auf Desktop-Rechner
 Auf dem externen Rechner können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
+
 ```bash
 # Eigenen Hostname fuer ROS festlegen
 export ROS_HOSTNAME=imech139.local
-# ROS Master festlegen
+# Externen ROS Master festlegen
 export ROS_MASTER_URI=http://ubuntu.local:11311/
 
 # ROS1 Workspace automatisch einrichten
 source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 ```
+
+Die Bezeichnung ```imech139``` entspricht hier dem Rechnernamen und kann ggf. auch geändert werden.
 
 Dadurch wird der ROS Master auf den RPi festgelegt und der ROS1 Workspace bei jedem neuen Terminal automatisch eingerichtet, so dass die ROS Tools, wie ```rostopic``` verwendet werden können.
 
@@ -725,8 +666,16 @@ Zudem muss in ```start_hector_slam.launch``` die Zeilen mit ```odom_frame``` ein
 
 >Konnte nicht gelöst werden, hat bisher allerdings auch keine Probleme bereitet. In der Regel werden auch alle Nodes korrekt terminiert.
 
+### Festlegen von 2D Estimate Pose / 2D Goal nicht möglich
+**Tritt auf**: Festlegen in RViz, Ausführung bei AMCL bzw. Navigation
+
+**Möglicher Grund**: Netzwerkkonfiguration nicht korrekt eingestellt; ```ROS_HOSTNAME``` bzw. ```ROS_IP``` wurde nicht oder falsch konfigur
+
+**Mögliche Lösungen**:
+Die [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) ausführen.
+
 ## Hinweise
-### Geschwindigkeit des Scoomatics
+### Geschwindigkei#ros-netzwerkkonfigurationt des Scoomatics
 Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
 
 Dies kann unteranderem durch diese beiden Verfahren erfolgen:
@@ -767,19 +716,13 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * !!! Koordinaten systeme richtig ausrichten (TF)
   * Auf Rosanswers fragen !!!
 * verschiedne tf frames erklären
-  * laser frame verändert sich, wenn odometry sich ändert, aber odometry ändert nicht seine koordinaten
   * https://www.ros.org/reps/rep-0105.html
 * https://www.ros.org/reps/rep-0103.html
 * base local planner anschauen
 * Latex: collision (detection) / urdf 
-* ROS service schreiben für zurücksetzen der odometrie?
-* schreiben: VM mit rviz aufsetzen
-* schreiben: ros ip, ros hostname und master uri 
-* navigation integrieren
-* http://wiki.ros.org/base_local_planner durchlesen
-* Fehler, dass 2D pose estimate und nav goal nicht ggesetzt werden -> netzwerk issues
 * Probieren: rplidar frame drehen
-* rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
+* bei navigation: rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
+* Schreiben, dass so festgelegt wurde, wegen historie, dass ROS Master auf rpi läuft
 -->
 
 <!-- !!! Festellungen
