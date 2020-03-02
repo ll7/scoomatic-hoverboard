@@ -6,7 +6,7 @@
 
   <param name="/use_sim_time" value="false"/>
 
-  <include file="./hector_mapping.launch"/>
+  <include file="$(find scoomatic_drive)/launch/hector_mapping.launch"/>
 
   <!-- For saving a GeoTIFF use this node -->
   <!--<include file="./hector_geotiff_mapper.launch">

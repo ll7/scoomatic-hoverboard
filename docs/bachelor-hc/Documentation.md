@@ -3,16 +3,15 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
 
 - [Dokumentation](#dokumentation)
   - [Einführung in das Projekt](#einf%c3%bchrung-in-das-projekt)
-  - [ROS](#ros)
-    - [ROS Package-Struktur](#ros-package-struktur)
-    - [Node & Topic Übersicht](#node--topic-%c3%9cbersicht)
-      - [ROS Logs](#ros-logs)
-    - [Parameter Einstellungen](#parameter-einstellungen)
-    - [How To Use](#how-to-use)
-      - [Raspberry Pi einschalten](#raspberry-pi-einschalten)
-      - [ROS (Core) Starten](#ros-core-starten)
-      - [SLAM starten](#slam-starten)
-      - [Navigation starten](#navigation-starten)
+  - [ROS Package-Struktur](#ros-package-struktur)
+  - [ROS Nodes & Topics Übersicht](#ros-nodes--topics-%c3%9cbersicht)
+  - [ROS Logs](#ros-logs)
+  - [ROS Parameter Einstellungen](#ros-parameter-einstellungen)
+  - [ROS How-To's](#ros-how-tos)
+    - [Raspberry Pi einschalten](#raspberry-pi-einschalten)
+    - [ROS (Core) Starten](#ros-core-starten)
+    - [SLAM starten](#slam-starten)
+    - [Navigation starten](#navigation-starten)
   - [ROS 2](#ros-2)
     - [ROS2 starten](#ros2-starten)
     - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
@@ -107,10 +106,10 @@ Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Pa
 
 Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Als Editor wurde [VS Code](https://code.visualstudio.com/) verwendet. Für beide ist auch Weiteres unter [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
 
-## ROS
-
-### ROS Package-Struktur
+## ROS Package-Struktur
 Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomatic-ros1```, welche die Sensordaten des Scoomatics bereitstellt, eventuell auch umrechnet sowie die Eingabemöglichkeiten wie Gamepad verwaltet. Letzteres, das ```scoomatic-drive``` Package stellt die Nodes zur Benutzung der Navigation und SLAM bereit. 
+
+Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, das die Sensordaten vor dem ausführen von bpsw. HectorSLAM zur Verfügung stehen müssen. Deshalb wird dieser gleichzeitig mit dem ```scoomatic_ros1``` gestartet. Allerdings kann das bei Bedarf geändert werden.
 
 * Sensordata & Input Publishing
   * Motor diagnostics/debug
@@ -125,7 +124,7 @@ Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomat
   * Navigation
   * Obstacle Avoidance
 
-### Node & Topic Übersicht
+## ROS Nodes & Topics Übersicht
 
 ![Node mit Topics Übersicht](images/topics-and-nodes-with-slam.svg)
 
@@ -141,14 +140,14 @@ sich die Nodes Beziehungen mit Topics anzeigen zu lassen.
 
 Es existieren Parameter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
 
-#### ROS Logs
+## ROS Logs
 Alle Ausgaben der Nodes bzw. Topics landen in der Topic ```/rosout```. Dies gilt natürlich auch für selbst erstellte Nodes. In Python kann mit ```rospy.loginfo(STRING)``` ein STRING als Info veröffentlicht werden. Mit ```rospy.logwarn(WARNING)``` kann eine Warnung veröffentlicht werden.
 
 Mehr Infos zum Thema [Logging](http://wiki.ros.org/rospy/Overview/Logging).
 
 > /rosout kann einfach mit ```rostopic echo /rosout``` angeschaut werden
 
-### Parameter Einstellungen
+## ROS Parameter Einstellungen
 
 Die Nodes werden über Launchfiles, also Dateien mit *.launch* gestartet und eingestellt. Parameter zum einstellen erfolgen also überwiegend in diesen Dateien, die als XML File strukturiert sind.
 
@@ -156,14 +155,13 @@ Im Package ```scoomatic_ros1``` existieren zwei Launchfiles. ```mpu_9259.launch`
 
 In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM notwendige und angepasste Launchfiles. Mit ```start_hector_slam.launch``` kann der SLAM Vorgang gestartet werden und startet auch sofort. Mit ```start_navigation.launch``` werden alle Nodes notwendig für die Navigation gestartet. Dafür muss allerdings eine Karte erstellt worden sein und dessen YAML-Datei im Argument *map_file* korrekt festgelegt werden.
 
-### How To Use
-
-#### Raspberry Pi einschalten
+## ROS How-To's
+### Raspberry Pi einschalten
 Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der Stromversorgung des Scoomatics zu versorgen. Zudem ist es aber auch möglich den RPi direkt per Micro-USB an eine USB Stromversorgung anzuschließen. Ein Computer reicht in der Regel dafür aus.
 
 > Voraussetzung ist, wenn die Stromversorgung des Scoomatics verwendet wird, dass die Verbindung zwischen Akku und Mainboard hergestellt ist
 
-#### ROS (Core) Starten
+### ROS (Core) Starten
 
 > Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel [Konfiguration](#Konfiguration) eingerichtet wurde.
 
@@ -172,7 +170,7 @@ Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der St
 3. ROS & Nodes starten: ```startros1```
 Dies ist generell notwendig um weitere Schritte auszuführen.
 
-#### SLAM starten
+### SLAM starten
 Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 
 1. Neues Terminal öffnen und
@@ -185,7 +183,7 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 
 > Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
 
-#### Navigation starten
+### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
 > Folgender Ausdruck ist nur verfügbar, wenn ein Catkin Workspace eingerichtet wurde
@@ -360,7 +358,7 @@ Diese Einstellungen werden in der ~/.bashrc vorgenommen und in den folgenden zwe
 
 Mehr Infos: [ROS Environment Variables](http://wiki.ros.org/ROS/EnvironmentVariables#ROS_IP.2BAC8-ROS_HOSTNAME)
 
->Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche. Der WiFi-Hotspot spielt eine Sonderrolle.
+>Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche. Der Ubuntu WiFi-Hotspot spielt eine Sonderrolle.
 
 ### Einrichtung ~/.bashrc auf RPi
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Zudem ist es eine Erleichterung automatisch die notwendigen Dateien von ROS source-Befehle ausführen zu lassen.
@@ -713,23 +711,17 @@ Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` R
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
 
 <!-- !!! TODOs
-* !!! Koordinaten systeme richtig ausrichten (TF)
-  * Auf Rosanswers fragen !!!
 * verschiedne tf frames erklären
   * https://www.ros.org/reps/rep-0105.html
 * https://www.ros.org/reps/rep-0103.html
-* base local planner anschauen
 * Latex: collision (detection) / urdf 
-* Probieren: rplidar frame drehen
 * bei navigation: rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
-* Schreiben, dass so festgelegt wurde, wegen historie, dass ROS Master auf rpi läuft
 -->
 
 <!-- !!! Festellungen
-* ohne odometrie node sind die koordiantensysteme immer noch falsch
 * neue karte mit neuem router erstellen
   * wifi genauso schlecht
 * drehungen gehen mit oder ohne odometrie gleich schlecht(?)
   * gleich schlecht
-
+* tf frame laser umgedreht wegten falscher ausrichtung des lidar
 -->
