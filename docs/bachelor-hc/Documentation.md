@@ -12,9 +12,6 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [ROS (Core) Starten](#ros-core-starten)
     - [SLAM starten](#slam-starten)
     - [Navigation starten](#navigation-starten)
-  - [ROS 2](#ros-2)
-    - [ROS2 starten](#ros2-starten)
-    - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
   - [TF](#tf)
     - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
   - [Hardware](#hardware)
@@ -47,6 +44,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [PGM / YAML Karten umbenennen](#pgm--yaml-karten-umbenennen)
     - [ROS Topic-Messages werden nicht empfangen](#ros-topic-messages-werden-nicht-empfangen)
     - [Odometrie Node ausschalten](#odometrie-node-ausschalten)
+    - [ROS2 Nodes stoppen](#ros2-nodes-stoppen)
   - [Mögliche Probleme](#m%c3%b6gliche-probleme)
     - [ssh: Could not resolve hostname ubuntu.local: Name or service not known](#ssh-could-not-resolve-hostname-ubuntulocal-name-or-service-not-known)
     - [Performance Probleme des RPi](#performance-probleme-des-rpi)
@@ -55,7 +53,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [........ escalating to SIGKILL / SIGTERM](#escalating-to-sigkill--sigterm)
     - [Festlegen von 2D Estimate Pose / 2D Goal nicht möglich](#festlegen-von-2d-estimate-pose--2d-goal-nicht-m%c3%b6glich)
   - [Hinweise](#hinweise)
-    - [Geschwindigkei#ros-netzwerkkonfigurationt des Scoomatics](#geschwindigkeiros-netzwerkkonfigurationt-des-scoomatics)
+    - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
     - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
 
@@ -63,53 +61,57 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
 
 ![Systemübersicht mit allen Maschinen](images/MachineOverview.png)
 
-Das Projekt Scoomatic baut insbesondere auf dem von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
+Das Projekt Scoomatic baut insbesondere auf der Arbeit von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
 
 Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
 
 Das Projekt ist so aufgebaut, dass ein Paket die gesamte Sensorik zur Verfügung stellt, ein Anderes die gesamte Verarbeitung (SLAM, Navigation). 
 
-Die Sensordaten, welche per I2C, UART bzw. Serieller Verbindung gelesen werden, werden per ROS Node als ROS Messages zur Verfügung gestellt. Damit kann jeder Rechner im Netzwerk auf diese Werte ebenfalls zugreifen. Unter andere
+Die Sensordaten, welche per I2C, UART bzw. Serieller Verbindung gelesen werden, werden per ROS Node als ROS Messages zur Verfügung gestellt. Damit kann jeder Rechner im Netzwerk auf diese Werte ebenfalls zugreifen.
 
-Der Prozess, der es ermöglicht eine Navigation zu starten, setzt voraus, dass vorher eine Karte erstellt wurde. Sonst ist eine globale Routenplanung nicht möglich. Dementsprechend ist der grobe Prozess, welcher erledigt werden muss folgender:
+Der Prozess, der es ermöglicht eine Navigation zu starten, setzt voraus, dass vorher eine Karte erstellt wurde. Sonst ist eine Navigation und Lokalisierung nicht möglich. Dementsprechend ist der grobe Ablauf folgender:
 
 1. Gerät vorbereiten und starten
-2. SLAM Vorgang starten
+2. SLAM Vorgang starten und manuell Roboter durch Raum bewegen
 3. Nach fertigstellen der Karte, selbige speichern & SLAM Prozess stoppen
 4. Nun kann der Navigation Modus gestartet werden
-5. Der Roboter lokalisiert sich, dann kann ein Ziel-Punkt festgelegt werden
-
-Die Lokalisierung kann verbessert werden, indem im Raum hin und her gefahren wird. Denn die Lokalisierung funktioniert mit AMCL, also einer [Monte-Carlo Lokalisierung](https://en.wikipedia.org/wiki/Monte_Carlo_localization). Deshalb verbessert sich das Ergebnis, wenn mehr Daten "gesammelt" werden können.
+5. Der Roboter lokalisiert sich (evtl. mit Hilfe), dann kann ein Ziel-Punkt festgelegt werden
+6. Der Roboter fährt autonom zum Ziel-Punkt
+7. Es wird so lange 5.-6. ausgeführt bis Navigation gestoppt wird
 
 Als kleine Übersicht, das grobe Message-passing für die Navigation:
-
 ```
 Map Server
     |
-    | → provides (nav_msgs/OccupancyGrid)
+    | → provides nav_msgs/OccupancyGrid
+    | → uses mapfile
     ↓
 Localization
     |
-    | → provides (geometry_msgs/PoseWithCovarianceStamped) & (tf/tfMessage)  & uses (sensor_msgs/LaserScan) & (tf/tfMessage)
+    | → provides geometry_msgs/PoseWithCovarianceStamped & tf/tfMessage
+    | → uses sensor_msgs/LaserScan & tf/tfMessage
     ↓
 Navigation
     |
-    | 
+    | → provides geometry_msgs/Twist
+    | → uses geometry_msgs/PoseStamped [goal]
     ↓
 Moves Robot
 ```
 
-Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle möglichen Informationsquellen verwendet.
+Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle 6 Nodes verwendet.
 ![Navigation Übersicht](images/overview_navigation.png)
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
-Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Als Editor wurde [VS Code](https://code.visualstudio.com/) verwendet. Für beide ist auch Weiteres unter [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
+Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Als Editor wurde [VS Code](https://code.visualstudio.com/) verwendet. Für beide ist die Konfiguration im Kapitel [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
+
+>Im Folgenden wird davon ausgegangen, dass sich das Terminal beim ausführen von Commands im Home-Verzeichnis befindet.
 
 ## ROS Package-Struktur
 Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomatic-ros1```, welche die Sensordaten des Scoomatics bereitstellt, eventuell auch umrechnet sowie die Eingabemöglichkeiten wie Gamepad verwaltet. Letzteres, das ```scoomatic-drive``` Package stellt die Nodes zur Benutzung der Navigation und SLAM bereit. 
 
-Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, das die Sensordaten vor dem ausführen von bpsw. HectorSLAM zur Verfügung stehen müssen. Deshalb wird dieser gleichzeitig mit dem ```scoomatic_ros1``` gestartet. Allerdings kann das bei Bedarf geändert werden.
+Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, dass die Sensordaten vor dem ausführen von bpsw. HectorSLAM zur Verfügung stehen müssen. Deshalb wird dieser gleichzeitig mit dem ```scoomatic_ros1``` gestartet. Allerdings kann das bei Bedarf geändert werden.
 
 * Sensordata & Input Publishing
   * Motor diagnostics/debug
@@ -126,7 +128,7 @@ Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, das die Senso
 
 ## ROS Nodes & Topics Übersicht
 
-![Node mit Topics Übersicht](images/topics-and-nodes-with-slam.svg)
+![Node mit Topics Übersicht](images/topics-and-nodes-with-slam.png)
 
 Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
 
@@ -138,7 +140,14 @@ rosrun rqt_graph rqt_graph
 
 sich die Nodes Beziehungen mit Topics anzeigen zu lassen.
 
-Es existieren Parameter, welche über ein launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. Beispiel: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt.
+Es existieren Parameter, welche über ein Launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. 
+
+Beispiel für festlegen eines Parameters:
+```XML
+<param name="maxspeed_factor" type="int" value="2"/> 
+```
+
+>Beispiel rosparam: Bei der Node ```MotorDriver``` ist der Parameter *port* per ```MotorDriver/port```. Mit ```rosparam``` lassen sich im Terminmal die Werte auslesen. Zudem werden diese beim Starten des ROS Core angezeigt. Der *port* ist in diesem Fall durch die udev Regel auf ```/dev/motor_driver``` festgelegt.
 
 ## ROS Logs
 Alle Ausgaben der Nodes bzw. Topics landen in der Topic ```/rosout```. Dies gilt natürlich auch für selbst erstellte Nodes. In Python kann mit ```rospy.loginfo(STRING)``` ein STRING als Info veröffentlicht werden. Mit ```rospy.logwarn(WARNING)``` kann eine Warnung veröffentlicht werden.
@@ -153,16 +162,21 @@ Die Nodes werden über Launchfiles, also Dateien mit *.launch* gestartet und ein
 
 Im Package ```scoomatic_ros1``` existieren zwei Launchfiles. ```mpu_9259.launch``` ist zum starten der IMU, ```launch_drivers.launch``` für das starten aller anderen Sensoren und Eingabe-Nodes. Durch auskommentieren kann das Starten einer Node deaktiviert werden.
 
-In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM notwendige und angepasste Launchfiles. Mit ```start_hector_slam.launch``` kann der SLAM Vorgang gestartet werden und startet auch sofort. Mit ```start_navigation.launch``` werden alle Nodes notwendig für die Navigation gestartet. Dafür muss allerdings eine Karte erstellt worden sein und dessen YAML-Datei im Argument *map_file* korrekt festgelegt werden.
+In ```scoomatic_drive``` existieren mehrere, insbesondere für SLAM und die Navigation notwendige und angepasste Launchfiles. Mit ```start_hector_slam.launch``` kann der SLAM Vorgang gestartet werden und startet auch sofort. Mit ```start_navigation.launch``` werden alle Nodes notwendig für die Navigation gestartet. Dafür muss allerdings eine Karte erstellt worden sein und dessen YAML-Datei im Argument *map_file* korrekt festgelegt werden.
+
+Zeile in ```start_navigation.launch```:
+```XML
+<arg name="map_file" value="/home/<USERNAME>/maps/room1-map.yaml" />
+```
 
 ## ROS How-To's
 ### Raspberry Pi einschalten
+
+> Voraussetzung ist, wenn die Stromversorgung des Scoomatics verwendet wird, dass die zentrale Stromversorgung zwischen Akku und Mainboard hergestellt ist
+
 Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der Stromversorgung des Scoomatics zu versorgen. Zudem ist es aber auch möglich den RPi direkt per Micro-USB an eine USB Stromversorgung anzuschließen. Ein Computer reicht in der Regel dafür aus.
 
-> Voraussetzung ist, wenn die Stromversorgung des Scoomatics verwendet wird, dass die Verbindung zwischen Akku und Mainboard hergestellt ist
-
 ### ROS (Core) Starten
-
 > Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel [Konfiguration](#Konfiguration) eingerichtet wurde.
 
 1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
@@ -186,15 +200,20 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 ### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
-> Folgender Ausdruck ist nur verfügbar, wenn der Catkin Workspace korrekt eingerichtet wurde.
+> Folgender Ausdruck ist nur verfügbar, wenn der Catkin Workspace korrekt eingerichtet wurde. Dies ist unter [Catkin Workspace einrichten](#catkin-workspace-einrichten) erläutert.
 
 ```bash
-roslaunch scoomatc_drive start_navigation.launch
+roslaunch scoomatic_drive start_navigation.launch
 ```
 
 Damit werden unter anderem der MapServer, welcher die Karte bereitstellt, die per SLAM erstellt wurde, und AMCL, zur Lokalisierung gestartet.
 
-AMCL benötigt initial eine ungefähre, vorgegbene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann.
+**TODO bild einfügen**
+
+AMCL benötigt initial eine ungefähre, vorgegbene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann. Standardmäßig ist die Pose das Zentrum der Karte.
+
+Dies kann in RViz einfach mit dem Button **2D Pose Estimate** erledigt werden.
+
 Es ist allerdings auch möglich mit 
 
 ```
@@ -203,27 +222,7 @@ rosservice call global_localization
 
 einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden.
 
-## ROS 2
-
-Für ausführliche Erklärungen sei auf [Projektmodul-MS#ros2-bedienung](../projektmodul-ms/index.md#ros2-bedienung) verwiesen. Eine kurze Übersicht ist hier zu finden.
-
-### ROS2 starten
-```sourceros2``` sourced alle notwendigen ROS2 Dateien. Dies ist bpsw. bei einem wechsel von ROS1 zu ROS2 im gleichen Terminal Fenster notwendig.
-```startros2``` startet ROS2.
-
-### ROS2 Nodes stoppen
-Es gibt keine einfache Möglichkeit die Gesamtheit der ROS2 Nodes zu stoppen. Dies kann höchstens Node-weise passieren.
-
-Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how-to-kill-nodes-in-ros2/), gelingt das stoppen von einer ROS2 Node folgendermaßen:
-```
-ros2 lifecycle set <nodename> shutdown
-```
-
-Allerdings hat dies in diesem Projekt nicht funktioniert.
-Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill PID``` und der passenden PID zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
-
 ## TF
-
 ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realten Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes gepublisht und verwendet werden können. Da dieser Roboter, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
 
 > Am besten folgenden Befehl auf dem Remote Rechner ausführen
@@ -237,7 +236,7 @@ rosrun rqt_tf_tree rqt_tf_tree
 kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
 
 ### Aktuelle TF Baumstruktur
-![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.svg)
+![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.png)
 
 Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
 
@@ -245,7 +244,7 @@ Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LI
 
 ## Hardware
 
-Zunächst sei angemerkt, dass keine Hardwareänderungen vorgenommen wurden. Zudem sei auf [Projektmodul-MS](docs/projektmodul-ms/index.md) verwiesen.
+Zunächst sei angemerkt, dass keine Hardwareänderungen vorgenommen wurden. Für Hardware Informationen sei auf [Projektmodul-MS](docs/projektmodul-ms/index.md) verwiesen.
 
 Es wurden alle Treiber, außer der GPS Treiber auf ROS1 portiert, da aktuell und in naher Zukunft kein Bedarf für diesen Treiber besteht.
 
@@ -257,7 +256,10 @@ Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SD
 Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt.
 
 ### Scoomatic Maße
+**TODO: weitere maße hinzufügen**
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
+
+Der Reifenumfang hat einen Durchmesser von **ca. 250mm**. Mehr zu [möglichen Problemen](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
 
 ## Software
 
@@ -270,15 +272,25 @@ Die Installation erfolgt über Ubuntus Packetverwalter. Weil aktuell ROS melodic
 sudo apt-get install ros-melodic-hector-slam
 ```
 
-Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Dies enthält die maßgeblichen Parameter Einstellungen für das SLAM.
+Dabei werden alle benötigten Dependencies mitinstalliert. Es gibt dann zwei entscheidende Default-Launchfiles: in ```hector_slam_launch/tutorial.launch``` und in ```hector_mapping/mapping_default.launch```. Ersteres ist für den Start von dem gesamten HectorSLAM verantwortlich. Dieses startet unteranderem auch Letzteres. Es enthält die maßgeblichen Parameter Einstellungen für das SLAM.
 
-Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic1/launch/launch_drivers.launch``` Datei geändert werden.
+>Folgendes ist nur bei erstmaligem einrichten von HectorSLAM notwendig.
+
+Die notwendigen Einstellungen für das RPLidar A1 ist von NickL77 hier abzurufen: [RPLidar_Hector_Slam](https://github.com/NickL77/RPLidar_Hector_SLAM/blob/master/README.md#Sources). Der Frame der Laserdaten ist per default ```laser``` und kann in der ```scoomatic_ros1/launch/launch_drivers.launch``` Datei geändert werden.
 
 ### Hector SLAM ausführen
+Für das ausführen von HectorSLAM gibt es ein vorgefertigtes Launchfile und eine RViz Konfiguration.
+
 ```bash
-roslaunch scoomatic_ros1 hector_slam.launch
+roslaunch scoomatic_drive start_hector_slam.launch
 ```
-kann Hector SLAM eigenständig ausgeführt werden. Sie liegt in ```scoomatic_ros1/launch/hector_slam.launch```
+
+Die RViz Konfiguration kann, wie in [RViz](#rviz) erläutert folgendermaßen gestartet werden:
+
+```bash
+$ cd scoomatic-hoverboard/code/configuration
+$ rviz -d mapping-and-odometry.rviz
+```
 
 ### Navigation installieren & ausführen
 Das Paket *navigation* installiert mehrere davon abhängige Pakete mit. 
@@ -295,13 +307,13 @@ Die Konfiguration der Navigation ist unter []()
 
 ![SLAM Karte Beispiel](./images/map-example.png)
 
-Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine pgm Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
+Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine PGM Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
 
 ```bash
 rosrun map_server map_saver -f map-roomname
 ```
 
-Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt. Dafür muss diese aber im korrekten Ordner sich befinden bzw. der Pfad im Launchfile angegeben sein.
+Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt. Dafür muss diese sich aber im korrekten Ordner befinden bzw. der Pfad im Launchfile angegeben sein.
 
 Mehr Infos: [map_server](http://wiki.ros.org/map_server#YAML_format)
 
@@ -316,9 +328,9 @@ Dies umfasst unter anderem folgende Daten:
 * PoseWithCovariance (Also Pose mit Unsicherheit)
 * Trajectory
 
-RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst die ROS MASTER URI neu gesetzt werden.
+RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst ROS_MASTER_URI neu gesetzt werden.
 
-> Die ROS_MASTER_URI kann folgendermaßen neu gesetzt werden: ```export ROS_MASTER_URI="http://ADRESSE:11311"``` Der Port ist in der Regel 11311, diese Einstellung gilt nur für das aktuelle Terminal und wird beim schließen verworfen. ADRESSE kann eine IP Adresse, .local-Adresse oder Ähnliches sein.
+> Die ROS_MASTER_URI kann folgendermaßen neu gesetzt werden: ```export ROS_MASTER_URI="http://<ADRESSE>:11311"``` Der Port ist in der Regel 11311, diese Einstellung gilt nur für das aktuelle Terminal und wird beim schließen verworfen. ADRESSE kann eine IP Adresse, .local-Adresse oder Ähnliches sein. Aktuell ist die Adresse: ```http://ubuntu.local:11311```.
 
 Es gibt zwei vorgefertigte Ansichten für RViz. Diese sind unter ```code/configuration/``` mit der Endung *.rviz* gespeichert.
 
@@ -328,10 +340,12 @@ Es gibt zwei vorgefertigte Ansichten für RViz. Diese sind unter ```code/configu
 
 Eine RViz Instanz mit einer bestimmten Konfiguration kann im Terminal gestartet werden:
 
+```bash
+rviz -d <configuration>.rviz
 ```
-rviz -d configuration.rviz
 bzw.
-rosrun rviz rviz -d configuration.rviz
+```bash
+rosrun rviz rviz -d <configuration>.rviz
 ```
 
 [RViz](http://wiki.ros.org/rviz)
@@ -339,7 +353,7 @@ rosrun rviz rviz -d configuration.rviz
 ## Konfiguration
 ### ssh Verbindung einrichten
 > Voraussetzungen dafür sind: Rechner & RPi sind mit dem ```rt``` WiFi-Netzwerk verbunden
-> und der avahi-daemon unter Ubuntu läuft. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
+> und der avahi-daemon unter Ubuntu läuft, was standardmäßig der Fall ist. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
 
 Im Ordner ```configuration``` liegt die [SSH-Config](../../code/configuration/ssh-config), welche sich mit dem Raspberry Pi verbinden kann. Diese Config muss unter Ubuntu 18.04 unter ```~/.ssh/config``` gespeichert werden.
 
@@ -441,7 +455,7 @@ $ echo $ROS_PACKAGE_PATH
 ```
 So sieht der korrekte Pfad aus.
 
-Nun müssen wir noch die programmierten Packages mit einem symbolischen Link verlinken, damit diese in ROS verfügbar sind:
+Nun müssen wir noch die programmierten Packages mit einem symbolischen Link verlinken, damit diese in ROS verfügbar sind und gefunden werden:
 ```
 <USERNAME>@imech139-u:~/catkin_ws$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/ros-drivers/scoomatic_drive src/scoomatic_drive
 ```
@@ -461,7 +475,7 @@ Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/r
 ### Integration von pyLint in VS Code
 Zunächst einmal muss pyLint durch die Paketverwaltung installiert werden:
 ```bash
-sudo apt-get install pylint pylint3
+sudo apt-get install pylint
 ```
 
 Nun kann in VS Code die [Extension Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) installiert werden. Die Warnungen und Fehler werden dann direkt angezeigt. 
@@ -489,7 +503,7 @@ Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: 
 
 Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden:
 ```bash
-nmcli c mod rt connection.autoconnect-priority 1
+nmcli c mod <wifiname> connection.autoconnect-priority 1
 ```
 
 Höhere Nummern bedeuteten höhere Priorität.
@@ -544,7 +558,7 @@ BAG Files nehmen alle Messages spezifischer Topics auf und können sie dann zu e
 Aufgenommen werden kann indem ein oder mehrere Topics spezifiziert werden:
 
 ```bash
-rosbag record -O NAMEDESBAGFILES /TOPIC1 [/TOPIC2 ...]
+rosbag record -O <NAMEDESBAGFILES> /<TOPIC1> [/<TOPIC2> ...]
 ```
 
 Also für das Beispiel (Hector) SLAM: 
@@ -567,11 +581,7 @@ Siehe auch: [Recording and playing back data](http://wiki.ros.org/rosbag/Tutoria
 3. Füge den Odometry Layer hinzu
 4. Wähle die ```/OdomPublisher/odom``` Topic aus
 
->Eine spezifische rviz config kann mit
->```bash
->rosrun rviz rviz -d "odometry-and-map.rviz"
->```
->gestartet werden
+Mehr Infos in [RViz](#rviz)
 
 ### Unterschiedliche Geschwindigkeiten Räder
 Aufgrund der pneumatischen Reifen kann es vorkommen, dass durch den unterschiedlichen Druck in linkem und rechtem Reifen bei vorgegebener, gerader Fahrt eine Kurve gefahren wird.
@@ -601,6 +611,19 @@ Zudem muss in ```start_hector_slam.launch``` die Zeilen mit ```odom_frame``` ein
 <!-- don't use odom frame-->
 <arg name="odom_frame" default="base_link"/>
 ```
+
+### ROS2 Nodes stoppen
+>Ein kleiner Abschnitt zu ROS2 Nodemanagement. Für das debugging und testen wurde teilweise ROS2 benötigt. Allerdings gab es keine einfache Möglichkeit ROS2 zu stoppen. Das sind die Erfahrungen des Autors.
+
+Es gibt keine einfache Möglichkeit die Gesamtheit der ROS2 Nodes zu stoppen. Dies kann höchstens Node-weise passieren.
+
+Nach Anleitung von [answers.ros.org](https://answers.ros.org/question/323329/how-to-kill-nodes-in-ros2/), gelingt das stoppen von einer ROS2 Node folgendermaßen:
+```
+ros2 lifecycle set <nodename> shutdown
+```
+
+Allerdings hat dies in diesem Projekt nicht funktioniert.
+Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PID>``` und der passenden PID zu beenden. Die PID kann per ```top``` oder ```htop``` ermittelt werden. Allerdings gibt es unter Umständen für eine Node mehrere Prozesse. 
 
 ## Mögliche Probleme
 
@@ -683,7 +706,7 @@ Zudem muss in ```start_hector_slam.launch``` die Zeilen mit ```odom_frame``` ein
 Die [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) ausführen.
 
 ## Hinweise
-### Geschwindigkei#ros-netzwerkkonfigurationt des Scoomatics
+### Geschwindigkeit des Scoomatics
 Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
 
 Dies kann unteranderem durch diese beiden Verfahren erfolgen:
@@ -712,7 +735,7 @@ Im Regelfall sollte mit dem Aufruf von ```rostopic pub syscommand std_msgs/Strin
 Allerdings bestehen keine ausreichenden Rechte, weil HectorSLAM per apt-get installiert wurde. Deswegen wurde vorgeschlagen die Rechte für die Nutzenden zu erlangen:
 
 ```bash
-sudo chown -R USER:GROUP /opt/ros/melodic/share/hector_geotiff
+sudo chown -R <USER>:<GROUP> /opt/ros/melodic/share/hector_geotiff
 ```
 Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Problem nicht behoben werden.
 
@@ -729,6 +752,7 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * schreiben: rviz initiale pose und naviagtion goal festlegen
 * schreiben: laser frame ist falsch herum, weil der lidar falsch montiert wurde
 * glasstüren sind ein problem, weil nicht von laser erkannt werden
+* limitations kapitel, bspw. gps treiber nicht da
 -->
 
 <!-- !!! Festellungen
