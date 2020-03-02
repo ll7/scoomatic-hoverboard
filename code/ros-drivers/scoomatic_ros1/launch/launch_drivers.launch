@@ -13,7 +13,7 @@
     <!-- Internal NODES -->
     <!-- tf static transform of laser -->
     <!-- Transform from base platform to laser -> for navigation-->
-    <node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 0 0 0 base_link laser 50" />
+    <node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 3.141592 0 0 base_link laser 50" />
 
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
