@@ -186,7 +186,7 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 ### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
-> Folgender Ausdruck ist nur verfügbar, wenn ein Catkin Workspace eingerichtet wurde
+> Folgender Ausdruck ist nur verfügbar, wenn der Catkin Workspace korrekt eingerichtet wurde.
 
 ```bash
 roslaunch scoomatc_drive start_navigation.launch
@@ -254,7 +254,7 @@ Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SD
 
 ![Koordinatensystem des RPLidar A1](images/rplidar_A1.png)
 
-Dies entspricht dann auch der Koordinaten in TF.
+Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt.
 
 ### Scoomatic Maße
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
@@ -342,6 +342,14 @@ rosrun rviz rviz -d configuration.rviz
 > und der avahi-daemon unter Ubuntu läuft. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
 
 Im Ordner ```configuration``` liegt die [SSH-Config](../../code/configuration/ssh-config), welche sich mit dem Raspberry Pi verbinden kann. Diese Config muss unter Ubuntu 18.04 unter ```~/.ssh/config``` gespeichert werden.
+
+Das wird am besten mithilfe eines symbolischen Links gemacht.:
+```
+$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/configuration ~/.ssh/
+$ cd ~/.ssh/
+```
+
+Danach nur noch umbenennen: ```mv ssh-config config```
 
 Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi verbunden werden.
 
@@ -469,12 +477,13 @@ Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder 
 ### WiFi Netzwerk Verbindung & Konfiguration
 Auf dem RPi sind drei WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
 
-Folgende 3 Netzwerke sind mit absteigender Priorität eingerichtet:
+Folgende 4 Netzwerke sind mit absteigender Priorität eingerichtet:
+* ll7-hp-eb | Passwort siehe WLAN-Hotspot Ubuntu
 * TP-LINK_A264 | Passwort: 95394787
-* imech139-u | Passwort siehe WLAN Hotspot Ubuntu
+* imech139-u | Passwort siehe WLAN-Hotspot Ubuntu
 * rt
 
-Dies bedeutet, dass sich der RPi mit TP-LINK_A264 automatisch verbindet, wenn alle drei zur Verfügung stehen. Wenn das nicht der Fall ist mit imech139-u und wenn nur rt zur Verfügung steht, mit diesem.
+Dies bedeutet, dass sich der RPi mit ll7-hp-eb automatisch verbindet, wenn alle vier zur Verfügung stehen. Wenn das nicht der Fall ist mit TP-LINK_A264 und so weiter.
 
 Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
 
@@ -496,6 +505,7 @@ Mehr Infos zum thema NM Priorities auf [NetworkManager connection priority](http
 * ROS1 starten: ```startros1```
 * ROS2 starten: ```startros2```
 * Parameter listen: ```rosparam list```
+* Launchfile starten: ```roslaunch package file.launch```
 
 ### Numerische Werte der TF Transformationen anzeigen
 Bspw. die in Beziehung stehenden frames *map* und *base_link*
@@ -716,6 +726,9 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * https://www.ros.org/reps/rep-0103.html
 * Latex: collision (detection) / urdf 
 * bei navigation: rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
+* schreiben: rviz initiale pose und naviagtion goal festlegen
+* schreiben: laser frame ist falsch herum, weil der lidar falsch montiert wurde
+* glasstüren sind ein problem, weil nicht von laser erkannt werden
 -->
 
 <!-- !!! Festellungen
