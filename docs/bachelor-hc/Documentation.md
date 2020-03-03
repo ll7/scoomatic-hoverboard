@@ -247,9 +247,10 @@ kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&No
 ### Aktuelle TF Baumstruktur
 ![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.png)
 
-Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
+Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar und wird entweder von HectorSLAM oder vom map_server bereitgestellt. Die Beziehung von ```odom``` zu ```base_link``` wird von der Node ```/OdomPublisher``` veröffentlicht und stellt die Motordaten zur Verfügung.
 
-Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
+Der ```base_link``` Frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` Frame per statischem Publisher festgelegt, genauso wie die IMU.
+Der ```imu_link``` Frame wird von dem MPU 9250 Treiber bereitgestellt.
 
 ## Hardware
 
@@ -502,7 +503,7 @@ Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder 
 Auf dem RPi sind drei WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
 
 Folgende 4 Netzwerke sind mit absteigender Priorität eingerichtet:
-* ll7-hp-eb | Passwort siehe WLAN-Hotspot Ubuntu
+* ll7-hp-eb | Passwort: Eq2tsmc3
 * TP-LINK_A264 | Passwort: 95394787
 * imech139-u | Passwort siehe WLAN-Hotspot Ubuntu
 * rt
@@ -757,15 +758,3 @@ Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Pr
 Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
 
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
-
-<!-- !!! TODOs
-* verschiedne tf frames erklären
--->
-
-<!-- !!! Festellungen
-* neue karte mit neuem router erstellen
-  * wifi genauso schlecht
-* drehungen gehen mit oder ohne odometrie gleich schlecht(?)
-  * gleich schlecht
-* tf frame laser umgedreht wegten falscher ausrichtung des lidar
--->
