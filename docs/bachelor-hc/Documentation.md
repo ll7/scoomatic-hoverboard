@@ -28,7 +28,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration)
     - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
-    - [Einrichtung ~/.bashrc auf Desktop-Rechner](#einrichtung-bashrc-auf-desktop-rechner)
+    - [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-auf-pc)
     - [udev Regeln](#udev-regeln)
     - [Catkin Workspace einrichten](#catkin-workspace-einrichten)
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
@@ -194,12 +194,11 @@ Dies ist generell notwendig um weitere Schritte auszuführen.
 Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 
 1. Neues Terminal öffnen und
-2. In den korrekten Ordner ```ros-drivers/scoomatic_drive/launch``` wechseln
-3. Hector SLAM ```roslaunch start_hector_slam.launch``` starten
-4. Wenn eine visuelle Darstellung gewünscht ist: Dann in einem neuen Terminal in den Ordner ```code/configuration/``` wechseln
-5. RViz mit ```rviz -d 'odometry-and-map.rviz'``` starten
-6. Ein neues Terminal öffnen, wenn das Kartieren abgeschlossen ist, damit die Karte gespeichert werden kann
-7. Mithilfe des Map servers ```rosrun map_server map_saver -f mapfilename``` ausführen
+2. Hector SLAM ```roslaunch scoomatic_drive start_hector_slam.launch``` starten
+3. Wenn eine visuelle Darstellung gewünscht ist: In neuem Terminal in den Ordner ```code/configuration/``` wechseln
+4. RViz mit ```rviz -d mapping-and-odometry.rviz``` starten
+5. Ein neues Terminal öffnen, wenn das Kartieren abgeschlossen ist, damit die Karte gespeichert werden kann
+6. Mithilfe des Map servers ```rosrun map_server map_saver -f <mapfilename>``` ausführen
 
 > Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
 
@@ -411,7 +410,7 @@ export ROS_MASTER_URI=http://ubuntu.local:11311
 
 Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
-### Einrichtung ~/.bashrc auf Desktop-Rechner
+### Einrichtung ~/.bashrc auf PC
 Auf dem externen Rechner können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
 
 ```bash
@@ -469,7 +468,7 @@ Nun müssen wir noch die programmierten Packages mit einem symbolischen Link ver
 <USERNAME>@imech139-u:~/catkin_ws$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/ros-drivers/scoomatic_drive src/scoomatic_drive
 ```
 
-Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf Desktop-Rechner](#einrichtung-bashrc-auf-desktop-rechner) gezeigt, noch das ```source``` statement hinzugefügt werden.
+Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-auf-pc) gezeigt, noch das ```source``` statement hinzugefügt werden.
 
 [Tutorial im ROS Wiki](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
@@ -656,7 +655,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 
 **Mögliche Gründe**:
 * Der ```avahi-daemon``` läuft nicht
-* Rechner oder RPi ist in einem anderem WiFi-Netzwerk als der jeweilige Partner
+* PC oder RPi ist in einem anderem WiFi-Netzwerk als der jeweilige Partner
 
 **Mögliche Lösungen**:
 * ```sudo systemctl start avahi-daemon``` ausführen. Zum permanent machen: ```sudo systemctl enable avahi-daemon```
@@ -669,7 +668,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 * (Hector)SLAM wird auf RPi ausgeführt, RPi ist zu langsam dafür
 
 **Mögliche Lösungen**:
-* SLAM auf Desktop Rechner ausführen
+* SLAM auf PC ausführen
 * Die Daten zunächst nur aufzunehmen, in einem BAG File speichern und danach auf einem leistungsstärkeren Rechner SLAM ausführen mit dem BAG File
 
 ### RViz: "Fixed Frame [map] does not exist"
