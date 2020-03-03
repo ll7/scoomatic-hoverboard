@@ -12,6 +12,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [ROS (Core) Starten](#ros-core-starten)
     - [SLAM starten](#slam-starten)
     - [Navigation starten](#navigation-starten)
+  - [Lokalisierung Global durchführen](#lokalisierung-global-durchf%c3%bchren)
   - [TF](#tf)
     - [Aktuelle TF Baumstruktur](#aktuelle-tf-baumstruktur)
   - [Hardware](#hardware)
@@ -101,6 +102,11 @@ Moves Robot
 
 Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle 6 Nodes verwendet.
 ![Navigation Übersicht](images/overview_navigation.png)
+
+Aktuell gelten folgende Einschränkungen:
+* Der GPS Treiber existiert nur für ROS2
+* Glastüren bzw. Hindernisse aus Glas können nicht erkannt werden
+* Hindernisse werden nur auf Höhe des Lasers erkannt
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
@@ -208,19 +214,23 @@ roslaunch scoomatic_drive start_navigation.launch
 
 Damit werden unter anderem der MapServer, welcher die Karte bereitstellt, die per SLAM erstellt wurde, und AMCL, zur Lokalisierung gestartet.
 
-**TODO bild einfügen**
-
 AMCL benötigt initial eine ungefähre, vorgegbene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann. Standardmäßig ist die Pose das Zentrum der Karte.
+
+![Button 2D Pose Estimate](images/rviz-estimate-pose.png)
 
 Dies kann in RViz einfach mit dem Button **2D Pose Estimate** erledigt werden.
 
-Es ist allerdings auch möglich mit 
+Nachdem eine Lokalisierung mit geringer Kovarianz besteht, kann ein Navigationsziel festgelegt werden. Dazu kann in RViz über den Button ```2D Nav Goal``` eine Pose festgelegt werden.
 
+## Lokalisierung Global durchführen
+
+Es ist auch möglich einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden:
 ```
 rosservice call global_localization
 ```
 
-einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden.
+![Karte nach der Ausführung von global_localization](images/amcl-global-localization.png)
+
 
 ## TF
 ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realten Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes gepublisht und verwendet werden können. Da dieser Roboter, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
@@ -256,7 +266,6 @@ Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SD
 Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt.
 
 ### Scoomatic Maße
-**TODO: weitere maße hinzufügen**
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
 
 Der Reifenumfang hat einen Durchmesser von **ca. 250mm**. Mehr zu [möglichen Problemen](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
@@ -416,7 +425,7 @@ source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 ```
 
-Die Bezeichnung ```imech139``` entspricht hier dem Rechnernamen und kann ggf. auch geändert werden.
+Die Bezeichnung ```imech139``` entspricht hier dem Rechnernamen und muss ggf. angepasst werden.
 
 Dadurch wird der ROS Master auf den RPi festgelegt und der ROS1 Workspace bei jedem neuen Terminal automatisch eingerichtet, so dass die ROS Tools, wie ```rostopic``` verwendet werden können.
 
@@ -486,6 +495,8 @@ Python › Linting: Pylint Use Minimal Checkers
 Whether to run Pylint with minimal set of rules.
 ```
 
+![](images/vscode-problems-view.png)
+
 Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder ```STRG+SHIFT+P > Problems: Focus on Problems View```) auch Code Style Probleme angezeigt.
 
 ### WiFi Netzwerk Verbindung & Konfiguration
@@ -501,12 +512,17 @@ Dies bedeutet, dass sich der RPi mit ll7-hp-eb automatisch verbindet, wenn alle 
 
 Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
 
-Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden:
+Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden. Höhere Nummern bedeuteten höhere Priorität:
 ```bash
-nmcli c mod <wifiname> connection.autoconnect-priority 1
+nmcli c mod <SSID> connection.autoconnect-priority 1
 ```
 
-Höhere Nummern bedeuteten höhere Priorität.
+Das Netzwerk kann manuell gewechselt werden:
+```bash
+nmcli c up <SSID>
+```
+
+>Zu beachten ist natürlich, dass nach dem wechseln des Netzwerks, die SSH Verbindung abbricht. Diese kann dann, nach dem wechseln des Netzwerks am PC, wieder aufgebaut werden.
 
 Mehr Infos zum thema NM Priorities auf [NetworkManager connection priority](http://bss.technology/tutorials/red-hat-enterprise-linux-v7-networking/networkmanager-connection-priority-manage-network-profile-priority-in-linux/)
 
@@ -745,14 +761,6 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 
 <!-- !!! TODOs
 * verschiedne tf frames erklären
-  * https://www.ros.org/reps/rep-0105.html
-* https://www.ros.org/reps/rep-0103.html
-* Latex: collision (detection) / urdf 
-* bei navigation: rotation konnte nicht ausgeführt werden -> costmap threshold verkleinern?
-* schreiben: rviz initiale pose und naviagtion goal festlegen
-* schreiben: laser frame ist falsch herum, weil der lidar falsch montiert wurde
-* glasstüren sind ein problem, weil nicht von laser erkannt werden
-* limitations kapitel, bspw. gps treiber nicht da
 -->
 
 <!-- !!! Festellungen
