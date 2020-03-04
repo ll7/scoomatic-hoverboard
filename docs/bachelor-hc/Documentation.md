@@ -27,6 +27,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
   - [Konfiguration](#konfiguration)
     - [ssh Verbindung einrichten](#ssh-verbindung-einrichten)
     - [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration)
+    - [Aktivieren des Ubuntu WiFi Hotspots](#aktivieren-des-ubuntu-wifi-hotspots)
     - [Einrichtung ~/.bashrc auf RPi](#einrichtung-bashrc-auf-rpi)
     - [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-auf-pc)
     - [udev Regeln](#udev-regeln)
@@ -56,7 +57,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
   - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
-    - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
+    - [Hector GeoTIFF Karte (wird nicht gespeichert)](#hector-geotiff-karte-wird-nicht-gespeichert)
 
 ## Einführung in das Projekt
 
@@ -107,6 +108,7 @@ Aktuell gelten folgende Einschränkungen:
 * Der GPS Treiber existiert nur für ROS2
 * Glastüren bzw. Hindernisse aus Glas können nicht erkannt werden
 * Hindernisse werden nur auf Höhe des Lasers erkannt
+* SLAM & Navigation funktionieren nur auf einer Ebene, mehrere Ebenen gleichzeitig werden nicht unterstützt
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
@@ -174,6 +176,7 @@ Zeile in ```start_navigation.launch```:
 ```XML
 <arg name="map_file" value="/home/<USERNAME>/maps/room1-map.yaml" />
 ```
+>Hier wurde ein symbolischer Link vom scoomatic-hoverboard Ordner zum maps verwendet.
 
 ## ROS How-To's
 ### Raspberry Pi einschalten
@@ -183,7 +186,7 @@ Zeile in ```start_navigation.launch```:
 Es ist möglich den Raspberry Pi mit dem vorhandenen Micro-USB Kabel, mit der Stromversorgung des Scoomatics zu versorgen. Zudem ist es aber auch möglich den RPi direkt per Micro-USB an eine USB Stromversorgung anzuschließen. Ein Computer reicht in der Regel dafür aus.
 
 ### ROS (Core) Starten
-> Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel [Konfiguration](#Konfiguration) eingerichtet wurde.
+> Diese Anleitung setzt voraus, dass die Umgebung wie im Kapitel [Konfiguration](#konfiguration) eingerichtet wurde.
 
 1. Scoomatic, also insbesondere den Raspberry Pi, anschalten. Kurz warten.
 2. Mit ```ssh scoomatic``` per SSH verbinden
@@ -200,7 +203,7 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 5. Ein neues Terminal öffnen, wenn das Kartieren abgeschlossen ist, damit die Karte gespeichert werden kann
 6. Mithilfe des Map servers ```rosrun map_server map_saver -f <mapfilename>``` ausführen
 
-> Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutztbar.
+> Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutzbar.
 
 ### Navigation starten
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
@@ -211,45 +214,43 @@ Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet we
 roslaunch scoomatic_drive start_navigation.launch
 ```
 
-Damit werden unter anderem der MapServer, welcher die Karte bereitstellt, die per SLAM erstellt wurde, und AMCL, zur Lokalisierung gestartet.
+Damit werden unter anderem der MapServer, welcher die Karte bereitstellt, die per SLAM erstellt wurde, AMCL, zur Lokalisierung und der restliche Navigation Stack, insbesondere move_base gestartet.
 
-AMCL benötigt initial eine ungefähre, vorgegbene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann. Standardmäßig ist die Pose das Zentrum der Karte.
+AMCL benötigt initial eine ungefähre, vorgegebene Pose, damit AMCL den Roboter global schneller und besser, eventuell sogar überhaupt lokalisieren kann. Standardmäßig ist die Pose das Zentrum der Karte.
 
 ![Button 2D Pose Estimate](images/rviz-estimate-pose.png)
 
 Dies kann in RViz einfach mit dem Button **2D Pose Estimate** erledigt werden.
 
-Nachdem eine Lokalisierung mit geringer Kovarianz besteht, kann ein Navigationsziel festgelegt werden. Dazu kann in RViz über den Button ```2D Nav Goal``` eine Pose festgelegt werden.
+Nachdem eine Lokalisierung mit geringer Kovarianz besteht, kann ein Navigationsziel festgelegt werden. Dazu kann in RViz über den Button ```2D Nav Goal``` eine Ziel-Pose festgelegt werden.
 
 ## Lokalisierung Global durchführen
+Es ist auch möglich einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, ungefähr gleich im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden:
 
-Es ist auch möglich einen Service zu starten, der alle möglichen Posen, die in RViz als **PoseArray** dargestellt werden, im Raum verteilt. Dann kann durch herumfahren im Raum eine Pose mit geringerer Kovarianz gefunden werden:
-```
+```bash
 rosservice call global_localization
 ```
 
 ![Karte nach der Ausführung von global_localization](images/amcl-global-localization.png)
 
-
 ## TF
-ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realten Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes gepublisht und verwendet werden können. Da dieser Roboter, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
+ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realen Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes veröffentlicht und verwendet werden können. Da der Scoomatic, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
 
-> Am besten folgenden Befehl auf dem Remote Rechner ausführen
-
-Mit 
+>Den folgenden Befehl am besten auf dem Remote PC ausführen
 
 ```bash
 rosrun rqt_tf_tree rqt_tf_tree
 ``` 
 
-kann eine Übersicht aller tf frames angezeigt werden. Ähnlich zu den Topics&Nodes.
+kann eine Übersicht aller tf frames angezeigen. Ähnlich zu den Topics&Nodes.
 
 ### Aktuelle TF Baumstruktur
 ![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.png)
 
-Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar. Der frame ```odom``` stellt die Daten des Motors bereit und wird von der Node /OdomPublisher/odom veröffentlicht. Die Beziehung zwischen map und odom wird von HectorSLAM hergestellt.
+Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar und wird entweder von HectorSLAM oder vom map_server bereitgestellt. Die Beziehung von ```odom``` zu ```base_link``` wird von der Node ```/OdomPublisher``` veröffentlicht und stellt die Motordaten zur Verfügung.
 
-Der ```base_link``` frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` frame per statischem Publisher festgelegt, genauso wie die IMU.
+Der ```base_link``` Frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` Frame per statischem Publisher festgelegt, genauso wie die IMU.
+Der ```imu_link``` Frame wird von dem MPU 9250 Treiber bereitgestellt.
 
 ## Hardware
 
@@ -262,7 +263,11 @@ Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SD
 
 ![Koordinatensystem des RPLidar A1](images/rplidar_A1.png)
 
-Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt.
+Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° (pi radiant) an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt. Dies wurde in ```launch_drivers.launch``` mit einem *static_transform_publisher* realisiert:
+
+```XML
+<node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 3.141592 0 0 base_link laser 50" />
+```
 
 ### Scoomatic Maße
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
@@ -270,7 +275,6 @@ Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Rei
 Der Reifenumfang hat einen Durchmesser von **ca. 250mm**. Mehr zu [möglichen Problemen](#unterschiedliche-geschwindigkeiten-r%c3%a4der)
 
 ## Software
-
 Die Installation von SLAM und der Navigation wird hier beschrieben.
 
 ### Hector SLAM Installation
@@ -318,7 +322,7 @@ Die Konfiguration der Navigation ist unter []()
 Mit dem package **map_server** aus *navigation* kann die Karte, welche per SLAM erzeugt wird, gespeichert werden. Es wird eine PGM Bilddatei zusammen mit einer YAML Konfigurationsdatei erstellt.
 
 ```bash
-rosrun map_server map_saver -f map-roomname
+rosrun map_server map_saver -f <map-roomname>
 ```
 
 Wenn die Karte bereitgestellt werden soll, kann dies mit dem *scoomatic_drive* passieren. Wenn das **navigation.launch** gelauncht wird, wird auch die Karte bereitgestellt. Dafür muss diese sich aber im korrekten Ordner befinden bzw. der Pfad im Launchfile angegeben sein.
@@ -334,17 +338,17 @@ Dies umfasst unter anderem folgende Daten:
 * Odometry
 * Map
 * PoseWithCovariance (Also Pose mit Unsicherheit)
-* Trajectory
+* Path (Trajectory)
 
-RViz kann auch auf einem externen Rechner, anstatt auf dem RPi, gestartet werden. Dafür muss jedoch zunächst ROS_MASTER_URI neu gesetzt werden.
+RViz kann auch auf einem PC, anstatt auf dem RPi, gestartet werden. Dafür muss unter Umständen jedoch *ROS_MASTER_URI* neu gesetzt werden.
 
-> Die ROS_MASTER_URI kann folgendermaßen neu gesetzt werden: ```export ROS_MASTER_URI="http://<ADRESSE>:11311"``` Der Port ist in der Regel 11311, diese Einstellung gilt nur für das aktuelle Terminal und wird beim schließen verworfen. ADRESSE kann eine IP Adresse, .local-Adresse oder Ähnliches sein. Aktuell ist die Adresse: ```http://ubuntu.local:11311```.
+> Die ROS_MASTER_URI kann folgendermaßen gesetzt werden: ```export ROS_MASTER_URI="http://<ADRESSE>:11311"``` Der Port ist in der Regel 11311, diese Einstellung gilt nur für das aktuelle Terminal und wird beim schließen verworfen. ADRESSE kann eine IP Adresse, .local-Adresse oder Ähnliches sein. Aktuell ist die Adresse: ```http://ubuntu.local:11311```.
 
 Es gibt zwei vorgefertigte Ansichten für RViz. Diese sind unter ```code/configuration/``` mit der Endung *.rviz* gespeichert.
 
-**odometry-and-mapping.rviz** ist für die herstellen von SLAM Maps geeignet
-
-**amcl.rviz** ist geeignet für die Überprüfung der korrekten Lokalisierung
+* **odometry-and-mapping.rviz** ist für das Erstellen von SLAM Karten geeignet
+* **amcl.rviz** ist geeignet für das Debugging der korrekten Lokalisierung
+* **navigation.rviz** ist geeignet für das Debugging von move_base und ganz allgmein der Navigation
 
 Eine RViz Instanz mit einer bestimmten Konfiguration kann im Terminal gestartet werden:
 
@@ -360,8 +364,7 @@ rosrun rviz rviz -d <configuration>.rviz
 
 ## Konfiguration
 ### ssh Verbindung einrichten
-> Voraussetzungen dafür sind: Rechner & RPi sind mit dem ```rt``` WiFi-Netzwerk verbunden
-> und der avahi-daemon unter Ubuntu läuft, was standardmäßig der Fall ist. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
+> Voraussetzungen dafür sind: PC & RPi sind mit einem passendem WiFi-Netzwerk verbunden und der avahi-daemon unter Ubuntu läuft, was standardmäßig der Fall ist. Dies kann mit ```systemctl status avahi-daemon``` überprüft werden.
 
 Im Ordner ```configuration``` liegt die [SSH-Config](../../code/configuration/ssh-config), welche sich mit dem Raspberry Pi verbinden kann. Diese Config muss unter Ubuntu 18.04 unter ```~/.ssh/config``` gespeichert werden.
 
@@ -371,24 +374,33 @@ $ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/configuration ~/.ssh/
 $ cd ~/.ssh/
 ```
 
-Danach nur noch umbenennen: ```mv ssh-config config```
+Danach die Datei nur noch umbenennen: ```mv ssh-config config```
 
-Dann sich kann mit ```ssh ubuntu``` und dem Passwort ```notubuntu``` mit dem RPi verbunden werden.
+Dann sich kann mit ```ssh scoomatic``` und dem Passwort ```notubuntu``` mit dem RPi verbunden werden.
 
-> In der Regel wird vom DHCP dem RPi die IP 192.168.140.16 vergeben
+>In der Regel wird vom DHCP im ```rt``` Netzwerk dem RPi die IP 192.168.140.16 vergeben.
 
-Alternative kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
+Alternativ kann jedes Mal ```ssh -X ubuntu@ubuntu.local``` eingegeben werden.
 
 ### ROS Netzwerkkonfiguration
 In diesem Projekt gibt es mehrere Teilnehmende in der ROS Umgebung. Dementsprechend muss die Konfiguration von ROS so vorgenommen werden, dass alle Teilnehmende sich gegenseitig finden können. Im Netzwerk existiert, bzw. sollte immer nur einen ROS Master existieren. Dementsprechend wird auf den jeweiligen Computern ein identischer, eindeutiger ROS Master festgelegt.
 
-Zudem hat jeder Computer eine eindeutige Bezeichnung, welche als ```ROS_HOSTNAME``` festgelegt wird, damit dieser Computer auch im Netzwerk gefunden werden können. Alternative kann eine ```ROS_IP``` festgelegt werden, was allerdings nicht bevorzugt wird, da sich diese Ändern kann.
+Zudem hat jeder Rechner eine eindeutige Bezeichnung, welche als ```ROS_HOSTNAME``` festgelegt wird, damit dieser Rechner auch im Netzwerk gefunden werden können. Alternativ kann eine ```ROS_IP``` festgelegt werden, was allerdings nicht bevorzugt wird, da sich diese Ändern kann.
 
-Diese Einstellungen werden in der ~/.bashrc vorgenommen und in den folgenden zwei Abschnitten erklärt.
+Diese Einstellungen werden in der ```~/.bashrc``` vorgenommen und in den folgenden zwei Abschnitten erklärt.
 
-Mehr Infos: [ROS Environment Variables](http://wiki.ros.org/ROS/EnvironmentVariables#ROS_IP.2BAC8-ROS_HOSTNAME)
+Mehr Infos zu [ROS Environment Variables](http://wiki.ros.org/ROS/EnvironmentVariables#ROS_IP.2BAC8-ROS_HOSTNAME).
 
 >Das Netzwerk rt vergibt an den RPi in der Regel die IP ```192.168.140.16```. Im Netzwerk TP-LINK_A264 wurde dafür eine statische IP festgelegt. Damit ist die IP in der Regel die Gleiche. Der Ubuntu WiFi-Hotspot spielt eine Sonderrolle.
+
+### Aktivieren des Ubuntu WiFi Hotspots
+![](images/ubuntu-wifi-hotspot-button.png)
+
+In den WLAN Einstellungen kann im Hamburger-Menü auf *WLAN-Hotspot einschalten...* gedrückt werden.
+
+Im folgenden kann nach dem erneuten drücken von *EInschalten* die SSID und das Passwort angesehen werden, sowie der Hotspot wieder ausgeschaltet werden:
+
+![](images/ubuntu-wifi-hotspot-details.png)
 
 ### Einrichtung ~/.bashrc auf RPi
 In diesem Projekt wurden alias in bash verwendet. Dies vereinfacht die Benutzung von ROS deutlich. Zudem ist es eine Erleichterung automatisch die notwendigen Dateien von ROS source-Befehle ausführen zu lassen.
@@ -411,7 +423,7 @@ export ROS_MASTER_URI=http://ubuntu.local:11311
 Mehr Infos bei [ubuntuusers/alias](https://wiki.ubuntuusers.de/alias/).
 
 ### Einrichtung ~/.bashrc auf PC
-Auf dem externen Rechner können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
+Auf dem PC können folgende Vereinfachungen in der ```~/.bashrc``` festgelegt werden:
 
 ```bash
 # Eigenen Hostname fuer ROS festlegen
@@ -424,7 +436,7 @@ source /opt/ros/melodic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 ```
 
-Die Bezeichnung ```imech139``` entspricht hier dem Rechnernamen und muss ggf. angepasst werden.
+Die Bezeichnung ```imech139``` entspricht hier dem PC-Namen und muss ggf. angepasst werden.
 
 Dadurch wird der ROS Master auf den RPi festgelegt und der ROS1 Workspace bei jedem neuen Terminal automatisch eingerichtet, so dass die ROS Tools, wie ```rostopic``` verwendet werden können.
 
@@ -446,7 +458,7 @@ zu schreiben.
 Wobei XXX durch den von Linux vergebenen Port geändert werden muss.
 
 ### Catkin Workspace einrichten
-Catkin ist das Builld-System von ROS1. Damit die Packages gebaut und von ROS verwaltet werden können, richten wir einen Workspace auf dem Desktop Rechner ein.
+Catkin ist das Builld-System von ROS1. Damit die Packages gebaut und von ROS verwaltet werden können, richten wir einen Workspace auf dem PC ein.
 
 Wir führen folgende Befehle aus:
 ```bash
@@ -468,7 +480,7 @@ Nun müssen wir noch die programmierten Packages mit einem symbolischen Link ver
 <USERNAME>@imech139-u:~/catkin_ws$ ln -s /home/<USERNAME>/scoomatic-hoverboard/code/ros-drivers/scoomatic_drive src/scoomatic_drive
 ```
 
-Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-auf-pc) gezeigt, noch das ```source``` statement hinzugefügt werden.
+Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-auf-pc) gezeigt, noch das ```source``` statement hinzugefügt werden, falls dies noch nicht geschehen ist.
 
 [Tutorial im ROS Wiki](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
@@ -476,7 +488,9 @@ Schlussendlich muss, wie in [Einrichtung ~/.bashrc auf PC](#einrichtung-bashrc-a
 
 ![Scan Modes des RPLidar](images/RPLidar-scan-modes.png)
 
-Es existieren verschiedene Scan Modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht und Erklärung ist die Dokumentation des Protokoll des RPLidar zu empfehlen. Auf Seite 12 werden die verschiedenen Scan Modes erklärt.
+Der Scan mode mit den maximalen Sample Rate für den A1 ist der **Boost** Mode.
+
+Es existieren verschiedene Scan Modes des RPLidars, welche sich in der Sample Rate, max. Distanz und anderen Features unterscheiden. Für eine Übersicht und Erklärung ist die Dokumentation des Protokoll des RPLidar zu empfehlen. Auf Seite 12 werden die hier abbgebildeten Scan Modes erklärt.
 
 Zur [Dokumentation RPlidar Protocol](https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en)
 
@@ -499,10 +513,10 @@ Whether to run Pylint with minimal set of rules.
 Nun werden uns beim klicken in der Statusliste auf die Warnungen & Fehler (oder ```STRG+SHIFT+P > Problems: Focus on Problems View```) auch Code Style Probleme angezeigt.
 
 ### WiFi Netzwerk Verbindung & Konfiguration
-Auf dem RPi sind drei WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
+Auf dem RPi sind vier WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlichen Prioritäten festgelegt.
 
 Folgende 4 Netzwerke sind mit absteigender Priorität eingerichtet:
-* ll7-hp-eb | Passwort siehe WLAN-Hotspot Ubuntu
+* ll7-hp-eb | Passwort: Eq2tsmc3 (WiFi Hotspot HP-Elitebook)
 * TP-LINK_A264 | Passwort: 95394787
 * imech139-u | Passwort siehe WLAN-Hotspot Ubuntu
 * rt
@@ -511,9 +525,9 @@ Dies bedeutet, dass sich der RPi mit ll7-hp-eb automatisch verbindet, wenn alle 
 
 Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
 
-Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden. Höhere Nummern bedeuteten höhere Priorität:
+Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden. Höhere Integer bedeuteten höhere Priorität:
 ```bash
-nmcli c mod <SSID> connection.autoconnect-priority 1
+nmcli c mod <SSID> connection.autoconnect-priority <priority>
 ```
 
 Das Netzwerk kann manuell gewechselt werden:
@@ -592,7 +606,7 @@ Siehe auch: [Recording and playing back data](http://wiki.ros.org/rosbag/Tutoria
 
 ### Odometrie Daten anzeigen in rviz
 1. Starte Hector SLAM
-2. Starte RViz mit ```rosrun rviz rviz``` oder, siehe unten.
+2. Starte RViz mit ```rviz``` 
 3. Füge den Odometry Layer hinzu
 4. Wähle die ```/OdomPublisher/odom``` Topic aus
 
@@ -609,7 +623,7 @@ Wenn der Datei Name der PGM Karte geändert wird, muss dieser auch in der dazuge
 > Es ist zu beachten, dass in dem Launchfile immer nur der Dateiname der YAML Datei angegeben werden muss und diese einen beliebigen Namen haben kann.
 
 ### ROS Topic-Messages werden nicht empfangen
-Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte in ```/etc/hosts``` die statische Route mit der passenden IP von ```ubuntu``` festgelegt werden.
+Wenn die ROS Topics zwar über ```rostopic list``` gelistet aber mit ```rostopic echo /tf``` nicht angezeigt werden können, sollte die [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) ausgeführt werden.
 
 ### Odometrie Node ausschalten
 Um ein debuggen von SLAM zu erleichtern, kann die Odometrie Daten ausgeschaltet werden.
@@ -669,7 +683,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 
 **Mögliche Lösungen**:
 * SLAM auf PC ausführen
-* Die Daten zunächst nur aufzunehmen, in einem BAG File speichern und danach auf einem leistungsstärkeren Rechner SLAM ausführen mit dem BAG File
+* Die Daten zunächst nur aufzunehmen, in einem BAG File speichern und danach auf einem leistungsstärkeren PC SLAM ausführen mit dem BAG File
 
 ### RViz: "Fixed Frame [map] does not exist"
 **Tritt auf**: In RViz, beim Anzeigen der Karte / immer
@@ -681,7 +695,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 **Mögliche Lösungen**:
 * In RViz links unten auf "Reset" klicken
 * RViz neustarten
-* Die Netzwerkkonfiguration überprüfen, eventuell stimmt die statische Route in ```/etc/hosts``` nicht
+* Die Netzwerkkonfiguration überprüfen, eventuell stimmt [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) nicht
 
 ### TF Transform Error
 **Tritt auf**: Bei HectorSLAM
@@ -715,7 +729,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 ### Festlegen von 2D Estimate Pose / 2D Goal nicht möglich
 **Tritt auf**: Festlegen in RViz, Ausführung bei AMCL bzw. Navigation
 
-**Möglicher Grund**: Netzwerkkonfiguration nicht korrekt eingestellt; ```ROS_HOSTNAME``` bzw. ```ROS_IP``` wurde nicht oder falsch konfigur
+**Möglicher Grund**: Netzwerkkonfiguration nicht korrekt eingestellt; ```ROS_HOSTNAME``` bzw. ```ROS_IP``` wurde nicht oder falsch konfiguriert.
 
 **Mögliche Lösungen**:
 Die [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) ausführen.
@@ -730,9 +744,10 @@ Dies kann unteranderem durch diese beiden Verfahren erfolgen:
 
 Zur Ermittlung wurde Erstere Variante verwendet. Allerdings ist diese mit einem zu hohen Fehler behaftet und kann nicht sinnvoll verwendet werden.
 
-Der Schätzwert der Geschwindigkeit für eine Einheitslose Geschwindigkeit v_{scoomatic} 
+Der Schätzwert der Geschwindigkeit $`v`$ in Abhängigkeit der Einheitslose Geschwindigkeit $`v_{scoomatic}`$
 
-≈ 4mm/s/v_{scoomatic} = 0,004m/s/v_{scoomatic}
+$`v\approx 5\frac{mm}{s}*v_{scoomatic} = 0,005\frac{m}{s}*v_{scoomatic}`$
+
 
 ### SLAM fortführen / Karte nachträglich verbessern
 Nach aktuellem Kenntnis Stand des Autors ist es nicht möglich eine abgeschlossene und gespeicherte SLAM Karte von Hector SLAM in irgendeiner Art und Weise fortzuführen oder den Prozess zu pausieren.
@@ -741,7 +756,7 @@ Allerdings ist es möglich eine PGM Karte mithilfe eines Bildbearbeitungsprogram
 
 Mehr Infos: [ROS Answers](https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721)
 
-### Hector GeoTIFF (wird nicht gespeichert)
+### Hector GeoTIFF Karte (wird nicht gespeichert)
 > Es ist zusätzlich, zu dem unter [SLAM Karte speichern und bereitstellen](#slam-karte-speichern-und-bereitstellen) beschriebenen Möglichkeit eine PGM Karte mithilfe des map_server zu erstellen, möglich eine GeoTIFF zu speichern. Diese Möglichkeit bietet das Paket ```hector_geotiff```, welches mit HectorSLAM geliefert wird. Allerdings ist es zum aktuellen Zeitpunkt nicht möglich diese Karte auch wieder als [OccupancyGrid](http://docs.ros.org/melodic/api/nav_msgs/html/msg/OccupancyGrid.html) als Node auszuliefern. Deswegen ist dieses Paket für dieses Projekt aktuell nicht hilfreich.
 
 
@@ -758,14 +773,7 @@ Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` R
 
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
 
-<!-- !!! TODOs
-* verschiedne tf frames erklären
--->
-
-<!-- !!! Festellungen
-* neue karte mit neuem router erstellen
-  * wifi genauso schlecht
-* drehungen gehen mit oder ohne odometrie gleich schlecht(?)
-  * gleich schlecht
-* tf frame laser umgedreht wegten falscher ausrichtung des lidar
+<!-- TODOs
+* AMCL Parameter verbessern für gute konstante lokalisierung
+* navigation ausführen können
 -->
