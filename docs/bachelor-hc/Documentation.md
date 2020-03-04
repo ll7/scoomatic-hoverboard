@@ -56,7 +56,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
   - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
-    - [Hector GeoTIFF (wird nicht gespeichert)](#hector-geotiff-wird-nicht-gespeichert)
+    - [Hector GeoTIFF Karte (wird nicht gespeichert)](#hector-geotiff-karte-wird-nicht-gespeichert)
 
 ## Einführung in das Projekt
 
@@ -742,7 +742,7 @@ Allerdings ist es möglich eine PGM Karte mithilfe eines Bildbearbeitungsprogram
 
 Mehr Infos: [ROS Answers](https://answers.ros.org/question/9448/loading-a-prior-map-with-gmapping/#13721)
 
-### Hector GeoTIFF (wird nicht gespeichert)
+### Hector GeoTIFF Karte (wird nicht gespeichert)
 > Es ist zusätzlich, zu dem unter [SLAM Karte speichern und bereitstellen](#slam-karte-speichern-und-bereitstellen) beschriebenen Möglichkeit eine PGM Karte mithilfe des map_server zu erstellen, möglich eine GeoTIFF zu speichern. Diese Möglichkeit bietet das Paket ```hector_geotiff```, welches mit HectorSLAM geliefert wird. Allerdings ist es zum aktuellen Zeitpunkt nicht möglich diese Karte auch wieder als [OccupancyGrid](http://docs.ros.org/melodic/api/nav_msgs/html/msg/OccupancyGrid.html) als Node auszuliefern. Deswegen ist dieses Paket für dieses Projekt aktuell nicht hilfreich.
 
 
@@ -758,3 +758,8 @@ Dabei sind User und Group in der Regel identisch. Allerdings konnte damit das Pr
 Dafür kann regelmäßig eine Karte gespeichert werden im ```hector_geotiff``` ROS Package mit dem Parameter ```geotiff_save_period``` in der Datei ```geotiff_mapper.launch``` in Sekunden.
 
 Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question/209730/saving-geotiff-map-in-hector_slam/)
+
+<!-- TODOs
+* AMCL Parameter verbessern für gute konstante lokalisierung
+* navigation ausführen können
+-->
