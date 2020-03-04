@@ -107,6 +107,7 @@ Aktuell gelten folgende Einschränkungen:
 * Der GPS Treiber existiert nur für ROS2
 * Glastüren bzw. Hindernisse aus Glas können nicht erkannt werden
 * Hindernisse werden nur auf Höhe des Lasers erkannt
+* SLAM & Navigation funktionieren nur auf einer Ebene, mehrere Ebenen gleichzeitig werden nicht unterstützt
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
