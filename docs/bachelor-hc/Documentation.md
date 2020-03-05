@@ -146,7 +146,7 @@ Es existiert die Möglichkeit mithilfe von
 rosrun rqt_graph rqt_graph
 ```
 
-sich die Nodes Beziehungen mit Topics anzeigen zu lassen.
+sich die Nodes und deren Beziehungen über die Topics anzeigen zu lassen.
 
 Es existieren Parameter, welche über ein Launchfile gesetzt werden. Sie sind nutzbar über ```NodeName/Parameter```. 
 
@@ -518,12 +518,12 @@ Auf dem RPi sind vier WiFi-Netzwerke eingerichtet. Diese sind mit unterschiedlic
 Folgende 4 Netzwerke sind mit absteigender Priorität eingerichtet:
 * ll7-hp-eb | Passwort: Eq2tsmc3 (WiFi Hotspot HP-Elitebook)
 * TP-LINK_A264 | Passwort: 95394787
-* imech139-u | Passwort siehe WLAN-Hotspot Ubuntu
+* imech139 | Passwort siehe WLAN-Hotspot Ubuntu imech139
 * rt
 
 Dies bedeutet, dass sich der RPi mit ll7-hp-eb automatisch verbindet, wenn alle vier zur Verfügung stehen. Wenn das nicht der Fall ist mit TP-LINK_A264 und so weiter.
 
-Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb auch: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
+Diese Konfiguration kann mit ```nmcli``` verändert werden. Siehe deshalb für das erstmalige verbinden mit WiFi Netzwerken: [Projektmodul-MS](../projektmodul-ms/index.md#netzwerkkonfiguration).
 
 Die Prioritäten der Netzwerke kann mithilfe diesen Befehls verändert bzw. gesetzt werden. Höhere Integer bedeuteten höhere Priorität:
 ```bash
@@ -551,6 +551,8 @@ Mehr Infos zum thema NM Priorities auf [NetworkManager connection priority](http
 * Launchfile starten: ```roslaunch package file.launch```
 
 ### Numerische Werte der TF Transformationen anzeigen
+Rotationen, Translationen, usw. die in TF veröffentlich werden, können im Terminal betrachtet werden.
+
 Bspw. die in Beziehung stehenden frames *map* und *base_link*
 ```bash
 rosrun tf tf_echo map base_link
@@ -686,7 +688,7 @@ Schlussendlich bleibt nur die Möglichkeit, den Prozess mithilfe von ```kill <PI
 * Die Daten zunächst nur aufzunehmen, in einem BAG File speichern und danach auf einem leistungsstärkeren PC SLAM ausführen mit dem BAG File
 
 ### RViz: "Fixed Frame [map] does not exist"
-**Tritt auf**: In RViz, beim Anzeigen der Karte / immer
+**Tritt auf**: In RViz, beim Anzeigen der Karte oder immer
 
 **Mögliche Gründe**:
 * Es kommen tatsächlich keine Daten an, überprüfen mit ```rostopic echo /tf```
@@ -736,7 +738,7 @@ Die [ROS Netzwerkkonfiguration](#ros-netzwerkkonfiguration) ausführen.
 
 ## Hinweise
 ### Geschwindigkeit des Scoomatics
-Die Geschwindigkeit des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
+Die Geschwindigkeit $`v`$ des Scoomatics muss ermittelt werden, damit anhand der Einheitslosen Geschwindigkeitswerten des Motors eine Wegstrecke bzw. Geschwindigkeit in SI-Einheiten berechnet werden kann.
 
 Dies kann unteranderem durch diese beiden Verfahren erfolgen:
 1. Der Radumfang wird berechnet/gemessen und dann innerhalb einer bestimmten Zeit die Anzahl der Umdrehungen gemessen
@@ -775,5 +777,7 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 
 <!-- TODOs
 * AMCL Parameter verbessern für gute konstante lokalisierung
-* navigation ausführen können
+* navigation extrapolation problem fixen
+* probablistic robotics p.127: "The less accurate a robot, the larger these parameters."
+* tf transformationen bei nacgiation foto machen!
 -->
