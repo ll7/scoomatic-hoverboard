@@ -1,4 +1,6 @@
 <launch>
+    <!-- Meanings and default values of parameters are explained here:
+    http://wiki.ros.org/amcl#Parameters -->
     <node name="AMCL" pkg="amcl" type="amcl" output="screen">
         <!-- Publish scans from best pose at a max of 10 Hz -->
         <param name="odom_model_type" value="diff-corrected"/>

@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+"""Sends velocity commands to motor based on Twist ROS Messages"""
+
+# Author: Henri Chilla
+# Based on code: from Martin Schoerner
+# Subscribres to:
+#   /speed_l: Speed on left side
+#   /speed_r: Speed on right side
+# Publishes to:
+#   /odom:
+# TF Transforms:
+#   /odom: from /base_link to /odom
+# Params: none
+
 import rospy
 import serial
 import struct
@@ -15,7 +28,7 @@ def limit(value, limit):
     return min(limit, max(-limit, value))
 
 def callback(message):
-    """"Calculates and constructs velocity commands for serial"""
+    """Calculates and constructs velocity commands for serial"""
     global send_bytes, maxspeed_factor
 
     # Calculate actual velocity from topic message
@@ -26,12 +39,12 @@ def callback(message):
     send_bytes=(struct.pack("<hh", ang_velocity, lin_velocity))
 
 def send_serial(ser):
-    """"Sends send_bytes via ser object to board"""
+    """Sends send_bytes via ser object to board"""
     global send_bytes
     ser.write(send_bytes)
 
 def main():
-    """"Sends generated velocty commands from ROS topic via serial to board"""
+    """Sends generated velocty commands from ROS topic via serial to board"""
     global maxspeed_factor
     # Start Node
     rospy.init_node('motor_driver', anonymous=True)

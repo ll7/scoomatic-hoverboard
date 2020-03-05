@@ -1,12 +1,14 @@
+# Sets parameters for Local Costmap, part of move_base (Navigation) Package
+# Meanings of Parameters can be read here: http://wiki.ros.org/navigation/Tutorials/RobotSetup#Costmap_Configuration_.28local_costmap.29_.26_.28global_costmap.29
 local_costmap:
   ## Set tf frames
   global_frame: odom
   robot_base_frame: base_link
   update_frequency: 5.0 #in Hz
-  publish_frequency: 2.0
+  publish_frequency: 2.0 #in Hz
   static_map: false
   rolling_window: true
-  ## Define size of local costmap
+  ## Define size of local costmap in meter
   width: 4.5
   height: 4.5
-  resolution: 0.05
+  resolution: 0.05 #in meters/cell

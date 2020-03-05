@@ -1,9 +1,11 @@
 # This document sets parameter for velocity and acceleration of scoomatic, for navigation purpose.
+# Meanings of Parameters can be read here: http://wiki.ros.org/navigation/Tutorials/RobotSetup#Base_Local_Planner_Configuration
+# Also consider changing maxspeed_factor in launch_driver.launch for velocity
 TrajectoryPlannerROS:
   # velocity in m/s
   max_vel_x: 1.5
   min_vel_x: 0.8
-  # angular vel in rad/s
+  # angular velocity in rad/s
   max_vel_theta: 0.8
   min_in_place_vel_theta: 0.3
 

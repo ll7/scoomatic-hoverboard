@@ -38,7 +38,7 @@ speed = 0.0  # +- 1
 thread_active = True
 
 def handle_game_controller():
-    """"Get button events and set speed & steering"""
+    """Get button events and set speed & steering"""
     global armed, direction, speed
 
     events = None
@@ -74,7 +74,7 @@ def gamepad_thread():
         handle_game_controller()
 
 def main():
-    """"Publish ROS Twist message for velocity"""
+    """Publish ROS Twist message for velocity"""
     global thread_active
 
     # Start node

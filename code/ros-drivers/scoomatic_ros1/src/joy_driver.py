@@ -3,7 +3,8 @@
 # Scoomatic Joystick Driver
 # Author: Martin Schoerner (ROS2 Version), migrated&improved from Henri Chilla to ROS1
 
-# Reads data from two joystick axis and button
+"""Reads data from joystick axis and button and publishs to ROS Topics"""
+
 # Sensor sends periodic packets in the form
 # JOY;*X-Axis*;*Y-Axis*;*Button-Pressed?*
 # coded in ascii with
@@ -51,7 +52,7 @@ def read_serial(ser):
 
 
 def main():
-    """"Publishs Twist messages for motor"""
+    """Publishs Twist messages for motor"""
     # Start node
     rospy.init_node('joy_driver', anonymous=True)
     node_name = rospy.get_name()

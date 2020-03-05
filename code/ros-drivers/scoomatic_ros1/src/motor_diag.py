@@ -3,7 +3,7 @@
 """Publishs motordriver debug/diagnositic data from UART via ROS messages"""
 
 # Scoomatic Sonar Driver
-# Author: Martin Schoerner
+# Author: Henri Chilla, based on Martin Schoerners Code
 # Debug packages are being received in the following form
 # 1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
 # 8 Key value pairs are being transmitted.
@@ -61,7 +61,7 @@ def read_serial(ser):
 
 
 def main():
-    """"Init publisher, paramter, read serial and publish debug data via ROS messages"""
+    """Init publisher, paramter, read serial and publish debug data via ROS messages"""
     # Start node
     rospy.init_node('motor_diag', anonymous=True)
     node_name = rospy.get_name()
@@ -74,12 +74,12 @@ def main():
     # Create publisher
     p1 = rospy.Publisher(node_name+'/adc1', Int32, queue_size=10)
     p2 = rospy.Publisher(node_name+'/adc2', Int32, queue_size=10)
-    p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=20)
-    p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=20)
+    p3 = rospy.Publisher(node_name+'/speed_l', Int32, queue_size=10)
+    p4 = rospy.Publisher(node_name+'/speed_r', Int32, queue_size=10)
     p5 = rospy.Publisher(node_name+'/battery_voltage_calibration_value', Int32, queue_size=10)
     p6 = rospy.Publisher(node_name+'/battery_voltage', Float32, queue_size=10)
     p7 = rospy.Publisher(node_name+'/temperature_calibration_value', Int32, queue_size=10)
-    p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=20)
+    p8 = rospy.Publisher(node_name+'/temperature', Int32, queue_size=10)
 
     # Create messages for the sensor values
     m1 = Int32()

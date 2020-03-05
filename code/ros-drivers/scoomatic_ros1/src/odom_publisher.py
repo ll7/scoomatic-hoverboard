@@ -21,6 +21,7 @@ from std_msgs.msg import Int32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
+# Define (start/default) values
 speed_l = 0
 speed_r = 0
 current_time = 0
@@ -103,9 +104,10 @@ def main():
     y = 0.0 # in m
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
-    velocity_multiplier = 0.004
+    # Value of velocity_multiplier is explained and calculated here: docs/bachelor-hc/Documentation.md#Geschwindigkeit-des-Scoomatics
+    velocity_multiplier = 0.005
 
-    rate = rospy.Rate(25) # => Hz
+    rate = rospy.Rate(12) # => Hz
 
     last_time = rospy.Time.now()
     while not rospy.is_shutdown():
@@ -115,7 +117,6 @@ def main():
         v_l = velocity_multiplier * speed_l # in m/s
         v_r = velocity_multiplier * speed_r # in m/s
         v_x = (v_r + v_l) / 2
-        #rospy.logwarn("Velocity VX: "+v_r+" v_r + "+v_l+"v_l /2="+v_x)
         v_y = 0.0 # in m/s [is always 0]
         v_th = (v_l - v_r) / l # in rad/s
 
