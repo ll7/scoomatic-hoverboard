@@ -11,10 +11,6 @@
         <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples--> <!-- Express ≙ 4K Samples--> 
     </node>
     <!-- Internal NODES -->
-    <!-- tf static transform of laser -->
-    <!-- Transform from base platform to laser -> for navigation-->
-    <node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 3.141592 0 0 base_link laser 50" />
-
     <!-- Odom Publisher -->
     <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>
     <!-- Motor Driver -->

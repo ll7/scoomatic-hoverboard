@@ -91,10 +91,26 @@
             <material name="aluminium"/>
         </visual>
         <collision>
-            geometry>
+            <geometry>
                 <box size="0.1 0.8 0.1"/>
             </geometry>
             <origin xyz="0.3 0.0 0.3"/>
+        </collision>
+    </link>
+
+    <link name="sensor_imu">
+        <visual>
+            <geometry>
+                <box size="0.02 0.01 0.02"/>
+            </geometry>
+            <origin xyz="0.05 -0.01 0.15"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.02 0.01 0.02"/>
+            </geometry>
+            <origin xyz="0.05 -0.01 0.15"/>
         </collision>
     </link>
 
@@ -114,8 +130,13 @@
         <child link="sensor_sonar"/>
     </joint>
 
-    <joint name="frame_to_laser" type="fixed">
+    <joint name="base_to_imu" type="fixed">
         <parent link="base_link"/>
+        <child link="sensor_imu"/>
+    </joint>
+
+    <joint name="frame_to_laser" type="fixed">
+        <parent link="frame_main_bar"/>
         <child link="laser"/>
     </joint>
 
