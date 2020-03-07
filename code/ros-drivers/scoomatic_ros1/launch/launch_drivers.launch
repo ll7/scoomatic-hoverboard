@@ -10,6 +10,8 @@
         <!-- for scan mode possibilities look at RPLidar docs (Page 12): https://download.slamtec.com/api/download/rplidar-protocol/2.1.1?lang=en-->
         <param name="scan_mode" type="string" value="Boost"/> <!-- Boost ≙ 8K Samples--> <!-- Express ≙ 4K Samples--> 
     </node>
+    <!-- Start Publishing URDF Model and TF Transformation-->
+    <include file="$(find scoomatic_description)/launch/publish_scoomatic_description.launch"/>
     <!-- Internal NODES -->
     <!-- Odom Publisher -->
     <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>

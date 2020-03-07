@@ -8,8 +8,6 @@
 
   <include file="$(find scoomatic_drive)/launch/hector_mapping.launch"/>
 
-  <include file="$(find scoomatic_description)/launch/publish_scoomatic_description.launch"/>
-
   <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server" output="screen" />
   <node pkg="hector_imu_attitude_to_tf" type="hector_imu_attitude_to_tf" name="hector_imu_attitude_to_tf" output="screen">
     <param name="base_frame" value="base_link"/>
