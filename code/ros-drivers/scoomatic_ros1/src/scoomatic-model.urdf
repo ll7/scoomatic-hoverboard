@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot name="scoomatic">
+    <!-- Base of Scoomatic -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="1.5 0.8 0.3"/>
+            </geometry>
+            <origin xyz="-0.5 0.0 0.0"/>
+        </visual>
+    </link>
+
+    <link name="frame_main_bar">
+        <visual>
+            <geometry>
+                <box size="0.2 0.2 1.0"/>
+            </geometry>
+            <material name="aluminium"/>
+        </visual>
+    </link>
+
+    <link name="frame_hand_bar">
+        <visual>
+            <geometry>
+                <box size="0.2 0.8 0.2"/>
+            </geometry>
+            <material name="aluminium"/>
+        </visual>
+    </link>
+
+    <!-- Materials -->
+    <material name="aluminium">
+        <color rgba="0.55 0.55 0.55 1.0"/>
+    </material>
+
+</robot>

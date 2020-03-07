@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # Scoomatic Sonar Driver
-# Author: Martin Schoerner
-# Last Change: 2019-04-26
+# Author: Henri Chilla, based on Martin Schoerners ROS2 Code
+
 # Reads data from 8 sensor sonar array via usb uart.
 # Sensor sends periodic packets in the form v0;v1;v2;v3;v4;v5;v6;v7
 # coded in ascii with v0 to v7 representing the distance

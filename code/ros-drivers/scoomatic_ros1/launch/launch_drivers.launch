@@ -46,7 +46,7 @@
     </node>-->
     <!-- Sonar Driver -->
     <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
-        <param name="rate" type="int" value="3"/>
+        <param name="rate" type="int" value="5"/>
         <param name="topic" type="str" value="/sonar"/>
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
