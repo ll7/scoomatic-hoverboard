@@ -1,6 +1,6 @@
 <launch>
     <!-- map file argument takes YAML-File, not Image-File! -->
-    <arg name="map_file" value="/home/chillahe/map4.yaml" />
+    <arg name="map_file" value="/home/chillahe/maps/map-alpha5.yaml" />
 
     <node name="MapServer" pkg="map_server" type="map_server"  args="$(arg map_file)"  output="screen">
     	<param name="frame_id" value="map" />

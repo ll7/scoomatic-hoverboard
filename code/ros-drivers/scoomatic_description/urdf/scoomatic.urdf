@@ -128,7 +128,7 @@
     </joint>
 
     <joint name="frame_to_laser" type="fixed">
-        <origin xyz="0.1 0.0 0.0"/>
+        <origin xyz="0.1 0.0 0.0" rpy="0.0 0.0 3.141592"/>
         <parent link="frame_main_bar"/>
         <child link="laser"/>
     </joint>
