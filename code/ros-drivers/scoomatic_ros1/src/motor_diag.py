@@ -106,8 +106,10 @@ def main():
             # set message
             m1.data = data[0]
             m2.data = data[1]
-            m3.data = (-data[2]) # speed is negative for forward motion
-            m4.data = (-data[3]) # speed is negative for forward motion
+            if(abs(data[2]<25): data[2]=0
+            else m3.data = (-data[2]) # speed is negative for forward motion
+            if(abs(data[3])<25): data[3]=0
+            else: m4.data = (-data[3]) # speed is negative for forward motion
             m5.data = data[4]
             m6.data = data[5] / 100.0  # Battery Voltage is multiplied by 100 in Firmware
             m7.data = data[6]
