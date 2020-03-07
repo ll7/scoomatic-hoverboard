@@ -35,6 +35,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [RPLidar | Scan Modes](#rplidar--scan-modes)
     - [Integration von pyLint in VS Code](#integration-von-pylint-in-vs-code)
     - [WiFi Netzwerk Verbindung & Konfiguration](#wifi-netzwerk-verbindung--konfiguration)
+    - [Scoomatic URDF Modell](#scoomatic-urdf-modell)
   - [Tips & Tricks](#tips--tricks)
     - [Hilfreiche Commands](#hilfreiche-commands)
     - [Numerische Werte der TF Transformationen anzeigen](#numerische-werte-der-tf-transformationen-anzeigen)
@@ -119,7 +120,7 @@ Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLi
 >Im Folgenden wird davon ausgegangen, dass sich das Terminal beim ausführen von Commands im Home-Verzeichnis befindet.
 
 ## ROS Package-Struktur
-Das System ist in zwei ROS Packages aufgeteilt. Das ist zum einen das ```scoomatic-ros1```, welche die Sensordaten des Scoomatics bereitstellt, eventuell auch umrechnet sowie die Eingabemöglichkeiten wie Gamepad verwaltet. Letzteres, das ```scoomatic-drive``` Package stellt die Nodes zur Benutzung der Navigation und SLAM bereit. 
+Das System ist in drei ROS Packages aufgeteilt. Das ist zum einen das ```scoomatic-ros1```, welche die Sensordaten des Scoomatics bereitstellt, eventuell auch umrechnet sowie die Eingabemöglichkeiten wie Gamepad verwaltet. Zum Zweiten, das ```scoomatic-drive``` Package stellt die Nodes zur Benutzung der Navigation und SLAM bereit. Und als letztes das ```scoomatic_description```. Dieses stellt das Roboter Modell als URDF zur Verfügung und damit auch die TF Transformationen.
 
 Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, dass die Sensordaten vor dem ausführen von bpsw. HectorSLAM zur Verfügung stehen müssen. Deshalb wird dieser gleichzeitig mit dem ```scoomatic_ros1``` gestartet. Allerdings kann das bei Bedarf geändert werden.
 
@@ -135,6 +136,8 @@ Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, dass die Sens
   * Localisation
   * Navigation
   * Obstacle Avoidance
+* Roboter Description
+  * URDF Model
 
 ## ROS Nodes & Topics Übersicht
 
@@ -208,6 +211,9 @@ Nun kann HectorSLAM auf dem Remote Rechner gestartet werden:
 > Hector SLAM kann **statt** auf dem Remote Rechner auf dem Raspberry Pi ausgeführt werden. Die Performance sinkt jedoch stark, die Leistung des RPi ist nicht ausreichend. Insbesondere die Darstellung von RViz über SSH ist faktisch nicht benutzbar.
 
 ### Navigation starten
+
+![Navigation in RViz mit Costmap und Roboter Modell](images/rviz-navigation-window.png)
+
 Nachdem die Karte per SLAM erstellt worden ist, kann die Navigation verwendet werden.
 
 > Folgender Ausdruck ist nur verfügbar, wenn der Catkin Workspace korrekt eingerichtet wurde. Dies ist unter [Catkin Workspace einrichten](#catkin-workspace-einrichten) erläutert.
@@ -236,7 +242,7 @@ rosservice call global_localization
 ![Karte nach der Ausführung von global_localization](images/amcl-global-localization.png)
 
 ## TF
-ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realen Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes veröffentlicht und verwendet werden können. Da der Scoomatic, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch.
+ROS bietet die Möglichkeit Transformationen, also Beziehungen zwischen Roboter-Teilen und zwischen des Roboters und der realen Welt abzubilden. Dafür wird eine Baumstruktur von TF erstellt, in der Beziehungen von Nodes veröffentlicht und verwendet werden können. Da der Scoomatic, ausgenommen die beiden Räder, keine beweglichen Teile enthält, sind die existierenden Transformationen statisch. Sie wurden im ```scoomatic.urdf``` festgelegt.
 
 >Den folgenden Befehl am besten auf dem Remote PC ausführen
 
@@ -265,11 +271,7 @@ Das Koordinatensystem des RPLidar A1 sind wie folgt durch das RPLidar Package/SD
 
 ![Koordinatensystem des RPLidar A1](images/rplidar_A1.png)
 
-Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° (pi radiant) an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt. Dies wurde in ```launch_drivers.launch``` mit einem *static_transform_publisher* realisiert:
-
-```XML
-<node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 3.141592 0 0 base_link laser 50" />
-```
+Dies entspricht dann auch der Koordinaten in TF. Deswegen ist der Frame ```laser``` einmal um 180° (pi radiant) an der Z-Achse gedreht, damit die x-Achse wie gewünscht nach vorne zeigt. Dies kann mit einem *static_transform_publisher* realisiert werden. In diesem Fall wurde es allerdings mit einem URDF Modell realisiert. Die ```scoomatic.urdf``` Datei beschreibt den Roboter und dessen Links sowie Joints.
 
 ### Scoomatic Maße
 Die Breite des Scoomatics ist **622mm**. Dies wurde jeweils in der Mitte der Reifen gemessen. Bedeutet, dort wo der Reifen abrollt.
@@ -540,6 +542,11 @@ nmcli c up <SSID>
 >Zu beachten ist natürlich, dass nach dem wechseln des Netzwerks, die SSH Verbindung abbricht. Diese kann dann, nach dem wechseln des Netzwerks am PC, wieder aufgebaut werden.
 
 Mehr Infos zum thema NM Priorities auf [NetworkManager connection priority](http://bss.technology/tutorials/red-hat-enterprise-linux-v7-networking/networkmanager-connection-priority-manage-network-profile-priority-in-linux/)
+
+### Scoomatic URDF Modell
+![URDF Scoomatic Modell in RViz](images/urdf-model-with-tf.png)
+
+In der Datei ```scoomatic.urdf``` wird der Scoomatic als 3 dimensionales Objekt in XML beschrieben. Diese Joints werden dann zu TF veröffentlicht und stehen dann dort verfügbar. Außerdem ist es möglich das Modell in RViz anzuzeigen. Dies wurde bereits vorkonfiguriert und steht in den RViz Konfigurationen unter ```configurations/``` zur Verfügung.
 
 ## Tips & Tricks
 ### Hilfreiche Commands
