@@ -112,7 +112,9 @@ Aktuell gelten folgende Einschränkungen:
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
-Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Als Editor wurde [VS Code](https://code.visualstudio.com/) verwendet. Für beide ist die Konfiguration im Kapitel [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
+Für angenehmes Arbeiten mit der Dokumentation und Code wurde [VS Code](https://code.visualstudio.com/) verwendet. Es existiert dafür eine passende Extension für das Arbeiten mit ROS: [Extension ROS](https://marketplace.visualstudio.com/items?itemName=ms-iot.vscode-ros). Es stellt unter anderem Syntax Highlighting bereit.
+
+Bei der Python Programmierung wurde für den CodeStyle, Fehler & Warnungen [pyLint](https://www.pylint.org/) verwendet. Für beide ist die Konfiguration im Kapitel [Konfiguration](#integration-von-pylint-in-vs-code) zu finden.
 
 >Im Folgenden wird davon ausgegangen, dass sich das Terminal beim ausführen von Commands im Home-Verzeichnis befindet.
 

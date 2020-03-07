@@ -6,9 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Map1
-        - /LaserScan1
-        - /PoseArray1
       Splitter Ratio: 0.5
     Tree Height: 848
   - Class: rviz/Selection
@@ -96,6 +93,12 @@ Visualization Manager:
         All Enabled: true
         base_link:
           Value: true
+        base_platform:
+          Value: true
+        frame_hand_bar:
+          Value: true
+        frame_main_bar:
+          Value: true
         imu_link:
           Value: true
         laser:
@@ -103,6 +106,12 @@ Visualization Manager:
         map:
           Value: true
         odom:
+          Value: true
+        scanmatcher_frame:
+          Value: true
+        sensor_laser:
+          Value: true
+        sensor_sonar:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -113,10 +122,21 @@ Visualization Manager:
         map:
           odom:
             base_link:
+              base_platform:
+                {}
+              frame_main_bar:
+                frame_hand_bar:
+                  {}
               imu_link:
                 {}
               laser:
                 {}
+              sensor_laser:
+                {}
+              sensor_sonar:
+                {}
+          scanmatcher_frame:
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 0.699999988079071
@@ -168,13 +188,59 @@ Visualization Manager:
       Enabled: true
       Head Length: 0.07000000029802322
       Head Radius: 0.029999999329447746
-      Name: PoseArray
+      Name: PoseEstimation
       Shaft Length: 0.23000000417232513
       Shaft Radius: 0.009999999776482582
       Shape: Arrow (Flat)
       Topic: /particlecloud
       Unreliable: false
       Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_platform:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        frame_hand_bar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        frame_main_bar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sensor_laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sensor_sonar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
