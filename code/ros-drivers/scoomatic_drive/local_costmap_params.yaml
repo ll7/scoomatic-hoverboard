@@ -2,7 +2,7 @@
 # Meanings of Parameters can be read here: http://wiki.ros.org/navigation/Tutorials/RobotSetup#Costmap_Configuration_.28local_costmap.29_.26_.28global_costmap.29
 local_costmap:
   ## Set tf frames
-  global_frame: odom
+  global_frame: map
   robot_base_frame: base_link
   update_frequency: 5.0 #in Hz
   publish_frequency: 2.0 #in Hz

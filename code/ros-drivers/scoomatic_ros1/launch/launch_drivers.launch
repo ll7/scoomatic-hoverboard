@@ -19,10 +19,10 @@
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
         <param name="topic" type="str" value="/cmd_vel"/>
-        <!-- Limit the maxspeed of the Scoomatic. For SLAM, 1 is recommended.
+        <!-- Limit the maxspeed of the Scoomatic. For SLAM, 2 is recommended.
         ! ATTENTION ! Maximum speed is very high and should not be underestimated !
         Range from 1 to 10 -> 10: Max, 1:Min -->
-        <param name="maxspeed_factor" type="int" value="2"/> 
+        <param name="maxspeed_factor" type="int" value="3"/> 
     </node>
     <!-- Motor Diagnostics -->
     <node name="MotorDiag" pkg="scoomatic_ros1" type="motor_diag.py">
