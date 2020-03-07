@@ -105,7 +105,7 @@ def main():
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
     # Value of velocity_multiplier is explained and calculated here: docs/bachelor-hc/Documentation.md#Geschwindigkeit-des-Scoomatics
-    velocity_multiplier = 0.005
+    velocity_multiplier = 0.006
 
     rate = rospy.Rate(12) # => Hz
 
@@ -116,7 +116,7 @@ def main():
         # Motor outputs values in range [0,1000] without unit
         v_l = velocity_multiplier * speed_l # in m/s
         v_r = velocity_multiplier * speed_r # in m/s
-        v_x = (v_r + v_l) / 2
+        v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
         v_th = (v_l - v_r) / l # in rad/s
 
