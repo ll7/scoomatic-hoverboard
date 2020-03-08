@@ -63,9 +63,7 @@ def create_pointfield():
     z.datatype = 1
     z.count = 1
 
-    fields.append(x)
-    fields.append(y)
-    fields.append(z)
+    fields = [[x], [y], [z]]
 
     return fields
 
@@ -77,8 +75,7 @@ def convert_data_pcl(data):
     y = [i*0.1 for i in y]
     tmp_data.append(y)
 
-    i=0.3
-    z = [i for d in range(0,8)]
+    z = [0.3 for i in range(0,8)]
 
     return tmp_data.append([y, z])
 
