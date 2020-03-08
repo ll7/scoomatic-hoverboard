@@ -42,6 +42,46 @@ def read_serial(ser):
     return data
 
 
+def create_pointfield():
+    fields = []
+
+    x = PointField()
+    x.name = "x"
+    x.offset = 0
+    x.datatype = 1
+    x.count = 1
+
+    y = PointField()
+    y.name = "y"
+    y.offset = 8
+    y.datatype = 1
+    y.count = 1
+
+    z = PointField()
+    z.name = "z"
+    z.offset = 16
+    z.datatype = 1
+    z.count = 1
+
+    fields.append(x)
+    fields.append(y)
+    fields.append(z)
+
+    return fields
+
+def convert_data_pcl(data):
+    tmp_data = data
+
+    #width_sonar_bar = 0.6
+    y = range(-4,4)
+    y = [i*0.1 for i in y]
+    tmp_data.append(y)
+
+    i=0.3
+    z = [i for d in range(0,8)]
+
+    return tmp_data.append([y, z])
+
 def main(args=None):
     # Start node
     rospy.init_node('sonar_driver', anonymous=True)
@@ -54,22 +94,20 @@ def main(args=None):
     baud = params.get_param(node_name+'/baudrate', 115200)
     frame_id = params.get_param(node_name+'/frame_id', "base_link")
 
+    rosrate = rospy.Rate(rate)
+
     # Cerate publisher
     publisher = rospy.Publisher(topic, PointCloud2, queue_size=10)
     # Create pointcloud message for the sensor values
-    field = PointField()
-    field.name = "Distance"
-    field.offset = 0
-    field.datatype = 1
-    field.count = 1
-    fields = [field]
+    zero_vector = [0, 0, 0, 0, 0, 0, 0, 0]
+    fields = create_pointfield()
     msg = PointCloud2()
     msg.height = 1
     msg.width = 8
     msg.fields = fields
     msg.point_step = 1
     msg.row_step = 8
-    msg.data = [0, 0, 0, 0, 0, 0, 0, 0]
+    msg.data = convert_data_pcl(zero_vector)
     msg.is_dense = True
     msg.header = std_msgs.msg.Header()
     msg.header.stamp = rospy.Time.now()
@@ -84,13 +122,14 @@ def main(args=None):
             try:
                 data = read_serial(ser)
             except:
-                sleep(1 / rate)
+                rosrate.sleep()
                 continue
             # update message
-            msg.data = data
+            msg.data = convert_data_pcl(data)
+            msg.header.stamp = rospy.Time.now()
             # publish message
             publisher.publish(msg)
-            sleep(1 / rate)  # seconds
+            rosrate.sleep()
 
 if __name__ == '__main__':
     try:

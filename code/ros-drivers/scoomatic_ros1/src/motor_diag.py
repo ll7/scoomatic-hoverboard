@@ -106,8 +106,8 @@ def main():
             # set message
             m1.data = data[0]
             m2.data = data[1]
-            if(abs(data[2]<25): data[2]=0
-            else m3.data = (-data[2]) # speed is negative for forward motion
+            if(abs(data[2])<25): data[2]=0
+            else: m3.data = (-data[2]) # speed is negative for forward motion
             if(abs(data[3])<25): data[3]=0
             else: m4.data = (-data[3]) # speed is negative for forward motion
             m5.data = data[4]
