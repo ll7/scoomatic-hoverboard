@@ -43,6 +43,7 @@
         <param name="topic" type="str" value="/sonar"/>
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
+        <param name="frame_id" type="str" value="base_link"/>
     </node>
     <!-- Joy Driver -->
     <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">

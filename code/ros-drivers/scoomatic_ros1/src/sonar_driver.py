@@ -19,6 +19,7 @@ import rospy
 import params
 from time import sleep
 from sensor_msgs.msg import PointCloud2, PointField
+import std_msgs.msg
 
 def read_serial(ser):
     # read line
@@ -51,6 +52,7 @@ def main(args=None):
     rate = int(params.get_param(node_name+'/rate', 3))
     port = params.get_param(node_name+'/port', '/dev/sonar_driver')
     baud = params.get_param(node_name+'/baudrate', 115200)
+    frame_id = params.get_param(node_name+'/frame_id', "base_link")
 
     # Cerate publisher
     publisher = rospy.Publisher(topic, PointCloud2, queue_size=10)
@@ -69,6 +71,9 @@ def main(args=None):
     msg.row_step = 8
     msg.data = [0, 0, 0, 0, 0, 0, 0, 0]
     msg.is_dense = True
+    msg.header = std_msgs.msg.Header()
+    msg.header.stamp = rospy.Time.now()
+    msg.header.frame_id = frame_id
     rospy.loginfo("Using Serial Port " + str(port))
 
     # open serial port

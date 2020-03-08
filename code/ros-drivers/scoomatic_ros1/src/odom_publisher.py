@@ -118,7 +118,7 @@ def main():
         v_r = velocity_multiplier * speed_r # in m/s
         v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
-        v_th = (v_l - v_r) / l # in rad/s
+        v_th = (v_r - v_l) / l # in rad/s
 
         x, y, th = calculate_odometry(v_x, v_y, v_th, x, y, th)
 

@@ -789,4 +789,6 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * navigation extrapolation problem fixen
 * probablistic robotics p.127: "The less accurate a robot, the larger these parameters."
 * tf transformationen bei nacgiation foto machen!
+* hector imu attitude bug fixen
+* sonar in rviz integrieren
 -->
