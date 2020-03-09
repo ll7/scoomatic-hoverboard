@@ -29,10 +29,10 @@
 		<param name="fusion_type" value="2" />
 
 		<!-- mpu9250/gyro_accel_sample_rate: 5 - 1000 Hz -->
-		<param name="mpu9250/gyro_accel_sample_rate" value="80" />
+		<param name="mpu9250/gyro_accel_sample_rate" value="20" />
 
 		<!-- mpu9250/compass_sample_rate: 1 - 100 Hz -->
-		<param name="mpu9250/compass_sample_rate" value="40" />	
+		<param name="mpu9250/compass_sample_rate" value="20" />	
 			
 		<!-- mpu9250/gyro_low_pass_filter:
 			0x11 - 8800Hz, 0.64mS delay

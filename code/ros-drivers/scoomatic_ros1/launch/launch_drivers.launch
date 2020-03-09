@@ -14,7 +14,11 @@
     <include file="$(find scoomatic_description)/launch/publish_scoomatic_description.launch"/>
     <!-- Internal NODES -->
     <!-- Odom Publisher -->
-    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>
+    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
+        <param name="speed_l_topic" type="str" value="/MotorDriver/speed_l"/>
+        <param name="speed_r_topic" type="str" value="/MotorDriver/speed_r"/>
+        <param name="imu_topic" type="str" value="/imu/data"/>
+    </node>
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>

@@ -43,7 +43,12 @@ def read_serial(ser):
 
 
 def create_pointfield():
-    fields = [PointField('x', 0, PointField.UINT8, 1), PointField('y', 8, PointField.UINT8, 1), PointField('z', 16, PointField.UINT8, 1)]
+    fields = 
+    [
+        PointField('x', 0, PointField.UINT8, 1), 
+        PointField('y', 8, PointField.UINT8, 1),
+        PointField('z', 16, PointField.UINT8, 1)
+    ]
 
     return fields
 
@@ -51,9 +56,10 @@ def convert_data_pcl(x):
     y = range(-4,4)
     y = [i*0.1 for i in y]
 
-
     z = [0.3 for i in range(0,8)]
     points = x + y + z
+
+    rospy.logwarn('data: ' + str(points))
 
     return points
 
