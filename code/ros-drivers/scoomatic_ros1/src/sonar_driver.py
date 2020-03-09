@@ -17,7 +17,7 @@
 import serial
 import rospy
 import params
-from time import sleep
+from sensor_msgs import point_cloud2
 from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
 
@@ -78,17 +78,12 @@ def main(args=None):
     # Create pointcloud message for the sensor values
     zero_vector = [0, 0, 0, 0, 0, 0, 0, 0]
     fields = create_pointfield()
-    msg = PointCloud2()
-    msg.height = 1
-    msg.width = 8
-    msg.fields = fields
-    msg.point_step = 1
-    msg.row_step = 8
-    msg.data = convert_data_pcl(zero_vector)
-    msg.is_dense = True
-    msg.header = Header()
-    msg.header.stamp = rospy.Time.now()
-    msg.header.frame_id = frame_id
+    header = Header()
+    header.stamp = rospy.Time.now()
+    header.frame_id = frame_id
+
+    pc = point_cloud2.create_cloud(header, fields, convert_data_pcl(zero_vector))
+
     rospy.loginfo("Using Serial Port " + str(port))
 
     # open serial port
@@ -102,10 +97,10 @@ def main(args=None):
                 rosrate.sleep()
                 continue
             # update message
-            msg.data = convert_data_pcl(data)
-            msg.header.stamp = rospy.Time.now()
+            header.stamp = rospy.Time.now()
+            pc = point_cloud2.create_cloud(header, fields, convert_data_pcl(data))
             # publish message
-            publisher.publish(msg)
+            publisher.publish(pc)
             rosrate.sleep()
 
 if __name__ == '__main__':
