@@ -47,17 +47,15 @@ def create_pointfield():
 
     return fields
 
-def convert_data_pcl(data):
-    tmp_data = data
-
-    #width_sonar_bar = 0.6
+def convert_data_pcl(x):
     y = range(-4,4)
     y = [i*0.1 for i in y]
-    tmp_data.append(y)
+
 
     z = [0.3 for i in range(0,8)]
+    points = x + y + z
 
-    return tmp_data.append([y, z])
+    return points
 
 def main(args=None):
     # Start node
