@@ -86,7 +86,7 @@ def main(args=None):
     msg.row_step = 8
     msg.data = convert_data_pcl(zero_vector)
     msg.is_dense = True
-    msg.header = std_msgs.msg.Header()
+    msg.header = Header()
     msg.header.stamp = rospy.Time.now()
     msg.header.frame_id = frame_id
     rospy.loginfo("Using Serial Port " + str(port))
