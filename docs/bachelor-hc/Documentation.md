@@ -793,4 +793,5 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * improve navigation for slow velocities
 * joystick reparieren?
 * schreiben: rqt 
+* /opt/ros/melodic/lib/python2.7/dist-packages/sensor_msgs/msg
 -->

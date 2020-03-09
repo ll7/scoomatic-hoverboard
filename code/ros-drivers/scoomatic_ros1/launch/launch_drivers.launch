@@ -42,13 +42,13 @@
         <param name="gain_ang" type="double" value="0.8"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->
-    <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
+    <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
         <param name="rate" type="int" value="5"/>
         <param name="topic" type="str" value="/sonar"/>
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
         <param name="frame_id" type="str" value="base_link"/>
-    </node>
+    </node>-->
     <!-- Joy Driver -->
     <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>

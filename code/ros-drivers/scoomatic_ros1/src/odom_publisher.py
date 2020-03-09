@@ -46,7 +46,7 @@ def imu_data_processing(message):
     imu_orientation = message.orientation
     imu_angular_velocity = message.angular_velocity
 
-def calculate_odometry(v_x, v_y, x, y):
+def calculate_odometry(v_x, v_y, x, y, th):
     """Compute odometry via pseudo integration"""
     global current_time, last_time
 
@@ -57,7 +57,7 @@ def calculate_odometry(v_x, v_y, x, y):
     x += delta_x
     y += delta_y
 
-    return x, y, th
+    return x, y
 
 def build_odom_message(v_x, v_y, v_th, x, y, odom_quat):
     """Build odom message for ROS with Twist & Pose info"""
@@ -114,6 +114,12 @@ def main():
     y = 0.0 # in m
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
+    # Initialize Imu data, while not available on startup
+    imu_data = Imu()
+    imu_angular_velocity = imu_data.angular_velocity
+    imu_angular_velocity.x = 0
+    imu_orientation = imu_data.orientation
+
     # Value of velocity_multiplier is explained and calculated here: docs/bachelor-hc/Documentation.md#Geschwindigkeit-des-Scoomatics
     velocity_multiplier = 0.006
 
@@ -130,7 +136,7 @@ def main():
         v_y = 0.0 # in m/s [is always 0]
         v_th = imu_angular_velocity.x # in rad/s
 
-        x, y = calculate_odometry(v_x, v_y, x, y)
+        x, y = calculate_odometry(v_x, v_y, x, y, th)
 
         # since all odometry is 6DOF we'll need a quaternion created from yaw
         # create quaternion from euler angle
