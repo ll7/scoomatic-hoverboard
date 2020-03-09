@@ -19,7 +19,7 @@ import rospy
 import params
 from time import sleep
 from sensor_msgs.msg import PointCloud2, PointField
-import std_msgs.msg
+from std_msgs.msg import Header
 
 def read_serial(ser):
     # read line
@@ -43,27 +43,7 @@ def read_serial(ser):
 
 
 def create_pointfield():
-    fields = []
-
-    x = PointField()
-    x.name = "x"
-    x.offset = 0
-    x.datatype = 1
-    x.count = 1
-
-    y = PointField()
-    y.name = "y"
-    y.offset = 8
-    y.datatype = 1
-    y.count = 1
-
-    z = PointField()
-    z.name = "z"
-    z.offset = 16
-    z.datatype = 1
-    z.count = 1
-
-    fields = [[x], [y], [z]]
+    fields = [PointField('x', 0, PointField.UINT8, 1), PointField('y', 8, PointField.UINT8, 1), PointField('z', 16, PointField.UINT8, 1)]
 
     return fields
 
