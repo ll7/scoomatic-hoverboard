@@ -122,7 +122,7 @@ def main():
         v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
         # "Highpass filter"
-        if (v_r < 25 && v_l < 25):
+        if (v_r < 25 and v_l < 25):
             v_th = 0
         else:
             v_th = (v_r - v_l) / l # in rad/s
