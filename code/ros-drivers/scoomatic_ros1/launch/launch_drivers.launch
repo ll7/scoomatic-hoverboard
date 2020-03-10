@@ -50,11 +50,11 @@
         <param name="frame_id" type="str" value="base_link"/>
     </node>-->
     <!-- Joy Driver -->
-    <node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
+    <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
         <param name="rate" type="int" value="15"/>
         <param name="baudrate" type="str" value="115200"/>
         <param name="topic_vel" type="str" value="/cmd_vel"/>
         <param name="topic_btn" type="str" value="/btn"/>
-    </node>
+    </node>-->
 </launch>
