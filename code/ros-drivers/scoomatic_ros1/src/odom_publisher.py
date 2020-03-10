@@ -16,12 +16,12 @@
 
 import rospy
 import tf
-import params
 from math import cos, sin
 from std_msgs.msg import Int32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from sensor_msgs.msg import Imu
+import params
 
 # Define (start/default) values
 speed_l = 0
@@ -50,9 +50,9 @@ def calculate_odometry(v_x, v_y, x, y, th):
     """Compute odometry via pseudo integration"""
     global current_time, last_time
 
-    dt = (current_time - last_time).to_sec()
-    delta_x = (v_x * cos(th) - v_y * sin(th)) * dt
-    delta_y = (v_x * sin(th) + v_y * cos(th)) * dt
+    d_t = (current_time - last_time).to_sec()
+    delta_x = (v_x * cos(th) - v_y * sin(th)) * d_t
+    delta_y = (v_x * sin(th) + v_y * cos(th)) * d_t
 
     x += delta_x
     y += delta_y

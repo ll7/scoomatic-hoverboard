@@ -17,10 +17,9 @@
 #   topic_btn: Topicname for publishing button values
 #   rate: update rate for main loop. Should be same as in Arduino sketch (20Hz)
 
-import serial
-import params
 import rospy
-from time import sleep
+import params
+import serial
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
@@ -37,12 +36,15 @@ def read_serial(ser):
 
     newdata = []
     if data[0] != "JOY":
-        rospy.logwarn("Corrupt Package or wrong device selected (%s)" % params.get_param('port', '/dev/joydriver'))
+        rospy.logwarn(
+            "Corrupt Package or wrong device selected (%s)"
+            % params.get_param('port', '/dev/joydriver')
+        )
         return [0, 0, 0]
     data.remove("JOY")
     # Convert string values to integer
-    for s in data: 
-        i = int(s)
+    for string in data:
+        i = int(string)
         newdata.append(i)
     data = newdata
     if (len(data) is not 3):
@@ -61,15 +63,13 @@ def main():
     topic_vel = params.get_param(node_name + '/topic_vel', '/joy')
     topic_btn = params.get_param(node_name + '/topic_btn', '/btn')
     rate = params.get_param(node_name + '/rate', 30)
+    baudrate = params.get_param(node_name + '/baudrate', 115200)
     port = params.get_param(node_name + '/port', '/dev/joydriver')
 
     # Create publishers for cmd_vel message and button
     publisher_vel = rospy.Publisher(topic_vel, Twist, queue_size=10)
     publisher_btn = rospy.Publisher(topic_btn, Bool, queue_size=10)
-
     rospy.loginfo("Using Serial Port " + str(port))
-
-    baudrate = 115200
     rosrate = rospy.Rate(rate)
 
     # Open serial port

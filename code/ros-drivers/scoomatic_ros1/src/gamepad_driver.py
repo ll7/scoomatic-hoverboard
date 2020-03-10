@@ -28,9 +28,9 @@
 
 import threading
 import rospy
-from params import get_param
 from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
+import params
 
 armed = False
 direction = 0.0  # +- 1
@@ -69,7 +69,7 @@ def handle_game_controller():
 def gamepad_thread():
     """Search for gamepad"""
     for device in devices:
-            rospy.loginfo("Found Device %s"%device)
+        rospy.loginfo("Found Device %s"%device)
     while thread_active:
         handle_game_controller()
 
@@ -93,8 +93,8 @@ def main():
     # Create  message for the sensor values
     msg = Twist()
     # Start GameController update Thread
-    t1 = threading.Thread(target=gamepad_thread)
-    t1.start()
+    t_1 = threading.Thread(target=gamepad_thread)
+    t_1.start()
 
     rospy.loginfo("Gamepad driver Online!")
     # open serial port
