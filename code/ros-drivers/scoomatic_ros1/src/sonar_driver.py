@@ -16,10 +16,10 @@
 
 import serial
 import rospy
-import params
 from sensor_msgs import point_cloud2
 from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
+from params import get_param
 
 def read_serial(ser):
     # read line
@@ -69,11 +69,11 @@ def main(args=None):
     node_name = rospy.get_name()
 
     # Read parameters
-    topic = params.get_param(node_name+'/topic', '/sonar')
-    rate = int(params.get_param(node_name+'/rate', 3))
-    port = params.get_param(node_name+'/port', '/dev/sonar_driver')
-    baud = params.get_param(node_name+'/baudrate', 115200)
-    frame_id = params.get_param(node_name+'/frame_id', "base_link")
+    topic = pars.get_param(node_name+'/topic', '/sonar')
+    rate = int(get_param(node_name+'/rate', 3))
+    port = get_param(node_name+'/port', '/dev/sonar_driver')
+    baud = get_param(node_name+'/baudrate', 115200)
+    frame_id = get_param(node_name+'/frame_id', "base_link")
 
     rosrate = rospy.Rate(rate)
 

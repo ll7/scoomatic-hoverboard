@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
+"""Reads input from Gamepad and publishes as geometry_msgs/Twist"""
+
 # Gamepad Driver
-# Author: Martin Schoerner, changed for ROS1 from Henri Chilla
-# Reads input from Gamepad and publishes as
-# geometry_msgs/Twist
+# Author: Henri Chilla
+# Based on Code from Martin Schoerner (ROS2)
 # Speed is stored in linear.x
 # Rotation is stored in angular.z
 # Publishes to:
@@ -28,11 +29,10 @@
 
 import threading
 import rospy
+from params import get_param
 from inputs import get_gamepad, devices
 from geometry_msgs.msg import Twist
-import params
 
-armed = False
 direction = 0.0  # +- 1
 speed = 0.0  # +- 1
 thread_active = True
@@ -44,13 +44,13 @@ def handle_game_controller():
     events = None
     try:
         events = get_gamepad()
-    except Exception as e:
+    except Exception as error:
         # On conection
         armed = False
         speed = 0
         direction = 0
         # Fehler ausgeben
-        print(e)
+        print error
         rospy.logwarn("Gamepad disconnected!")
         rospy.sleep(5.)
         return
@@ -75,11 +75,12 @@ def gamepad_thread():
 
 def main():
     """Publish ROS Twist message for velocity"""
-    global thread_active
+    global thread_active, armed
 
     # Start node
     rospy.init_node('gamepad_driver', anonymous=True)
     node_name = rospy.get_name()
+    armed = False
 
     # Read parameters from launchfile
     gain_lin = float(get_param(node_name+'/gain_lin', 1.0))

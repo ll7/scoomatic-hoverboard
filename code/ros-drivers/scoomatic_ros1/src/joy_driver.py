@@ -18,10 +18,10 @@
 #   rate: update rate for main loop. Should be same as in Arduino sketch (20Hz)
 
 import rospy
-import params
 import serial
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
+from params import get_param
 
 def read_serial(ser):
     """Read serial data from Joystick & construct list"""
@@ -38,7 +38,7 @@ def read_serial(ser):
     if data[0] != "JOY":
         rospy.logwarn(
             "Corrupt Package or wrong device selected (%s)"
-            % params.get_param('port', '/dev/joydriver')
+            % get_param('port', '/dev/joydriver')
         )
         return [0, 0, 0]
     data.remove("JOY")
@@ -47,7 +47,7 @@ def read_serial(ser):
         i = int(string)
         newdata.append(i)
     data = newdata
-    if (len(data) is not 3):
+    if len(data) is not 3:
         rospy.logwarn("Corrupt Package from Joystick (Have you used the right port?")
         return [0, 0, 0]
     return data
@@ -60,11 +60,11 @@ def main():
     node_name = rospy.get_name()
 
     # Read parameter
-    topic_vel = params.get_param(node_name + '/topic_vel', '/joy')
-    topic_btn = params.get_param(node_name + '/topic_btn', '/btn')
-    rate = params.get_param(node_name + '/rate', 30)
-    baudrate = params.get_param(node_name + '/baudrate', 115200)
-    port = params.get_param(node_name + '/port', '/dev/joydriver')
+    topic_vel = get_param(node_name + '/topic_vel', '/joy')
+    topic_btn = get_param(node_name + '/topic_btn', '/btn')
+    rate = get_param(node_name + '/rate', 30)
+    baudrate = get_param(node_name + '/baudrate', 115200)
+    port = get_param(node_name + '/port', '/dev/joydriver')
 
     # Create publishers for cmd_vel message and button
     publisher_vel = rospy.Publisher(topic_vel, Twist, queue_size=10)
