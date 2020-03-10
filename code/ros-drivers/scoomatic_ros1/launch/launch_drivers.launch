@@ -2,7 +2,7 @@
 <launch>
     <!-- External NODES -->
     <!-- IMU -->
-    <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
+    <!--<include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>-->
     <!-- LIDAR -->
     <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
     	<param name="serial_port" type="string" value="/dev/rplidar" />
@@ -17,7 +17,6 @@
     <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
         <param name="speed_l_topic" type="str" value="/MotorDriver/speed_l"/>
         <param name="speed_r_topic" type="str" value="/MotorDriver/speed_r"/>
-        <param name="imu_topic" type="str" value="/imu/data"/>
     </node>
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
