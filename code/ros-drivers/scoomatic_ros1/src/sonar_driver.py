@@ -16,10 +16,10 @@
 
 import serial
 import rospy
-import params
-from time import sleep
+from sensor_msgs import point_cloud2
 from sensor_msgs.msg import PointCloud2, PointField
-import std_msgs.msg
+from std_msgs.msg import Header
+from params import get_param
 
 def read_serial(ser):
     # read line
@@ -43,41 +43,25 @@ def read_serial(ser):
 
 
 def create_pointfield():
-    fields = []
-
-    x = PointField()
-    x.name = "x"
-    x.offset = 0
-    x.datatype = 1
-    x.count = 1
-
-    y = PointField()
-    y.name = "y"
-    y.offset = 8
-    y.datatype = 1
-    y.count = 1
-
-    z = PointField()
-    z.name = "z"
-    z.offset = 16
-    z.datatype = 1
-    z.count = 1
-
-    fields = [[x], [y], [z]]
+    fields = 
+    [
+        PointField('x', 0, PointField.UINT8, 1), 
+        PointField('y', 8, PointField.UINT8, 1),
+        PointField('z', 16, PointField.UINT8, 1)
+    ]
 
     return fields
 
-def convert_data_pcl(data):
-    tmp_data = data
-
-    #width_sonar_bar = 0.6
+def convert_data_pcl(x):
     y = range(-4,4)
     y = [i*0.1 for i in y]
-    tmp_data.append(y)
 
     z = [0.3 for i in range(0,8)]
+    points = x + y + z
 
-    return tmp_data.append([y, z])
+    rospy.logwarn('data: ' + str(points))
+
+    return points
 
 def main(args=None):
     # Start node
@@ -85,11 +69,11 @@ def main(args=None):
     node_name = rospy.get_name()
 
     # Read parameters
-    topic = params.get_param(node_name+'/topic', '/sonar')
-    rate = int(params.get_param(node_name+'/rate', 3))
-    port = params.get_param(node_name+'/port', '/dev/sonar_driver')
-    baud = params.get_param(node_name+'/baudrate', 115200)
-    frame_id = params.get_param(node_name+'/frame_id', "base_link")
+    topic = pars.get_param(node_name+'/topic', '/sonar')
+    rate = int(get_param(node_name+'/rate', 3))
+    port = get_param(node_name+'/port', '/dev/sonar_driver')
+    baud = get_param(node_name+'/baudrate', 115200)
+    frame_id = get_param(node_name+'/frame_id', "base_link")
 
     rosrate = rospy.Rate(rate)
 
@@ -98,17 +82,12 @@ def main(args=None):
     # Create pointcloud message for the sensor values
     zero_vector = [0, 0, 0, 0, 0, 0, 0, 0]
     fields = create_pointfield()
-    msg = PointCloud2()
-    msg.height = 1
-    msg.width = 8
-    msg.fields = fields
-    msg.point_step = 1
-    msg.row_step = 8
-    msg.data = convert_data_pcl(zero_vector)
-    msg.is_dense = True
-    msg.header = std_msgs.msg.Header()
-    msg.header.stamp = rospy.Time.now()
-    msg.header.frame_id = frame_id
+    header = Header()
+    header.stamp = rospy.Time.now()
+    header.frame_id = frame_id
+
+    pc = point_cloud2.create_cloud(header, fields, convert_data_pcl(zero_vector))
+
     rospy.loginfo("Using Serial Port " + str(port))
 
     # open serial port
@@ -122,10 +101,10 @@ def main(args=None):
                 rosrate.sleep()
                 continue
             # update message
-            msg.data = convert_data_pcl(data)
-            msg.header.stamp = rospy.Time.now()
+            header.stamp = rospy.Time.now()
+            pc = point_cloud2.create_cloud(header, fields, convert_data_pcl(data))
             # publish message
-            publisher.publish(msg)
+            publisher.publish(pc)
             rosrate.sleep()
 
 if __name__ == '__main__':

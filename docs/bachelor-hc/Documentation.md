@@ -57,6 +57,7 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
     - [Festlegen von 2D Estimate Pose / 2D Goal nicht möglich](#festlegen-von-2d-estimate-pose--2d-goal-nicht-m%c3%b6glich)
   - [Hinweise](#hinweise)
     - [Geschwindigkeit des Scoomatics](#geschwindigkeit-des-scoomatics)
+    - [IMU Daten](#imu-daten)
     - [SLAM fortführen / Karte nachträglich verbessern](#slam-fortf%c3%bchren--karte-nachtr%c3%a4glich-verbessern)
     - [Hector GeoTIFF Karte (wird nicht gespeichert)](#hector-geotiff-karte-wird-nicht-gespeichert)
 
@@ -759,6 +760,8 @@ Der Schätzwert der Geschwindigkeit $`v`$ in Abhängigkeit der Einheitslose Gesc
 
 $`v\approx 5\frac{mm}{s}*v_{scoomatic} = 0,005\frac{m}{s}*v_{scoomatic}`$
 
+### IMU Daten
+Die MPU9250 funktioniert einwandfrei, wenn das Hoverboard System ausgeschaltet ist. Andernfalls sind die Messwerte aus unerklärlichen Gründen nicht verwendbar, da sehr verrauscht bzw. fehlerhaft. Der Grund hierfur konnte nicht festgestellt werden.
 
 ### SLAM fortführen / Karte nachträglich verbessern
 Nach aktuellem Kenntnis Stand des Autors ist es nicht möglich eine abgeschlossene und gespeicherte SLAM Karte von Hector SLAM in irgendeiner Art und Weise fortzuführen oder den Prozess zu pausieren.
@@ -788,9 +791,9 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * AMCL Parameter verbessern für gute konstante lokalisierung
 * navigation extrapolation problem fixen
 * probablistic robotics p.127: "The less accurate a robot, the larger these parameters."
-* tf transformationen bei nacgiation foto machen!
-* hector imu attitude bug fixen
 * sonar in rviz integrieren
 * improve navigation for slow velocities
 * gmapping ausprobieren
+* schreiben: rqt 
+* global plan path bild erstellen
 -->

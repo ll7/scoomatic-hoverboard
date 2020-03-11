@@ -2,7 +2,7 @@
 <launch>
     <!-- External NODES -->
     <!-- IMU -->
-    <include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>
+    <!--<include file="$(find scoomatic_ros1)/launch/mpu_9250.launch"/>-->
     <!-- LIDAR -->
     <node name="RPLidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
     	<param name="serial_port" type="string" value="/dev/rplidar" />
@@ -14,7 +14,10 @@
     <include file="$(find scoomatic_description)/launch/publish_scoomatic_description.launch"/>
     <!-- Internal NODES -->
     <!-- Odom Publisher -->
-    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py"></node>
+    <node name="OdomPublisher" pkg="scoomatic_ros1" type="odom_publisher.py">
+        <param name="speed_l_topic" type="str" value="/MotorDriver/speed_l"/>
+        <param name="speed_r_topic" type="str" value="/MotorDriver/speed_r"/>
+    </node>
     <!-- Motor Driver -->
     <node name="MotorDriver" pkg="scoomatic_ros1" type="motor_driver.py">
 	    <param name="port" type="str" value="/dev/motor_driver"/>
@@ -38,18 +41,19 @@
         <param name="gain_ang" type="double" value="0.8"/> <!-- From 0.0 to 1.0-->
     </node>
     <!-- Sonar Driver -->
-    <node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
+    <!--<node name="SonarDriver" pkg="scoomatic_ros1" type="sonar_driver.py">
         <param name="rate" type="int" value="5"/>
         <param name="topic" type="str" value="/sonar"/>
         <param name="port" type="str" value="/dev/sonar_driver"/>
         <param name="baudrate" type="str" value="115200"/>
         <param name="frame_id" type="str" value="base_link"/>
-    </node>
+    </node>-->
     <!-- Joy Driver -->
     <!--<node name="JoyDriver" pkg="scoomatic_ros1" type="joy_driver.py">
 	    <param name="port" type="str" value="/dev/joydriver"/>
         <param name="rate" type="int" value="15"/>
-        <param name="topic_vel" type="str" value="/joy"/>
+        <param name="baudrate" type="str" value="115200"/>
+        <param name="topic_vel" type="str" value="/cmd_vel"/>
         <param name="topic_btn" type="str" value="/btn"/>
     </node>-->
 </launch>

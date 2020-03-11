@@ -20,6 +20,7 @@ from math import cos, sin
 from std_msgs.msg import Int32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
+import params
 
 # Define (start/default) values
 speed_l = 0
@@ -39,7 +40,7 @@ def call_speed_r(message):
     speed_r = message.data
 
 def calculate_odometry(v_x, v_y, v_th, x, y, th):
-    """Compute odometry via pseudo integration"""
+    """Compute odometry via numerical integration"""
     global current_time, last_time
 
     dt = (current_time - last_time).to_sec()
@@ -77,11 +78,13 @@ def main():
     rospy.init_node('odom', anonymous=True)
     node_name = rospy.get_name()
 
+    speed_l_topic = params.get_param(node_name+'/speed_l_topic', '/MotorDiag/speed_l')
+    speed_r_topic = params.get_param(node_name+'/speed_r_topic', '/MotorDiag/speed_r')
 
     # Get speed from topics
-    rospy.Subscriber('/MotorDiag/speed_l', Int32, call_speed_l, queue_size=10)
-    rospy.Subscriber('/MotorDiag/speed_r', Int32, call_speed_r, queue_size=10)
-    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=15)
+    rospy.Subscriber(speed_l_topic, Int32, call_speed_l, queue_size=10)
+    rospy.Subscriber(speed_r_topic, Int32, call_speed_r, queue_size=10)
+    odom_publisher = rospy.Publisher(node_name+'/odom', Odometry, queue_size=10)
     tf_broadcaster = tf.TransformBroadcaster()
 
     # odom coordinate frame
@@ -118,7 +121,11 @@ def main():
         v_r = velocity_multiplier * speed_r # in m/s
         v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
-        v_th = (v_r - v_l) / l # in rad/s
+        # "Highpass filter"
+        if (v_r < 25 and v_l < 25):
+            v_th = 0
+        else:
+            v_th = (v_r - v_l) / l # in rad/s
 
         x, y, th = calculate_odometry(v_x, v_y, v_th, x, y, th)
 
