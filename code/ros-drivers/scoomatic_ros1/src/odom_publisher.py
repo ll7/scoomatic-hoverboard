@@ -147,10 +147,13 @@ def main():
         # publish message to ROS
         odom_publisher.publish(build_odom_message(v_x, v_y, v_th, x, y, odom_quat))
 
-        last_time = current_time
+        last_time = current_time # update for numerical integration
         rate.sleep()
 
     rospy.spin()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
