@@ -793,6 +793,7 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * probablistic robotics p.127: "The less accurate a robot, the larger these parameters."
 * sonar in rviz integrieren
 * improve navigation for slow velocities
+* gmapping ausprobieren
 * schreiben: rqt 
 * global plan path bild erstellen
 -->
