@@ -108,7 +108,9 @@ def main():
     th = 0.0 # in rad
     l = 0.622 # width of scoomatic in m
     # Value of velocity_multiplier is explained and calculated here: docs/bachelor-hc/Documentation.md#Geschwindigkeit-des-Scoomatics
-    velocity_multiplier = 0.006
+    lin_velocity_multiplier = 0.006
+    ang_velocity_multiplier = 0.0053
+    ang_vel_threshold = 38
 
     rate = rospy.Rate(12) # => Hz
 
@@ -117,15 +119,15 @@ def main():
         current_time = rospy.Time.now()
 
         # Motor outputs values in range [0,1000] without unit
-        v_l = velocity_multiplier * speed_l # in m/s
-        v_r = velocity_multiplier * speed_r # in m/s
+        v_l = lin_velocity_multiplier * speed_l # in m/s
+        v_r = lin_velocity_multiplier * speed_r # in m/s
         v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
         # "Highpass filter"
-        if (v_r < 25 and v_l < 25):
+        if (speed_r < ang_vel_threshold and speed_l < ang_vel_threshold):
             v_th = 0
         else:
-            v_th = (v_r - v_l) / l # in rad/s
+            v_th = (speed_r * ang_velocity_multiplier - speed_l * ang_velocity_multiplier) / l # in rad/s
 
         x, y, th = calculate_odometry(v_x, v_y, v_th, x, y, th)
 

@@ -32,8 +32,9 @@ def callback(message):
     global send_bytes, maxspeed_factor
 
     # Calculate actual velocity from topic message
+    # For convention and move_base: minus for ang_velocity
     lin_velocity = limit(message.linear.x * 100 * maxspeed_factor, 100*maxspeed_factor)
-    ang_velocity = limit(message.angular.z * 100 * maxspeed_factor, 100*maxspeed_factor)
+    ang_velocity = - limit(message.angular.z * 100 * maxspeed_factor, 100*maxspeed_factor)
 
     # Generate bytes for motor: little endian, as short integer (h) -> 4 bytes
     send_bytes=(struct.pack("<hh", ang_velocity, lin_velocity))
