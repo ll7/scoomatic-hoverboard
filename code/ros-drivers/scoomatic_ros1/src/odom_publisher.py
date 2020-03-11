@@ -122,7 +122,7 @@ def main():
         v_x = (v_l + v_r) / 2
         v_y = 0.0 # in m/s [is always 0]
         # "Highpass filter"
-        if (v_r < 25 and v_l < 25):
+        if (speed_l < 25 and speed_r < 25):
             v_th = 0
         else:
             v_th = (v_r - v_l) / l # in rad/s
@@ -145,10 +145,13 @@ def main():
         # publish message to ROS
         odom_publisher.publish(build_odom_message(v_x, v_y, v_th, x, y, odom_quat))
 
-        last_time = current_time
+        last_time = current_time # update for numerical integration
         rate.sleep()
 
     rospy.spin()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
