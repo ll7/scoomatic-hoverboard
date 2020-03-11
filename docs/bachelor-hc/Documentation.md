@@ -792,4 +792,5 @@ Siehe auch: [Saving geotiff map in Hector_slam](https://answers.ros.org/question
 * hector imu attitude bug fixen
 * sonar in rviz integrieren
 * improve navigation for slow velocities
+* gmapping ausprobieren
 -->
