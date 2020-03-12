@@ -8,7 +8,7 @@ project(scoomatic_drive)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  hector_slam
+  hector_mapping hector_trajectory_server
 )
 
 ## System dependencies are found with CMake's conventions
@@ -103,7 +103,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES scoomatic_drive
-#  CATKIN_DEPENDS hector_slam
+#  CATKIN_DEPENDS hector_mapping hector_trajectory_server
 #  DEPENDS system_lib
 )
 

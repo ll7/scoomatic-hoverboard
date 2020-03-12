@@ -1,0 +1,4 @@
+Host scoomatic
+	HostName ubuntu.local
+	User ubuntu
+	ForwardX11 yes

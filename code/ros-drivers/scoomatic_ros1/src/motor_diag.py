@@ -3,7 +3,7 @@
 """Publishs motordriver debug/diagnositic data from UART via ROS messages"""
 
 # Scoomatic Sonar Driver
-# Author: Martin Schoerner
+# Author: Henri Chilla, based on Martin Schoerners Code
 # Debug packages are being received in the following form
 # 1:0 2:0 3:0 4:0 5:1384 6:3491 7:1651 8:36\r\n
 # 8 Key value pairs are being transmitted.
@@ -36,7 +36,7 @@ from params import get_param
 from std_msgs.msg import Int32, Float32
 
 def read_serial(ser):
-    """ Read serial input and convert data into list"""
+    """Read serial input and convert data into list"""
     data = ser.readline()
 
     # parse serial data
@@ -61,14 +61,14 @@ def read_serial(ser):
 
 
 def main():
-    """"Init publisher, paramter, read serial and publish debug data via ROS messages"""
+    """Init publisher, paramter, read serial and publish debug data via ROS messages"""
     # Start node
     rospy.init_node('motor_diag', anonymous=True)
     node_name = rospy.get_name()
 
     # Read parameter from motor/mainboard
     port = get_param(node_name+'/port', '/dev/motor_diag')
-    rate = get_param(node_name+'/rate', 5) # in Hertz
+    rate = get_param(node_name+'/rate', 30) # in Hertz
     rosrate = rospy.Rate(rate)
 
     # Create publisher
@@ -100,14 +100,14 @@ def main():
             try:
                 data = read_serial(ser)
             except:
-                rospy.logwarn("Serial package Invalid. Did you set the right port?")
+                # DEBUG: rospy.logwarn("Serial package Invalid. Did you set the right port?")
                 rosrate.sleep()
                 continue
             # set message
             m1.data = data[0]
             m2.data = data[1]
-            m3.data = data[2]
-            m4.data = data[3]
+            m3.data = (-data[2]) # speed is negative for forward motion
+            m4.data = (-data[3]) # speed is negative for forward motion
             m5.data = data[4]
             m6.data = data[5] / 100.0  # Battery Voltage is multiplied by 100 in Firmware
             m7.data = data[6]
@@ -124,6 +124,7 @@ def main():
             p8.publish(m8)
 
             rosrate.sleep()
+            ser.reset_input_buffer()
 
 if __name__ == '__main__':
     try:

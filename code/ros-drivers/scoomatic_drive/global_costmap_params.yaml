@@ -1,0 +1,7 @@
+# Sets Parameters for Global Costmap, part of move_base (Navigation)
+# Meanings and explanations of Parameters can be read here: http://wiki.ros.org/navigation/Tutorials/RobotSetup#Costmap_Configuration_.28local_costmap.29_.26_.28global_costmap.29
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 5.0 #in Hz
+  static_map: true

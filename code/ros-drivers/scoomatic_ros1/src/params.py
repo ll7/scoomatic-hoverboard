@@ -1,6 +1,6 @@
 # ROS Params Helpers
 # Author: Henri Chilla
-""""Helpers for use with ROS paramters"""
+"""Helper for use with ROS paramters"""
 
 import rospy
 

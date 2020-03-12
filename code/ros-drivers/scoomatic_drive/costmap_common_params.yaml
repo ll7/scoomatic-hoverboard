@@ -1,0 +1,15 @@
+# This document sets parameter for both global & local costmap
+# Meanings of Parameters can be read here: http://wiki.ros.org/navigation/Tutorials/RobotSetup#Costmap_Configuration_.28local_costmap.29_.26_.28global_costmap.29
+## Sets threshold for obstacle detection/put obstacle on map
+obstacle_range: 2.5
+## Sets threshold for free space
+raytrace_range: 3.0
+## define footprint of Scoomatic in m
+footprint: [[0.3, -0.3], [0.3, 0.3], [-0.8, 0.3], [-0.8, -0.3]]
+#robot_radius: ir_of_robot, center at (0.0, 0.0)
+inflation_radius: 0.4
+
+## define sensor streams for costmaps / it's possible to add more streams
+observation_sources: laser
+
+laser: {sensor_frame: laser, data_type: LaserScan, topic: scan, marking: true, clearing: true}

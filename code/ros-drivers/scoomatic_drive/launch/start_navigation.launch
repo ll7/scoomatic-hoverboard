@@ -1,15 +1,21 @@
 <launch>
-    <arg name="map_file" default="$(find map_server)/map.yaml" />
-
-    <!-- Transform from base platform to laser -> for navigation-->
-    <node pkg="tf" type="static_transform_publisher" name="base_to_laser" args="0.3 0 0.8 0 0 0 1 base_link laser 100" />
+    <!-- map file argument takes YAML-File, not Image-File! -->
+    <arg name="map_file" value="/home/chillahe/maps/map-alpha5.yaml" />
 
     <node name="MapServer" pkg="map_server" type="map_server"  args="$(arg map_file)"  output="screen">
     	<param name="frame_id" value="map" />
     </node>
 
-    <node name="AMCL" pkg="amcl" type="amcl" output="screen">
+    <!-- AMCL Parameters in amcl.launch -->
+    <include file="$(find scoomatic_drive)/launch/amcl.launch"/>
 
+    <!-- Start base for navigation: move_base -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find scoomatic_drive)/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find scoomatic_drive)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find scoomatic_drive)/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find scoomatic_drive)/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find scoomatic_drive)/base_local_planner_params.yaml" command="load" />
     </node>
 
 </launch>

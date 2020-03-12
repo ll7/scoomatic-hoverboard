@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-	<node pkg="tf" type="static_transform_publisher" name="imu_to_base" 
-		args="0 0 .1 0 0 0 base_link imu_link 50" />	
-
-	<node name="i2c_imu_node" pkg="i2c_imu" type="i2c_imu_node" ns="imu" output="screen">
-		<param name="imu_frame" value="imu_link" />
+		<node name="i2c_imu_node" pkg="i2c_imu" type="i2c_imu_node" ns="imu" output="screen">
+		<param name="imu_frame" value="sensor_imu" />
 
 		<param name="i2c_bus" value="1" />
 
@@ -32,10 +29,10 @@
 		<param name="fusion_type" value="2" />
 
 		<!-- mpu9250/gyro_accel_sample_rate: 5 - 1000 Hz -->
-		<param name="mpu9250/gyro_accel_sample_rate" value="80" />
+		<param name="mpu9250/gyro_accel_sample_rate" value="20" />
 
 		<!-- mpu9250/compass_sample_rate: 1 - 100 Hz -->
-		<param name="mpu9250/compass_sample_rate" value="40" />	
+		<param name="mpu9250/compass_sample_rate" value="20" />	
 			
 		<!-- mpu9250/gyro_low_pass_filter:
 			0x11 - 8800Hz, 0.64mS delay
@@ -48,7 +45,7 @@
 			0x05 - 10Hz, 17.85mS delay
 			0x06 - 5Hz, 33.48mS delay
 		-->
-		<param name="mpu9250/gyro_low_pass_filter" value="3" />
+		<param name="mpu9250/gyro_low_pass_filter" value="5" />
 		
 		<!-- mpu9250/accel_low_pass_filter:
 			0x00 - 460Hz, 1.94mS delay
@@ -59,7 +56,7 @@
 			0x05 - 10Hz, 35.70mS delay
 			0x06 - 5Hz, 66.96mS delay
 		-->
-		<param name="mpu9250/accel_low_pass_filter" value="3" />
+		<param name="mpu9250/accel_low_pass_filter" value="4" />
 
 		<!-- mpu9250/gyro_full_scale_range:
 			0 +/- 250 degress per second
