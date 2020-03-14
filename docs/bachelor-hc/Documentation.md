@@ -103,14 +103,16 @@ Navigation
 Moves Robot
 ```
 
-Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle 6 Nodes verwendet.
+Die Navigtion benötigt nicht alle Packages, welche im folgenden Schaubild zu sehen sind. Bestimmte sind optional, aber hilfreich. In diesem Projekt wurden alle Nodes im Schaubild verwendet.
 ![Navigation Übersicht](images/overview_navigation.png)
 
 Aktuell gelten folgende Einschränkungen:
 * Der GPS Treiber existiert nur für ROS2
 * Glastüren bzw. Hindernisse aus Glas können nicht erkannt werden
 * Hindernisse werden nur auf Höhe des Lasers erkannt
-* SLAM & Navigation funktionieren nur auf einer Ebene, mehrere Ebenen gleichzeitig werden nicht unterstützt
+* SLAM & Navigation funktionieren nur auf einer Ebene, mehrere Ebenen bzw. Stockwerke gleichzeitig werden nicht unterstützt
+
+Glasfenster, -türen, usw. werden mit dem LIDAR in der Karte als freie Bereiche festgelegt.
 
 Zu Konfiguration sei gesagt, dass ein Großteil, insbesondere die wichtigsten Parameter, in den Launchfiles bearbeitet werden können. Dort ist es auch möglich einzelne Nodes auszuschalten bzw. einzuschalten. So ist es ganz einfach möglich mehrere Nodes, bspw. den SLAM Prozess, mit einer Zeile zu starten.
 
@@ -142,9 +144,13 @@ Der ROS Master wird auf dem RPi ausgeführt. Der Grund dafür ist, dass die Sens
 
 ## ROS Nodes & Topics Übersicht
 
-![Node mit Topics Übersicht](images/topics-and-nodes-with-slam.png)
+![SLAM Nodes mit Topics Übersicht](images/topics-and-nodes-with-slam.png)
 
-Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst.
+Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst, wenn SLAM gestartet wurde.
+
+![Navigation mit Topics Übersicht](images/topics-and-nodes-with-navigation.png)
+
+Dies gibt eine Übersicht über die Topics zwischen den Nodes und den Nodes selbst, wenn die Navigation gestartet wurde.
 
 Es existiert die Möglichkeit mithilfe von
 
@@ -254,9 +260,11 @@ rosrun rqt_tf_tree rqt_tf_tree
 kann eine Übersicht aller tf frames angezeigen. Ähnlich zu den Topics&Nodes.
 
 ### Aktuelle TF Baumstruktur
-![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames.png)
+![Alle TF Frames zusammen mit HectorSLAM als Diagramm](images/tf-frames_slam.png)
 
-Die derzeitige Baumstruktur, während HectorSLAM geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar und wird entweder von HectorSLAM oder vom map_server bereitgestellt. Die Beziehung von ```odom``` zu ```base_link``` wird von der Node ```/OdomPublisher``` veröffentlicht und stellt die Motordaten zur Verfügung.
+![Alle TF Frames bei der Navigation](images/tf-frames_navigation.png)
+
+Die derzeitige Baumstruktur, während HectorSLAM bzw. die Navigation geöffnet ist. Die einzelnen Ellipsen werden ```frames``` gennant. Die ```map``` stellt die Welt-Referenz dar und wird entweder von HectorSLAM oder vom map_server bereitgestellt. Die Beziehung von ```odom``` zu ```base_link``` wird von der Node ```/OdomPublisher``` veröffentlicht und stellt die Motordaten zur Verfügung.
 
 Der ```base_link``` Frame sollte im Rotationszentrum des Roboters liegen. Der LIDAR wird dann ausgehend vom ```base_link``` Frame per statischem Publisher festgelegt, genauso wie die IMU.
 Der ```imu_link``` Frame wird von dem MPU 9250 Treiber bereitgestellt.
