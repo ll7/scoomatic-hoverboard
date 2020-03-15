@@ -3,11 +3,11 @@
 # Also consider changing maxspeed_factor in launch_driver.launch for velocity
 TrajectoryPlannerROS:
   # velocity in m/s
-  max_vel_x: 0.3
-  min_vel_x: 0.3
+  max_vel_x: 0.4
+  min_vel_x: 0.4
   # angular velocity in rad/s
-  max_vel_theta: 0.4
-  min_in_place_vel_theta: 0.4
+  max_vel_theta: 0.5
+  min_in_place_vel_theta: 0.5
 
   # acceleration in m/s^2
   acc_lim_x: 0.5
