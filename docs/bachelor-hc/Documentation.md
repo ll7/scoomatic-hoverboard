@@ -67,9 +67,9 @@ Dieser Leitfaden soll bei der Konfiguration, Weiterentwicklung und Veränderung 
 
 Das Projekt Scoomatic baut insbesondere auf der Arbeit von Martin Schoerner auf. Es wurde einige Veränderungen vorgenommen. Insbesondere wurden die Treiber von ROS2 auf ROS1 backported. Dadurch wurde sich eine ausgereiftere Software und bessere Dokumentation versprochen. Die Dokumentation des vorherigen Projekts findet sich hier: [Projektmodul-MS](../projektmodul-ms/index.md).
 
-Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht.
+Zudem wurde die Einstellungen so geändert, dass der Zugang und die Konfiguration vereinfacht wurden. Beispielhaft wurde das aufwendige sortierte einstecken der USB-Geräten mit udev Regeln vereinfacht. Dies ist im Abschnitt [udev-Regeln](#udev-regeln) erläutert.
 
-Das Projekt ist so aufgebaut, dass ein Paket die gesamte Sensorik zur Verfügung stellt, ein Anderes die gesamte Verarbeitung (SLAM, Navigation). 
+Das Projekt ist so aufgebaut, dass ein Paket die gesamte Sensorik zur Verfügung stellt, ein Anderes die gesamte Verarbeitung (SLAM, Navigation). In dem Schaubild ist die Netzwerkstruktur dargestellt. ROS ist Netzwerkfähig und kann entweder über einen eigenständigen Access Point oder auf einen WiFi Hotspot eines Rechners ausgeführt werden. Internet ist optional für den Betrieb, ist aber für Softwareupdates und die aktualisierung des Projekts notwendig.
 
 Die Sensordaten, welche per I2C, UART bzw. Serieller Verbindung gelesen werden, werden per ROS Node als ROS Messages zur Verfügung gestellt. Damit kann jeder Rechner im Netzwerk auf diese Werte ebenfalls zugreifen.
 
