@@ -110,7 +110,7 @@ def main():
     # Value of velocity_multiplier is explained and calculated here: docs/bachelor-hc/Documentation.md#Geschwindigkeit-des-Scoomatics
     lin_velocity_multiplier = 0.006
     ang_velocity_multiplier = 0.0053
-    ang_vel_threshold = 38
+    ang_vel_threshold = 43
 
     rate = rospy.Rate(12) # => Hz
 
