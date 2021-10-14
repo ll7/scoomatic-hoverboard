@@ -1,0 +1,78 @@
+FROM dustynv/ros:foxy-ros-base-l4t-r32.5.0
+# install ros
+
+# RUN /bin/bash -c 'apt update &&  apt install -y build-essential cmake git libbullet-dev python3-colcon-common-extensions python3-flake8 python3-pip python3-pytest-cov python3-rosdep python3-setuptools python3-vcstool wget ;  \
+# # install some pip packages needed for testing
+# python3 -m pip install -U \
+#   argcomplete \
+#   flake8-blind-except \
+#   flake8-builtins \
+#   flake8-class-newline \
+#   flake8-comprehensions \
+#   flake8-deprecated \
+#   flake8-docstrings \
+#   flake8-import-order \
+#   flake8-quotes \
+#   pytest-repeat \
+#   pytest-rerunfailures \
+#   pytest ; \
+# # install Fast-RTPS dependencies
+#  apt install --no-install-recommends -y \
+#   libasio-dev \
+#   libtinyxml2-dev ; \
+# # install Cyclone DDS dependencies
+#  apt install --no-install-recommends -y \
+#   libcunit1-dev '
+
+# RUN /bin/bash -c 'mkdir -p /root/ros2_foxy/src ; \
+#     cd /root/ros2_foxy; \
+#     wget --no-check-certificate https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos ; \
+#     vcs import src < ros2.repos'
+
+# WORKDIR  /root/ros2_foxy/
+
+# RUN /bin/bash -c 'rosdep init && rosdep update; \
+#     rosdep install --from-paths src --ignore-src --rosdistro foxy -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers"'
+
+# # building ros
+# RUN colcon build --symlink-install
+
+
+#
+# Set the default DDS middleware to cyclonedds
+# https://github.com/ros2/rclcpp/issues/1335
+#
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
+# realsense lib
+
+
+RUN /bin/bash -c 'apt-get update && apt-get install -y python3-pip software-properties-common'
+
+# Update ros dep
+RUN /bin/bash -c 'source /opt/ros/foxy/setup.bash ;\
+                  rosdep update '
+
+RUN /bin/bash -c ' apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE ||  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE'
+
+RUN /bin/bash -c ' add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main" -u'
+
+RUN /bin/bash -c 'apt-get update && apt-get install -y librealsense2-utils librealsense2-dev'
+
+
+RUN /bin/bash -c 'mkdir -p /root/catkin_ws/'
+
+WORKDIR /root/catkin_ws/
+
+RUN /bin/bash -c 'cd /root/catkin_ws/; \
+                   git clone https://github.com/IntelRealSense/realsense-ros.git -b foxy;'
+
+RUN /bin/bash -c 'source /opt/ros/foxy/setup.bash ;\
+                   rosdep install -y --from-path src --ignore-src -r ;\
+                   colcon build --symlink-install'
+
+COPY start.sh /root/catkin_ws/start.sh
+
+RUN /bin/bash -c 'chmod +x ./start.sh'
+
+
