@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+    scoomatic-realsense:
+        image: realsense
+        network_mode: "host"
+        privileged: true
+        command: "./start.sh"

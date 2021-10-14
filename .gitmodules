@@ -1,0 +1,4 @@
+[submodule "code/ros-drivers/scoomatic_core_src/csm"]
+	path = code/ros-drivers/scoomatic_core_src/csm
+	url = https://github.com/AlexKaravaev/csm.git
+	branch = ros2_csm_eigen

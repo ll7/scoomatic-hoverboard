@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>realsense_scoomatic</name>
+  <version>0.0.0</version>
+  <description>package that contains the realsense_scoomatic</description>
+  <maintainer email="scoomatic@todo.todo">Markus Keppeler</maintainer>
+  <license>TODO: License declaration</license>
+
+  <exec_depend>realsense2_camera</exec_depend>
+  <exec_depend>pointcloud_to_laserscan</exec_depend>
+  <exec_depend>tf2</exec_depend>
+
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

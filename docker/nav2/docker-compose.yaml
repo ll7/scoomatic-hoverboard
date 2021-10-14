@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+    slam:
+      image: scoomatic-nav
+      network_mode: "host"
+      command: "./start_slam.sh"
+    navigation:
+      image: scoomatic-nav
+      network_mode: "host"
+      command: "./start_nav.sh"

@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+    webproxy:
+      image: distahl/squid:bullseye-arm64v8
+      ports: 
+        - "3128:3128"
+    ntp-service:
+      image: cturra/ntp
+      ports:
+        - "123:123/udp"

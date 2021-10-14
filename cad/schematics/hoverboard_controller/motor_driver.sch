@@ -1,0 +1,425 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 2
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L power:GND #PWR0101
+U 1 1 60E6FA3D
+P 4800 2900
+F 0 "#PWR0101" H 4800 2650 50  0001 C CNN
+F 1 "GND" H 4805 2727 50  0000 C CNN
+F 2 "" H 4800 2900 50  0001 C CNN
+F 3 "" H 4800 2900 50  0001 C CNN
+	1    4800 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 60E7407D
+P 7550 6200
+F 0 "#PWR0102" H 7550 5950 50  0001 C CNN
+F 1 "GND" H 7555 6027 50  0000 C CNN
+F 2 "" H 7550 6200 50  0001 C CNN
+F 3 "" H 7550 6200 50  0001 C CNN
+	1    7550 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L motor_driver:A3213EUA-T B1
+U 1 1 6102D39A
+P 7600 5550
+F 0 "B1" H 7420 5596 50  0000 R CNN
+F 1 "A3213EUA-T" H 7420 5505 50  0000 R CNN
+F 2 "Package_SIP:SIP3_11.6x8.5mm" H 7700 6000 50  0001 C CNN
+F 3 "" H 7700 6000 50  0001 C CNN
+	1    7600 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 6102E193
+P 7850 3500
+F 0 "R1" H 7920 3546 50  0000 L CNN
+F 1 "100kR" H 7920 3455 50  0000 L CNN
+F 2 "" V 7780 3500 50  0001 C CNN
+F 3 "~" H 7850 3500 50  0001 C CNN
+	1    7850 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6400 2700 6250 2700
+Wire Wire Line
+	6250 2700 6250 3400
+Wire Wire Line
+	6250 3400 6750 3400
+Wire Wire Line
+	7700 3150 7850 3150
+Wire Wire Line
+	7850 3150 7850 3350
+Wire Wire Line
+	9000 5550 7950 5550
+Wire Wire Line
+	6750 3400 6750 3650
+Wire Wire Line
+	6750 3650 7850 3650
+Wire Wire Line
+	7550 5950 7550 6200
+$Comp
+L Device:LED D1
+U 1 1 61031F7C
+P 9350 3250
+F 0 "D1" V 9389 3133 50  0000 R CNN
+F 1 "LED" V 9298 3133 50  0000 R CNN
+F 2 "" H 9350 3250 50  0001 C CNN
+F 3 "~" H 9350 3250 50  0001 C CNN
+	1    9350 3250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 61032B42
+P 8950 3050
+F 0 "R2" V 8743 3050 50  0000 C CNN
+F 1 "330R" V 8834 3050 50  0000 C CNN
+F 2 "" V 8880 3050 50  0001 C CNN
+F 3 "~" H 8950 3050 50  0001 C CNN
+	1    8950 3050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9100 3050 9350 3050
+Wire Wire Line
+	9350 3050 9350 3100
+Wire Wire Line
+	8800 3050 7700 3050
+$Comp
+L power:GND #PWR01
+U 1 1 61033D7A
+P 9350 3600
+F 0 "#PWR01" H 9350 3350 50  0001 C CNN
+F 1 "GND" H 9355 3427 50  0000 C CNN
+F 2 "" H 9350 3600 50  0001 C CNN
+F 3 "" H 9350 3600 50  0001 C CNN
+	1    9350 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9350 3400 9350 3600
+Text Notes 9700 3300 0    50   ~ 0
+Diagnose LED
+Text Notes 6800 5400 0    50   ~ 0
+Hall-Switch als \nTotmannschalter
+Text GLabel 6200 2100 0    50   Output ~ 0
+Master_RX
+Text GLabel 6200 2250 0    50   Input ~ 0
+Master_TX
+Wire Wire Line
+	3650 2100 5400 2100
+Wire Wire Line
+	5400 2100 5400 2500
+Wire Wire Line
+	6200 2100 6400 2100
+Wire Wire Line
+	6200 2250 6400 2250
+Text GLabel 7900 2400 2    50   Output ~ 0
+Hoverboard_Control_RX
+Text GLabel 7900 2550 2    50   Input ~ 0
+Hoverboard_Control_TX
+Wire Wire Line
+	7900 2400 7700 2400
+Wire Wire Line
+	7900 2550 7700 2550
+Text GLabel 7900 2750 2    50   Output ~ 0
+Hoverboard_Diag_RX
+Text GLabel 7900 2900 2    50   Input ~ 0
+Hoverboard_Diag_TX
+Wire Wire Line
+	7900 2750 7700 2750
+Wire Wire Line
+	7900 2900 7700 2900
+Text GLabel 1600 1200 0    50   Input ~ 0
+14.4V_Hoverboard
+Text GLabel 1450 5950 0    50   Output ~ 0
+Hoverboard_Control_RX
+Text GLabel 2600 5850 2    50   Input ~ 0
+Hoverboard_Diag_TX
+Text GLabel 1450 5750 0    50   Input ~ 0
+14.4V_Hoverboard
+$Comp
+L power:GND #PWR03
+U 1 1 61060157
+P 3050 5600
+F 0 "#PWR03" H 3050 5350 50  0001 C CNN
+F 1 "GND" H 3055 5427 50  0000 C CNN
+F 2 "" H 3050 5600 50  0001 C CNN
+F 3 "" H 3050 5600 50  0001 C CNN
+	1    3050 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J1
+U 1 1 61067895
+P 1300 4650
+F 0 "J1" H 1218 4325 50  0000 C CNN
+F 1 "Conn_01x03" H 1218 4416 50  0000 C CNN
+F 2 "" H 1300 4650 50  0001 C CNN
+F 3 "~" H 1300 4650 50  0001 C CNN
+	1    1300 4650
+	-1   0    0    1   
+$EndComp
+Text GLabel 1700 4650 2    50   Output ~ 0
+Master_RX
+Text GLabel 1700 4550 2    50   Input ~ 0
+Master_TX
+Wire Wire Line
+	1700 4650 1500 4650
+Wire Wire Line
+	1700 4550 1500 4550
+$Comp
+L power:GND #PWR02
+U 1 1 6106E127
+P 1800 4850
+F 0 "#PWR02" H 1800 4600 50  0001 C CNN
+F 1 "GND" H 1805 4677 50  0000 C CNN
+F 2 "" H 1800 4850 50  0001 C CNN
+F 3 "" H 1800 4850 50  0001 C CNN
+	1    1800 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1500 4750 1800 4750
+Wire Wire Line
+	1800 4750 1800 4850
+Wire Wire Line
+	6400 2500 5400 2500
+Wire Wire Line
+	1600 1200 2650 1200
+Wire Wire Line
+	6400 2900 4800 2900
+$Sheet
+S 6400 2000 1300 1250
+U 60E708C8
+F0 "Esp_dev" 50
+F1 "esp_dev.sch" 50
+F2 "5V_In" I L 6400 2500 50 
+F3 "GND" U L 6400 2900 50 
+F4 "CONT_TX" O R 7700 2400 50 
+F5 "CONT_RX" I R 7700 2550 50 
+F6 "Diag_RX" I R 7700 2900 50 
+F7 "Diag_TX" O R 7700 2750 50 
+F8 "Master_Tx" O L 6400 2100 50 
+F9 "Master_Rx" I L 6400 2250 50 
+F10 "Safety_In" I R 7700 3150 50 
+F11 "3_3_V" U L 6400 2700 50 
+F12 "Diag_LED" O R 7700 3050 50 
+F13 "SCL" B R 7700 2100 50 
+F14 "SDA" B R 7700 2250 50 
+$EndSheet
+Wire Wire Line
+	7550 4850 7550 5150
+Text GLabel 7900 2100 2    50   BiDi ~ 0
+SCL
+Text GLabel 7900 2250 2    50   BiDi ~ 0
+SDA
+Wire Wire Line
+	7900 2100 7700 2100
+Wire Wire Line
+	7700 2250 7900 2250
+Text GLabel 2250 6950 2    50   BiDi ~ 0
+SDA
+Text GLabel 2250 7050 2    50   BiDi ~ 0
+SCL
+$Comp
+L Connector:Conn_01x05_Male J3
+U 1 1 610A91D9
+P 1300 7050
+F 0 "J3" H 1408 7431 50  0000 C CNN
+F 1 "Conn_01x05_Male" H 1408 7340 50  0000 C CNN
+F 2 "" H 1300 7050 50  0001 C CNN
+F 3 "~" H 1300 7050 50  0001 C CNN
+	1    1300 7050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0103
+U 1 1 610AB357
+P 5900 2700
+F 0 "#PWR0103" H 5900 2550 50  0001 C CNN
+F 1 "+3V3" H 5915 2873 50  0000 C CNN
+F 2 "" H 5900 2700 50  0001 C CNN
+F 3 "" H 5900 2700 50  0001 C CNN
+	1    5900 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2700 6250 2700
+Connection ~ 6250 2700
+$Comp
+L power:+3V3 #PWR0104
+U 1 1 610AD499
+P 2250 6850
+F 0 "#PWR0104" H 2250 6700 50  0001 C CNN
+F 1 "+3V3" H 2265 7023 50  0000 C CNN
+F 2 "" H 2250 6850 50  0001 C CNN
+F 3 "" H 2250 6850 50  0001 C CNN
+	1    2250 6850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 610ADEC2
+P 2250 7250
+F 0 "#PWR0105" H 2250 7000 50  0001 C CNN
+F 1 "GND" H 2255 7077 50  0000 C CNN
+F 2 "" H 2250 7250 50  0001 C CNN
+F 3 "" H 2250 7250 50  0001 C CNN
+	1    2250 7250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 6850 1500 6850
+Wire Wire Line
+	1500 6950 2250 6950
+Wire Wire Line
+	1500 7050 2250 7050
+Wire Wire Line
+	2250 7250 1500 7250
+NoConn ~ 1500 7150
+$Comp
+L power:+3V3 #PWR0106
+U 1 1 610C5979
+P 7550 4850
+F 0 "#PWR0106" H 7550 4700 50  0001 C CNN
+F 1 "+3V3" H 7565 5023 50  0000 C CNN
+F 2 "" H 7550 4850 50  0001 C CNN
+F 3 "" H 7550 4850 50  0001 C CNN
+	1    7550 4850
+	1    0    0    -1  
+$EndComp
+Text GLabel 9000 5550 2    50   Input ~ 0
+Dead_mans_switch
+Text GLabel 8200 3300 2    50   Input ~ 0
+Dead_mans_switch
+Wire Wire Line
+	7850 3150 8200 3150
+Wire Wire Line
+	8200 3150 8200 3300
+Connection ~ 7850 3150
+Wire Notes Line
+	6300 4100 10050 4100
+Wire Notes Line
+	10050 4100 10050 6500
+Wire Notes Line
+	10050 6500 6300 6500
+Wire Notes Line
+	6300 6500 6300 4100
+Text Notes 6350 4200 0    50   ~ 0
+Dead man's switch board/circuit
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J2
+U 1 1 610AD30B
+P 2000 5850
+F 0 "J2" H 2050 6167 50  0000 C CNN
+F 1 "Conn_02x03_Odd_Even" H 2050 6076 50  0000 C CNN
+F 2 "" H 2000 5850 50  0001 C CNN
+F 3 "~" H 2000 5850 50  0001 C CNN
+	1    2000 5850
+	1    0    0    -1  
+$EndComp
+Text GLabel 1450 5850 0    50   Output ~ 0
+Hoverboard_Diag_RX
+Text GLabel 2600 5950 2    50   Input ~ 0
+Hoverboard_Control_TX
+Wire Wire Line
+	1450 5750 1800 5750
+Wire Wire Line
+	2300 5750 2750 5750
+Wire Wire Line
+	2750 5750 2750 5600
+Wire Wire Line
+	2750 5600 3050 5600
+Wire Wire Line
+	1800 5850 1450 5850
+Wire Wire Line
+	2300 5850 2600 5850
+Wire Wire Line
+	1800 5950 1450 5950
+Wire Wire Line
+	2300 5950 2600 5950
+$Comp
+L motor_driver:DC_DC_LM2596S_5V U1
+U 1 1 610ED1A4
+P 3250 1950
+F 0 "U1" H 3275 2025 50  0000 C CNN
+F 1 "DC_DC_LM2596S_5V" H 3275 1934 50  0000 C CNN
+F 2 "" H 3200 2000 50  0001 C CNN
+F 3 "" H 3200 2000 50  0001 C CNN
+	1    3250 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4800 2900 4800 2350
+Wire Wire Line
+	4800 2350 3650 2350
+Connection ~ 4800 2900
+Wire Wire Line
+	2900 2100 2650 2100
+Wire Wire Line
+	2650 1200 2650 2100
+$Comp
+L power:GND #PWR04
+U 1 1 610F4312
+P 2400 2500
+F 0 "#PWR04" H 2400 2250 50  0001 C CNN
+F 1 "GND" H 2405 2327 50  0000 C CNN
+F 2 "" H 2400 2500 50  0001 C CNN
+F 3 "" H 2400 2500 50  0001 C CNN
+	1    2400 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2900 2350 2400 2350
+Wire Wire Line
+	2400 2350 2400 2500
+Wire Notes Line
+	1100 3950 1100 5200
+Wire Notes Line
+	1100 5200 2400 5200
+Wire Notes Line
+	2400 5200 2400 3950
+Wire Notes Line
+	2400 3950 1100 3950
+Wire Notes Line
+	3550 5350 3550 6150
+Wire Notes Line
+	3550 6150 500  6150
+Wire Notes Line
+	500  6150 500  5350
+Wire Notes Line
+	500  5350 3550 5350
+Wire Notes Line
+	950  6400 2600 6400
+Wire Notes Line
+	2600 6400 2600 7500
+Wire Notes Line
+	2600 7500 950  7500
+Wire Notes Line
+	950  7500 950  6400
+Text Notes 1150 4150 0    50   ~ 0
+Master<->Motorcontroller\nUART
+Text Notes 500  5500 0    50   ~ 0
+Hoverboard<->Motorcontroller\nUART + Power
+Text Notes 950  6550 0    50   ~ 0
+IMU <-> Motorcontroller\nI2C + Power
+$EndSCHEMATC
