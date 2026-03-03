@@ -11,6 +11,16 @@ Klonen des Repositories:
 git clone --recurse-submodules https://git.rz.uni-augsburg.de/luttkule/scoomatic-hoverboard.git
 ```
 
+Der Scoomatic‑Prototyp ist als modulare, softwaregestützte Mobilitätsplattform konzipiert, die die Basis eines selbstbalancierenden Fahrzeugs auf Hoverboard‑Technik demonstriert. Im Mittelpunkt steht die Verbindung aus robuster Hardware, sensorbasierter Regelung und einer klar strukturierten Steuerungslogik, um ein sicheres und nachvollziehbares Fahrverhalten zu ermöglichen.
+
+Funktional zeigt der Prototyp vor allem drei Kernfähigkeiten: Stabilisierung, steuerbare Bewegung und Systemüberwachung. Die Stabilisierung sorgt dafür, dass das Fahrzeug Lastwechsel und kleine Störungen ausgleichen kann. Die Bewegungssteuerung erlaubt ein kontrolliertes Anfahren, Bremsen und Lenken im Rahmen der prototypischen Einsatzgrenzen. Ergänzend werden Betriebszustände des Systems erfasst, sodass Entwicklungs‑ und Testdaten für Optimierungsschritte verfügbar sind.
+
+Ein weiterer Schwerpunkt ist die Entwicklungsfreundlichkeit. Der Scoomatic‑Prototyp ist so aufgebaut, dass Komponenten und Software iterativ weiterentwickelt werden können. Das unterstützt schnelle Tests, reproduzierbare Versuche und eine klare Trennung zwischen Basisfunktionen und experimentellen Erweiterungen. Dadurch eignet sich das Projekt sowohl als Technologie‑Demonstrator als auch als Grundlage für spätere Produktentscheidungen.
+
+Aus Anwendersicht steht beim aktuellen Stand weniger die Endkunden‑Featuretiefe im Vordergrund, sondern die verlässliche technische Machbarkeit: Wie gut funktioniert das Zusammenspiel aus Antrieb, Regelung und Sicherheitsmechanismen unter realen Bedingungen? Genau hier liefert Scoomatic einen greifbaren Mehrwert, weil der Prototyp nicht nur theoretische Konzepte beschreibt, sondern sie praktisch erprobt.
+
+Insgesamt präsentiert sich Scoomatic als fokussierter, praxisnaher Prototyp mit klarer Entwicklungsrichtung: ein intelligentes, balancierendes Mikromobilitäts‑System, das schrittweise von einer belastbaren technischen Basis zu einem ausgereiften Produkt weitergeführt werden kann.
+
 ## Martin Schörner @schoerma
 
 *Bearbeitungszeitraum: 2018-12 bis 2019-05
